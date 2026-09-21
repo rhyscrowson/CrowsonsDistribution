@@ -19,11 +19,7 @@
 <header class="nav" id="nav">
   <div class="container">
     <a href="#home" class="logo">
-      <span class="logo-text">
-        <span class="l1">Crowsons</span>
-        <span class="l2">Distribution</span>
-      </span>
-      <span class="logo-crow"><span class="crow-mark" role="img" aria-label="Crowsons Distribution crow mark"></span></span>
+      <img src="assets/logo.png" alt="Crowsons Distribution" class="logo-img">
     </a>
 
     <nav class="nav-links" aria-label="Primary">
@@ -60,12 +56,59 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="home">
-  <span class="crow-mark hero-watermark" aria-hidden="true"></span>
+  <div class="hero-globe" aria-hidden="true">
+    <svg viewBox="0 0 1440 620" class="globe-svg" preserveAspectRatio="none">
+      <defs>
+        <radialGradient id="globeFill" cx="38%" cy="35%" r="75%">
+          <stop offset="0%" stop-color="#182721"/>
+          <stop offset="100%" stop-color="#0a0f0d"/>
+        </radialGradient>
+        <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#5c7268" stop-opacity="0.1"/>
+          <stop offset="50%" stop-color="#f3efe4" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#5c7268" stop-opacity="0.1"/>
+        </linearGradient>
+        <filter id="arcGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <circle cx="980" cy="280" r="300" fill="url(#globeFill)" stroke="rgba(243,239,228,0.16)" stroke-width="1.5"/>
+
+      <ellipse cx="980" cy="280" rx="300" ry="80" class="grid-line"/>
+      <ellipse cx="980" cy="280" rx="300" ry="175" class="grid-line"/>
+      <ellipse cx="980" cy="140" rx="245" ry="48" class="grid-line grid-line--faint"/>
+      <ellipse cx="980" cy="420" rx="245" ry="48" class="grid-line grid-line--faint"/>
+      <ellipse cx="980" cy="280" rx="110" ry="300" class="grid-line"/>
+      <ellipse cx="980" cy="280" rx="210" ry="300" class="grid-line"/>
+
+      <path class="arc arc--long" d="M760,190 Q980,10 1240,260" filter="url(#arcGlow)"/>
+      <path class="arc" d="M760,190 Q830,110 900,240" filter="url(#arcGlow)"/>
+      <path class="arc" d="M900,240 Q1080,150 1240,260" filter="url(#arcGlow)"/>
+
+      <g class="marker"><circle cx="760" cy="190" r="9" class="marker-pulse"/><circle cx="760" cy="190" r="4.5" class="marker-dot"/></g>
+      <g class="marker"><circle cx="900" cy="240" r="9" class="marker-pulse"/><circle cx="900" cy="240" r="4.5" class="marker-dot"/></g>
+      <g class="marker"><circle cx="1240" cy="260" r="9" class="marker-pulse"/><circle cx="1240" cy="260" r="4.5" class="marker-dot"/></g>
+    </svg>
+  </div>
   <div class="container">
     <div class="hero-copy reveal">
       <span class="eyebrow"><span class="dot"></span> Trade Partnerships</span>
       <h1>Sourced smarter.<br><span class="line-2">Priced better.</span></h1>
       <p>Crowsons Distribution is a UK-based wholesale procurement company. We work with a selective number of trade partners who value pricing integrity, channel discipline and long-term relationships — not one-off deals.</p>
+
+      <div class="trade-lanes">
+        <span class="lane"><i></i>United Kingdom</span>
+        <span class="lane-arrow">&rarr;</span>
+        <span class="lane"><i></i>Europe</span>
+        <span class="lane-arrow">&rarr;</span>
+        <span class="lane"><i></i>China</span>
+      </div>
+
       <div class="hero-cta">
         <a href="#contact" class="btn btn-primary">
           Apply for Partnership
@@ -97,7 +140,7 @@
 
 <!-- ============ WHO WE ARE ============ -->
 <section class="who" id="about">
-  <span class="crow-mark who-watermark" aria-hidden="true"></span>
+  <img src="assets/crow-mark.png" alt="" class="who-watermark">
   <div class="container">
     <span class="eyebrow eyebrow--center"><span class="dot"></span> Who We Are</span>
     <h2>A distribution partner built around <em>trade relationships</em> —<br>not mass-market resale.</h2>
@@ -375,11 +418,7 @@
     <footer class="footer">
       <div class="container">
         <a href="#home" class="footer-brand">
-          <span class="logo-text">
-            <span class="l1">Crowsons</span>
-            <span class="l2">Distribution</span>
-          </span>
-          <span class="logo-crow"><span class="crow-mark" role="img" aria-label="Crowsons Distribution crow mark"></span></span>
+          <img src="assets/logo.png" alt="Crowsons Distribution" class="logo-img">
         </a>
         <div class="footer-meta">
           <span>Crowsons Distribution Ltd</span>
