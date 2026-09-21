@@ -79,9 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Contact form (front-end only) ---------- */
+  /* ---------- Contact form (Netlify Forms) ---------- */
   const form = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
+  const errorBox = document.getElementById('formError');
+
+  const encode = (data) =>
+    Object.keys(data)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -89,8 +95,22 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reportValidity();
       return;
     }
-    success.classList.add('is-visible');
-    form.reset();
-    setTimeout(() => success.classList.remove('is-visible'), 6000);
+
+    errorBox.classList.remove('is-visible');
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode(data),
+    })
+      .then(() => {
+        success.classList.add('is-visible');
+        form.reset();
+        setTimeout(() => success.classList.remove('is-visible'), 6000);
+      })
+      .catch(() => {
+        errorBox.classList.add('is-visible');
+      });
   });
 });
