@@ -196,13 +196,30 @@ h1, h2, h3, h4 {
   position: relative;
 }
 
+/* Crow mark: recolourable via CSS mask so the real photographic crow
+   asset (assets/crow-mark.png, pure black on transparent) can render
+   in any brand colour instead of only working on white backgrounds. */
+.crow-mark {
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-image: url('../assets/crow-mark.png');
+  mask-image: url('../assets/crow-mark.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
 .logo-crow {
   width: 30px;
   height: 26px;
   margin-left: -6px;
   margin-top: -14px;
+  color: var(--color-cream);
 }
-.logo-crow img { width: 100%; height: 100%; object-fit: contain; }
+.logo-crow .crow-mark { width: 100%; height: 100%; }
 
 .logo-text {
   display: flex;
@@ -300,7 +317,9 @@ h1, h2, h3, h4 {
   top: -60px;
   right: -80px;
   width: 620px;
+  height: 500px;
   opacity: 0.05;
+  color: var(--color-cream);
   transform: rotate(8deg);
   pointer-events: none;
 }
@@ -427,8 +446,10 @@ h1, h2, h3, h4 {
   position: absolute;
   top: 50%; left: 50%;
   width: 420px;
+  height: 340px;
   transform: translate(-50%, -50%);
   opacity: 0.045;
+  color: var(--color-cream);
   pointer-events: none;
 }
 
