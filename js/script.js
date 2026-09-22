@@ -11,6 +11,24 @@ document.addEventListener('DOMContentLoaded', () => {
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
+  /* ---------- Magnetic buttons ---------- */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transition = 'transform 0.15s ease';
+        btn.style.transform = `translate(${x * 0.22}px, ${y * 0.22 - 2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transition = 'transform 0.35s var(--ease)';
+        btn.style.transform = 'translate(0, 0)';
+      });
+    });
+  }
+
   /* ---------- Mobile drawer ---------- */
   const navToggle = document.getElementById('navToggle');
   const drawer = document.getElementById('mobileDrawer');

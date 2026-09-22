@@ -31,12 +31,12 @@
   --hero-border: rgba(243, 239, 228, 0.14);
   --hero-border-strong: rgba(243, 239, 228, 0.24);
 
-  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --radius-pill: 999px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 
   --container-w: 1240px;
   --nav-h: 84px;
@@ -92,15 +92,21 @@ section { position: relative; }
   height: 6px;
   border-radius: 50%;
   background: var(--color-accent-light);
-  box-shadow: 0 0 8px var(--color-accent-glow);
+  animation: eyebrow-pulse 2.4s infinite;
+}
+
+@keyframes eyebrow-pulse {
+  0% { box-shadow: 0 0 0 0 var(--color-accent-glow); }
+  70% { box-shadow: 0 0 0 7px rgba(58, 74, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(58, 74, 69, 0); }
 }
 
 .eyebrow--center { display: inline-flex; }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--color-ink);
 }
 
@@ -153,7 +159,6 @@ h1, h2, h3, h4 {
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
   box-shadow: 0 14px 32px -10px var(--color-accent-glow);
 }
 
@@ -376,8 +381,10 @@ h1, h2, h3, h4 {
 .hero-copy .eyebrow { margin-bottom: 26px; }
 
 .hero-copy h1 {
-  font-size: clamp(38px, 5.4vw, 66px);
-  line-height: 1.08;
+  font-size: clamp(34px, 4.8vw, 58px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   margin-bottom: 26px;
   color: var(--color-cream);
 }
@@ -420,7 +427,7 @@ h1, h2, h3, h4 {
   position: absolute;
   right: 10px;
   bottom: -18px;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 64px;
   font-weight: 700;
   color: rgba(243, 239, 228, 0.05);
@@ -449,7 +456,7 @@ h1, h2, h3, h4 {
 .feat-card--glow h3 { color: var(--color-cream); }
 
 .feat-card h3 .num {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 13px;
   width: 24px; height: 24px;
   border-radius: 50%;
@@ -498,7 +505,7 @@ h1, h2, h3, h4 {
 }
 
 .who h2 em {
-  font-style: italic;
+  font-style: normal;
   color: var(--color-accent);
 }
 
@@ -529,7 +536,7 @@ h1, h2, h3, h4 {
 
 .pillar-index {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 15px;
   color: var(--color-accent);
   margin-bottom: 16px;
@@ -566,7 +573,10 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: flex-start;
   gap: 16px;
+  transition: transform 0.3s var(--ease);
 }
+.why-item:hover { transform: translateX(4px); }
+.why-item:hover .check { background: rgba(58, 74, 69, 0.18); transform: scale(1.08); }
 
 .why-item .check {
   flex-shrink: 0;
@@ -574,6 +584,7 @@ h1, h2, h3, h4 {
   border-radius: 50%;
   background: rgba(58, 74, 69, 0.10);
   border: 1px solid rgba(58, 74, 69, 0.35);
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
   color: var(--color-accent);
   display: flex;
   align-items: center;
@@ -641,7 +652,7 @@ h1, h2, h3, h4 {
 .service-card .idx {
   position: absolute;
   top: 26px; right: 30px;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 42px;
   color: var(--color-border-strong);
 }
@@ -796,7 +807,22 @@ h1, h2, h3, h4 {
 
 .contact-detail .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-faint); margin-bottom: 3px; }
 .contact-detail .value { font-size: 15px; color: var(--color-ink); }
+.contact-detail a.value {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+.contact-detail a.value::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: var(--color-accent-light);
+  transition: width 0.3s var(--ease);
+}
 .contact-detail a.value:hover { color: var(--color-accent); }
+.contact-detail a.value:hover::after { width: 100%; }
 
 .founder-note {
   display: flex;
@@ -816,7 +842,7 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
   color: var(--color-cream);
@@ -824,8 +850,9 @@ h1, h2, h3, h4 {
 }
 
 .founder-note p {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 600;
   font-size: 16px;
   color: var(--color-ink);
   line-height: 1.4;
@@ -1011,7 +1038,7 @@ h1, h2, h3, h4 {
 .mobile-drawer.is-open { transform: translateX(0); }
 
 .mobile-drawer a {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 26px;
   padding: 14px 0;
   border-bottom: 1px solid var(--color-border);
