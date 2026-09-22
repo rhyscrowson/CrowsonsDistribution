@@ -333,6 +333,14 @@ h1, h2, h3, h4 {
 }
 .arc--long { stroke-width: 1.8; opacity: 0.6; animation-duration: 4.6s; }
 
+.arc--secondary {
+  stroke-width: 1.2;
+  opacity: 0.3;
+  animation-duration: 5.5s;
+  animation-direction: reverse;
+}
+.arc--secondary.arc--long { opacity: 0.2; animation-duration: 7s; }
+
 @keyframes dash-flow { to { stroke-dashoffset: -140; } }
 
 .marker-dot {
@@ -348,6 +356,11 @@ h1, h2, h3, h4 {
 @keyframes marker-pulse {
   0% { transform: scale(0.5); opacity: 0.9; }
   100% { transform: scale(2.4); opacity: 0; }
+}
+
+.marker--dim .marker-dot {
+  opacity: 0.55;
+  filter: drop-shadow(0 0 3px rgba(243, 239, 228, 0.6));
 }
 
 
