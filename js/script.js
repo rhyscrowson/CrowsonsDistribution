@@ -81,36 +81,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Contact form (Netlify Forms) ---------- */
   const form = document.getElementById('contactForm');
-  const success = document.getElementById('formSuccess');
-  const errorBox = document.getElementById('formError');
 
-  const encode = (data) =>
-    Object.keys(data)
-      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-      .join('&');
+  if (form) {
+    const success = document.getElementById('formSuccess');
+    const errorBox = document.getElementById('formError');
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    const encode = (data) =>
+      Object.keys(data)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+        .join('&');
 
-    errorBox.classList.remove('is-visible');
-    const data = Object.fromEntries(new FormData(form).entries());
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
 
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encode(data),
-    })
-      .then(() => {
-        success.classList.add('is-visible');
-        form.reset();
-        setTimeout(() => success.classList.remove('is-visible'), 6000);
+      errorBox.classList.remove('is-visible');
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(data),
       })
-      .catch(() => {
-        errorBox.classList.add('is-visible');
-      });
-  });
+        .then(() => {
+          success.classList.add('is-visible');
+          form.reset();
+          setTimeout(() => success.classList.remove('is-visible'), 6000);
+        })
+        .catch(() => {
+          errorBox.classList.add('is-visible');
+        });
+    });
+  }
 });
