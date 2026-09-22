@@ -11,6 +11,52 @@ document.addEventListener('DOMContentLoaded', () => {
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
+  /* ---------- Magnetic buttons ---------- */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transition = 'transform 0.15s ease';
+        btn.style.transform = `translate(${x * 0.22}px, ${y * 0.22 - 2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transition = 'transform 0.35s var(--ease)';
+        btn.style.transform = 'translate(0, 0)';
+      });
+    });
+  }
+
+  /* ---------- Hero globe parallax ---------- */
+  const heroGlobe = document.querySelector('.hero-globe');
+  const heroSection = document.querySelector('.hero');
+  if (heroGlobe && heroSection && !prefersReducedMotion) {
+    window.addEventListener('scroll', () => {
+      const rect = heroSection.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      heroGlobe.style.transform = `translateY(${rect.top * -0.12}px)`;
+    }, { passive: true });
+  }
+
+  /* ---------- Tilt-on-hover cards ---------- */
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('.service-card, .pillar, .feat-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transition = 'transform 0.1s ease';
+        card.style.transform = `perspective(700px) rotateX(${py * -6}deg) rotateY(${px * 6}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transition = 'transform 0.4s var(--ease)';
+        card.style.transform = '';
+      });
+    });
+  }
+
   /* ---------- Mobile drawer ---------- */
   const navToggle = document.getElementById('navToggle');
   const drawer = document.getElementById('mobileDrawer');
@@ -32,6 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Active nav link on scroll ---------- */
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
+  const navIndicator = document.getElementById('navIndicator');
+
+  const moveIndicator = () => {
+    const activeLink = document.querySelector('.nav-links a.active');
+    if (!activeLink || !navIndicator) return;
+    navIndicator.style.width = `${activeLink.offsetWidth}px`;
+    navIndicator.style.transform = `translateX(${activeLink.offsetLeft - 6}px)`;
+  };
 
   const sectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -40,11 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.forEach(link => {
           link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
         });
+        moveIndicator();
       }
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
 
   sections.forEach(section => sectionObserver.observe(section));
+  moveIndicator();
+  window.addEventListener('resize', moveIndicator);
+  navLinks.forEach(link => link.addEventListener('mouseenter', () => {
+    navIndicator.style.width = `${link.offsetWidth}px`;
+    navIndicator.style.transform = `translateX(${link.offsetLeft - 6}px)`;
+  }));
+  document.querySelector('.nav-links').addEventListener('mouseleave', moveIndicator);
 
   /* ---------- Scroll reveal ---------- */
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
