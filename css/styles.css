@@ -336,35 +336,6 @@ h1, h2, h3, h4 {
   100% { transform: scale(2.4); opacity: 0; }
 }
 
-.trade-lanes {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-
-.trade-lanes .lane {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12.5px;
-  letter-spacing: 0.05em;
-  color: var(--color-cream-dim);
-}
-
-.trade-lanes .lane i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent-light);
-  box-shadow: 0 0 6px var(--color-accent-light);
-}
-
-.trade-lanes .lane-arrow {
-  color: var(--color-cream-faint);
-  font-size: 12px;
-}
 
 .hero .container {
   position: relative;
