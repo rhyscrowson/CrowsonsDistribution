@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
       const rect = heroSection.getBoundingClientRect();
       if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-      heroGlobe.style.transform = `translateY(${rect.top * -0.12}px)`;
+      heroGlobe.style.transform = `translateY(${rect.top * -0.22}px)`;
     }, { passive: true });
   }
 
