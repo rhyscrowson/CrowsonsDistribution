@@ -20,6 +20,12 @@
   --color-accent-light: #5c7268;
   --color-accent-glow: rgba(58, 74, 69, 0.28);
 
+  /* Secondary accent, pulled from the logo mark — used sparingly: thin
+     outlines, dividers and small accents, never on primary actions. */
+  --color-accent-blue: #1f6fa8;
+  --color-accent-blue-light: #84b0cf;
+  --color-accent-blue-border: rgba(31, 111, 168, 0.4);
+
   --color-black: #050605;
 
   /* Dark hero band only */
@@ -79,6 +85,7 @@ ul { list-style: none; }
 section { position: relative; }
 
 .eyebrow {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -90,6 +97,18 @@ section { position: relative; }
   text-transform: uppercase;
   color: var(--color-ink-dim);
   background: rgba(20, 25, 23, 0.02);
+}
+
+.eyebrow::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent-blue);
+  transform: translateX(-50%);
 }
 
 .eyebrow .dot {
@@ -208,7 +227,7 @@ h1, h2, h3, h4 {
 }
 
 .nav.is-scrolled {
-  border-bottom-color: var(--color-border);
+  border-bottom-color: var(--color-accent-blue-border);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.25);
 }
@@ -441,6 +460,19 @@ h1, h2, h3, h4 {
 
 .feat-card:hover { transform: translateY(-4px); border-color: var(--hero-border-strong); }
 
+.feat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-accent-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+
+.feat-card:hover::before { transform: scaleX(1); }
+
 .feat-card .wm {
   position: absolute;
   right: 10px;
@@ -580,7 +612,7 @@ a.who-signature:hover { opacity: 0.75; }
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: radial-gradient(ellipse 90% 70% at 30% 20%, var(--hero-bg-2), var(--hero-bg));
-  border: 1px solid var(--hero-border);
+  border: 1.5px solid var(--color-accent-blue-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -793,6 +825,19 @@ a.who-signature:hover { opacity: 0.75; }
   border-color: var(--color-accent-light);
   box-shadow: 0 24px 44px -24px rgba(20,25,23,0.28);
 }
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-accent-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+
+.service-card:hover::before { transform: scaleX(1); }
 
 .service-card .icon-wrap {
   width: 56px; height: 56px;
@@ -1164,7 +1209,7 @@ a.who-signature:hover { opacity: 0.75; }
 .footer {
   margin-top: 100px;
   padding: 50px 0 34px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-accent-blue-border);
   background: var(--color-bg-alt);
 }
 
@@ -1203,7 +1248,7 @@ a.who-signature:hover { opacity: 0.75; }
 .legal-hero {
   padding: calc(var(--nav-h) + 64px) 0 56px;
   background: var(--color-bg-alt);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-accent-blue-border);
 }
 
 .legal-hero .eyebrow { margin-bottom: 22px; }
@@ -1348,6 +1393,7 @@ body.no-scroll { overflow: hidden; }
 }
 
 .insight-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 30px 28px;
@@ -1355,6 +1401,7 @@ body.no-scroll { overflow: hidden; }
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: 0 2px 12px -8px rgba(20,25,23,0.1);
+  overflow: hidden;
   transition: transform .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease);
 }
 
@@ -1363,6 +1410,19 @@ body.no-scroll { overflow: hidden; }
   border-color: var(--color-accent-light);
   box-shadow: 0 24px 44px -24px rgba(20,25,23,0.28);
 }
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-accent-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+}
+
+.insight-card:hover::before { transform: scaleX(1); }
 
 .insight-card .insight-date {
   font-size: 12px;
