@@ -1067,6 +1067,7 @@ a.who-signature:hover { opacity: 0.75; }
   flex-shrink: 0;
 }
 .contact-detail .ic svg { width: 16px; height: 16px; stroke: var(--color-accent); }
+.contact-detail .ic svg.icon-solid { fill: var(--color-accent); stroke: none; }
 
 .contact-detail .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-ink-faint); margin-bottom: 3px; }
 .contact-detail .value { font-size: 15px; color: var(--color-ink); }
@@ -1221,6 +1222,13 @@ a.who-signature:hover { opacity: 0.75; }
   flex-wrap: wrap;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
 .footer-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1232,6 +1240,20 @@ a.who-signature:hover { opacity: 0.75; }
 .footer-meta span::after { content: "•"; margin-left: 18px; color: var(--color-border-strong); }
 .footer-meta span:last-child::after { content: ""; margin-left: 0; }
 .footer-meta a:hover { color: var(--color-accent); }
+
+.footer-social { display: flex; align-items: center; gap: 10px; }
+.footer-social a {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.footer-social a svg { width: 15px; height: 15px; fill: var(--color-ink-faint); transition: fill 0.25s var(--ease); }
+.footer-social a:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+.footer-social a:hover svg { fill: var(--color-accent); }
 
 .form-note {
   margin-top: 16px;
