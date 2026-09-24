@@ -1,4 +1,4 @@
-// Crowsons Distribution — interactions
+// Crowsons Global — interactions
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('year').textContent = new Date().getFullYear();
