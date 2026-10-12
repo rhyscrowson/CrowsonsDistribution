@@ -16,6 +16,7 @@ from openpyxl.worksheet.datavalidation import DataValidation
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from suppliers_data import SUPPLIERS  # noqa: E402
 from suppliers_eu2 import SUPPLIERS_EU2  # noqa: E402
+from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
@@ -24,7 +25,9 @@ NAVY = "1F3864"
 HDR_FILL = PatternFill("solid", fgColor=NAVY)
 TRACK_HDR_FILL = PatternFill("solid", fgColor="BF8F00")
 TRACK_FILL = PatternFill("solid", fgColor="FFF2CC")   # yellow = cells for the user to fill in
-NEW_FILL = PatternFill("solid", fgColor="E2EFDA")     # green tint = added in round 2
+NEW_FILL = PatternFill("solid", fgColor="E2EFDA")     # green tint = added in the latest round
+BAND_FILLS = [PatternFill("solid", fgColor="DDEBF7"), PatternFill("solid", fgColor="FCE4D6")]  # alternate per country
+PAN_EU = "Pan-European / Online"
 THIN = Side(style="thin", color="BFBFBF")
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 WRAP = Alignment(wrap_text=True, vertical="top")
@@ -106,13 +109,25 @@ def normalise(s, rnd):
     s.setdefault("amzsell", "Unknown")
     s.setdefault("dropship", "Unknown")
     s.setdefault("regid", "")
-    s["region"] = "UK" if s["country"].startswith("UK") else "EU / Other"
+    # One primary country per supplier so each country's suppliers sit together.
+    parts = [p.strip() for p in s["country"].split("/")]
+    if parts[0] in ("EU", "Global (UK site)"):
+        s["country"], s["also"] = PAN_EU, ", ".join(p for p in parts if p not in ("EU", "Global (UK site)"))
+    else:
+        s["country"], s["also"] = parts[0], ", ".join(p for p in parts[1:] if p != "EU")
+    s["region"] = "UK" if s["country"] == "UK" else ("Pan-EU" if s["country"] == PAN_EU else "EU / Europe")
     s["round"] = rnd
     return s
 
 
-rows = [normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
-rows.sort(key=lambda s: (-s["pri"], s["cat"], s["name"]))
+rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
+        + [normalise(s, "Round 3") for s in SUPPLIERS_EU3])
+# Country A-Z (pan-European platforms last), then best priority first within each country.
+rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], -s["pri"], s["cat"], s["name"]))
+COUNTRIES = []
+for s_ in rows:
+    if s_["country"] not in COUNTRIES:
+        COUNTRIES.append(s_["country"])
 CATS = sorted({s["cat"] for s in rows})
 N = len(rows)
 LAST = N + 1
@@ -133,10 +148,10 @@ r = 5
 ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
-    ("+80 suppliers (EU focus)", "Round 2 adds suppliers in Baby Products, Beauty, DIY & Tools, Health & Personal Care, Home & Kitchen, Pet Supplies, Sports & Outdoors, Stationery & Office and Toys & Games - plus multi-category EU B2B platforms. New rows are shaded green in the Company column and marked 'Round 2' in the Added column."),
-    ("New columns", "Region (UK vs EU), Sells to Online/Amazon Sellers?, Dropship?, Registry ID (Companies House / KRS / VAT / LEI) and Added."),
-    ("Niche Guide tab", "Per niche: Amazon UK gating, compliance you must have, what sells, and live supplier counts."),
-    ("Profit Calculator tab", "Landed cost (incl. EU freight & import duty), Amazon fees, profit, ROI, margin, break-even price and a Buy/Skip verdict."),
+    ("Grouped by country", "The Suppliers tab is now sorted by Country A-Z, then by Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country at a time. Pan-European / online platforms are at the bottom."),
+    ("Country Index tab", "Lists every country with supplier counts - click 'Go to' to jump straight to that country's first row."),
+    ("+40 more EU suppliers (Round 3)", "Mostly brand owners and established distributors in Germany, Netherlands, Poland, Belgium, France, Italy, Spain and Czech Republic (e.g. Trixie-style pet brands, goki, small foot, Depesche, Canpol, cosnova, Eveline, GTX/NEO Tools, kwb, Westmark, Beurer). Round 3 rows are shaded green in the Company column."),
+    ("Also operates in", "New column showing other countries a supplier covers (the Country column now holds one main country so the grouping works)."),
     ("Keeping your tracker notes", "If you already filled in the tracker in the previous file, copy the yellow columns across by matching the Company name - or send me the old file and I'll merge it."),
 ]:
     para(ws0, r, k, v, 32)
@@ -145,7 +160,8 @@ r += 1
 ws0.cell(row=r, column=2, value="How to use this workbook").font = H2
 r += 1
 for k, v in [
-    ("1. Suppliers", "The master list, sorted by Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Region, Country, Priority or Added."),
+    ("1. Suppliers", "The master list, grouped by Country A-Z and then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
+    ("1b. Country Index", "Jump to any country's block of suppliers with one click."),
     ("2. Yellow columns", "Your outreach tracker. Status, Method and Account Approved have drop-down lists. 'Suggested Follow-up' fills in automatically (5 working days after Date Contacted) and turns red when overdue."),
     ("3. LinkedIn Outreach", "One-click LinkedIn searches for each company page and its sales / account-manager staff, plus a tracker."),
     ("4. Niche Guide", "Read before contacting suppliers in a new niche - it lists the compliance documents to ask for."),
@@ -202,8 +218,8 @@ para(ws0, r, "", (
 # =========================================================================== Suppliers
 ws = wb.create_sheet("Suppliers")
 cols = [
-    ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Region", 10), ("Company", 30), ("Website", 30),
-    ("Country", 13), ("City / Region", 20), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
+    ("Country", 14), ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Company", 30), ("Website", 30),
+    ("City / Region", 20), ("Also operates in", 16), ("Region", 10), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
     ("Key Brands / Products", 38), ("Segment", 20), ("MOQ / Min. Order", 22), ("Account Requirements", 28),
     ("Ships to UK?", 18), ("Sells to Online/Amazon Sellers?", 16), ("Dropship?", 11), ("Registry ID", 18),
     ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36), ("Data Confidence", 22),
@@ -222,7 +238,7 @@ for i, s in enumerate(rows, start=1):
     r = i + 1
     vals = {
         "ID": i, "Priority (1-5)": s["pri"], "Category": s["cat"], "Region": s["region"], "Company": s["name"],
-        "Country": s["country"], "City / Region": s["city"], "Address": s["addr"], "Phone": s["phone"],
+        "Country": s["country"], "City / Region": s["city"], "Also operates in": s["also"], "Address": s["addr"], "Phone": s["phone"],
         "Email": s["email"], "Supplier Type": s["stype"], "Key Brands / Products": s["brands"],
         "Segment": s["segment"], "MOQ / Min. Order": s["moq"], "Account Requirements": s["req"],
         "Ships to UK?": s["uk"], "Sells to Online/Amazon Sellers?": s["amzsell"], "Dropship?": s["dropship"],
@@ -238,8 +254,16 @@ for i, s in enumerate(rows, start=1):
         c.border = BORDER
         if col >= TRACK_START:
             c.fill = TRACK_FILL
-    if s["round"] == "Round 2":
+    if s["round"] == "Round 3":
         ws.cell(row=r, column=COLN["Company"]).fill = NEW_FILL
+    band = BAND_FILLS[COUNTRIES.index(s["country"]) % 2]
+    for nm in ("Country", "ID"):
+        ws.cell(row=r, column=COLN[nm]).fill = band
+    ws.cell(row=r, column=COLN["Country"]).font = BOLD
+    if i == 1 or rows[i - 2]["country"] != s["country"]:  # thick line where a new country starts
+        for col in range(1, len(cols) + 1):
+            cell = ws.cell(row=r, column=col)
+            cell.border = Border(left=THIN, right=THIN, bottom=THIN, top=Side(style="medium", color=NAVY))
     if s["web"]:
         set_link(ws.cell(row=r, column=COLN["Website"]), s["web"])
     else:
@@ -288,14 +312,14 @@ ws.conditional_formatting.add(
 
 # =========================================================================== LinkedIn Outreach
 wl = wb.create_sheet("LinkedIn Outreach")
-lcols = [("ID", 6), ("Company", 32), ("Category", 18), ("Country", 12), ("Company Page Search", 16),
+lcols = [("Country", 14), ("ID", 6), ("Company", 32), ("Category", 18), ("Company Page Search", 16),
          ("Find Sales / Account Managers", 20), ("Person Name", 20), ("Job Title", 20), ("Profile URL", 28),
          ("Connection Sent", 12), ("Accepted?", 10), ("Message Sent", 12), ("Reply?", 10), ("Notes", 34)]
 header_row(wl, 1, [c[0] for c in lcols], [c[1] for c in lcols],
            {i: TRACK_HDR_FILL for i in range(7, len(lcols) + 1)})
 for i, s in enumerate(rows, start=1):
     r = i + 1
-    for col, src in enumerate(["ID", "Company", "Category", "Country"], start=1):
+    for col, src in enumerate(["Country", "ID", "Company", "Category"], start=1):
         c = wl.cell(row=r, column=col, value=f"=Suppliers!{C[src]}{r}")
         c.font = LINKED_FONT
         c.border = BORDER
@@ -320,6 +344,33 @@ dv_yn.add(f"K2:K{LAST}")
 dv_yn.add(f"M2:M{LAST}")
 
 # =========================================================================== Niche Guide
+# =========================================================================== Country Index
+wc = wb.create_sheet("Country Index")
+ccols = [("Country", 24), ("Suppliers", 11), ("Priority 4-5", 11), ("Niches covered", 70), ("Jump to list", 14)]
+header_row(wc, 1, [c[0] for c in ccols], [c[1] for c in ccols])
+crng = f'Suppliers!${C["Country"]}$2:${C["Country"]}${LAST}'
+cpr = f'Suppliers!${C["Priority (1-5)"]}$2:${C["Priority (1-5)"]}${LAST}'
+for k, country in enumerate(COUNTRIES):
+    r = k + 2
+    first_row = next(i for i, s_ in enumerate(rows, start=2) if s_["country"] == country)
+    niches = sorted({s_["cat"] for s_ in rows if s_["country"] == country})
+    vals = [country, f'=COUNTIF({crng},A{r})', f'=COUNTIFS({crng},A{r},{cpr},">=4")', ", ".join(niches)]
+    for col, v in enumerate(vals, start=1):
+        c = wc.cell(row=r, column=col, value=v)
+        c.font = BOLD if col == 1 else BODY
+        c.alignment = WRAP
+        c.border = BORDER
+        c.fill = BAND_FILLS[k % 2] if col == 1 else PatternFill()
+    link = wc.cell(row=r, column=5, value="Go to >")
+    link.hyperlink = f"#Suppliers!A{first_row}"
+    link.font = LINK_FONT
+    link.border = BORDER
+tr = len(COUNTRIES) + 2
+wc.cell(row=tr, column=1, value="Total").font = BOLD
+wc.cell(row=tr, column=2, value=f"=SUM(B2:B{tr - 1})").font = BOLD
+wc.cell(row=tr, column=3, value=f"=SUM(C2:C{tr - 1})").font = BOLD
+wc.freeze_panes = "A2"
+
 wn = wb.create_sheet("Niche Guide")
 ncols = [("Niche", 22), ("Suppliers in list", 11), ("Priority 4-5", 10), ("Amazon UK gating (check Seller Central)", 42),
          ("Compliance / documents to ask for", 46), ("What tends to sell", 40), ("Sourcing tips", 44)]
@@ -565,7 +616,7 @@ reg = f'Suppliers!${C["Region"]}$2:${C["Region"]}${LAST}'
 st = f'Suppliers!${C["Status"]}$2:${C["Status"]}${LAST}'
 pr = f'Suppliers!${P}$2:${P}${LAST}'
 ap = f'Suppliers!${C["Account Approved?"]}$2:${C["Account Approved?"]}${LAST}'
-hdr = ["Niche", "Suppliers", "UK", "EU / Other", "Priority 4-5", "Contacted+", "Approved"]
+hdr = ["Niche", "Suppliers", "UK", "EU / Europe", "Priority 4-5", "Contacted+", "Approved"]
 for i, h in enumerate(hdr):
     c = wd.cell(row=5, column=2 + i, value=h)
     c.font = HDR_FONT
@@ -576,7 +627,7 @@ for cat in CATS:
     wd.cell(row=r, column=2, value=cat)
     wd.cell(row=r, column=3, value=f'=COUNTIF({rng},B{r})')
     wd.cell(row=r, column=4, value=f'=COUNTIFS({rng},B{r},{reg},"UK")')
-    wd.cell(row=r, column=5, value=f'=COUNTIFS({rng},B{r},{reg},"EU / Other")')
+    wd.cell(row=r, column=5, value=f'=COUNTIFS({rng},B{r},{reg},"<>UK")')
     wd.cell(row=r, column=6, value=f'=COUNTIFS({rng},B{r},{pr},">=4")')
     wd.cell(row=r, column=7, value=f'=COUNTIFS({rng},B{r},{st},"<>Not contacted")')
     wd.cell(row=r, column=8, value=f'=COUNTIFS({rng},B{r},{ap},"Yes")')
