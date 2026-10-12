@@ -987,7 +987,7 @@ SUPPLIERS_EU4 += [
 
 # Batch 8
 SUPPLIERS_EU4 += [
-    dict(cat="Stationery & Office Supplies", name="CARIOCA S.p.A.", web="https://www.carioca.com",
+    dict(cat="Stationery & Office", name="CARIOCA S.p.A.", web="https://www.carioca.com",
          country="Italy", city="Settimo Torinese (Turin)", addr="Via Verga 40 Ter, Settimo Torinese", phone="", email="amministrazione@carioca.it (ask for export)",
          stype="Brand owner / manufacturer", brands="Carioca markers, colouring pencils, tempera", segment="Kids art & colouring",
          moq="On request", req="Distributors & retailers; exports 70%+ of output to 80+ countries", uk="Ask",
@@ -1065,21 +1065,21 @@ SUPPLIERS_EU4 += [
 
 # Batch 10: Iberian stationery & office
 SUPPLIERS_EU4 += [
-    dict(cat="Stationery & Office Supplies", name="APLI Paper S.A.U.", web="https://www.apli.com",
+    dict(cat="Stationery & Office", name="APLI Paper S.A.U.", web="https://www.apli.com",
          country="Spain", city="Barberà del Vallès (Barcelona)", addr="Avda. Arraona 120-124, Centro Industrial Santiga, 08210 Barberà del Vallès", phone="+34 937 479 100", email="apli@apli.com",
          stype="Brand owner / manufacturer", brands="APLI labels, Miquelrius notebooks, Agipa, Decadry, Back2Fun", segment="Labels & stationery",
          moq="On request", req="Distributors & office dealers (80-85+ countries)", uk="Ask - Agipa/Decadry well known in UK",
          legit="Spain's leading label maker; Ambiente exhibitor; Catalonia exporter directory", amazon="Printer labels sell steadily - strong repeat purchases",
          verified="Trade fair listing + regional exporter directory", pri=5, notes="", src="https://suppliers.catalonia.com/detail/apli-paper-sau/672",
          amzsell="Unknown", dropship="Unknown"),
-    dict(cat="Stationery & Office Supplies", name="Distribuidora Universal S.L. (DUNSA Group)", web="",
+    dict(cat="Stationery & Office", name="Distribuidora Universal S.L. (DUNSA Group)", web="",
          country="Spain", city="La Garriga (Barcelona)", addr="C/ Josep Maria Sert 17-3, 08530 La Garriga", phone="+34 938 71 80 64", email="",
          stype="Manufacturer / brand owner", brands="INSTANT, PLAYCOLOR", segment="School & office supplies",
          moq="On request", req="Distributors & direct customers (40+ countries)", uk="Ask",
          legit="Creativeworld 2025 (Messe Frankfurt) exhibitor; family-run manufacturer", amazon="Playcolor solid paint sticks suit the kids crafts category",
          verified="Trade fair exhibitor listing", pri=3, notes="", src="https://creativeworld.messefrankfurt.com/frankfurt/en/exhibitor-search.detail.html/distribuidora-universal-sl.html",
          amzsell="Unknown", dropship="Unknown"),
-    dict(cat="Stationery & Office Supplies", name="Bi-silque - Produtos de Comunicação Visual, S.A.", web="",
+    dict(cat="Stationery & Office", name="Bi-silque - Produtos de Comunicação Visual, S.A.", web="",
          country="Portugal", city="Esmoriz (Ovar)", addr="Rua Cais da Estação 340, 3885-528 Esmoriz", phone="+351 256 750 120", email="",
          stype="Manufacturer / brand owner", brands="Bi-Office whiteboards, noticeboards, flipcharts", segment="Visual communication / office",
          moq="On request", req="Office dealers & distributors (80+ countries)", uk="Yes - Bi-Office is sold in UK",
@@ -1161,4 +1161,15 @@ SUPPLIERS_EU4 += [
          legit="Org.nr 556448-8178; Swedish royal warrant holder; 75+ years", amazon="Table tennis bats/balls sell year-round; sledges in winter",
          verified="Company site + press releases", pri=4, notes="", src="https://www.stigasports.com/en/explore-stiga-sports/stiga-75-years",
          amzsell="Unknown", dropship="Unknown", regid="Org.nr 556448-8178"),
+]
+
+# Batch 14
+SUPPLIERS_EU4 += [
+    dict(cat="Health & Personal Care", name="Aboca S.p.A. Società Agricola", web="https://www.aboca.com",
+         country="Italy", city="Sansepolcro (Arezzo)", addr="Sansepolcro (AR), Tuscany", phone="+39 0575 746370", email="",
+         stype="Brand owner / manufacturer", brands="Aboca Grintuss, Melilax, Fitonasal, herbal medical devices", segment="Natural health / OTC herbal",
+         moq="Account based", req="Own subsidiaries (ES, FR, PL, DE, AT) + distributors", uk="Ask",
+         legit="SACE/CDP-backed financing (2022); Expopharm exhibitor; Austrian branch registered 2025", amazon="Herbal cough syrups & supplements; Amazon category approval needed",
+         verified="State lender press release + company brochure + corporate register", pri=3, notes="", src="https://www.cdp.it/resources/cms/documents/Comunicato_n_84_del_10_08_2022_ Aboca_SACE_CAI_CDP.pdf",
+         amzsell="Unknown", dropship="Unknown"),
 ]
