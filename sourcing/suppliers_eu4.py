@@ -1062,3 +1062,46 @@ SUPPLIERS_EU4 += [
          verified="Trade fair listing", pri=3, notes="", src="https://interzoo.com/en/exhibitors-products/g/gosbi-pet-food-sa",
          amzsell="Unknown", dropship="Unknown"),
 ]
+
+# Batch 10: Iberian stationery & office
+SUPPLIERS_EU4 += [
+    dict(cat="Stationery & Office Supplies", name="APLI Paper S.A.U.", web="https://www.apli.com",
+         country="Spain", city="Barberà del Vallès (Barcelona)", addr="Avda. Arraona 120-124, Centro Industrial Santiga, 08210 Barberà del Vallès", phone="+34 937 479 100", email="apli@apli.com",
+         stype="Brand owner / manufacturer", brands="APLI labels, Miquelrius notebooks, Agipa, Decadry, Back2Fun", segment="Labels & stationery",
+         moq="On request", req="Distributors & office dealers (80-85+ countries)", uk="Ask - Agipa/Decadry well known in UK",
+         legit="Spain's leading label maker; Ambiente exhibitor; Catalonia exporter directory", amazon="Printer labels sell steadily - strong repeat purchases",
+         verified="Trade fair listing + regional exporter directory", pri=5, notes="", src="https://suppliers.catalonia.com/detail/apli-paper-sau/672",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="Stationery & Office Supplies", name="Distribuidora Universal S.L. (DUNSA Group)", web="",
+         country="Spain", city="La Garriga (Barcelona)", addr="C/ Josep Maria Sert 17-3, 08530 La Garriga", phone="+34 938 71 80 64", email="",
+         stype="Manufacturer / brand owner", brands="INSTANT, PLAYCOLOR", segment="School & office supplies",
+         moq="On request", req="Distributors & direct customers (40+ countries)", uk="Ask",
+         legit="Creativeworld 2025 (Messe Frankfurt) exhibitor; family-run manufacturer", amazon="Playcolor solid paint sticks suit the kids crafts category",
+         verified="Trade fair exhibitor listing", pri=3, notes="", src="https://creativeworld.messefrankfurt.com/frankfurt/en/exhibitor-search.detail.html/distribuidora-universal-sl.html",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="Stationery & Office Supplies", name="Bi-silque - Produtos de Comunicação Visual, S.A.", web="",
+         country="Portugal", city="Esmoriz (Ovar)", addr="Rua Cais da Estação 340, 3885-528 Esmoriz", phone="+351 256 750 120", email="",
+         stype="Manufacturer / brand owner", brands="Bi-Office whiteboards, noticeboards, flipcharts", segment="Visual communication / office",
+         moq="On request", req="Office dealers & distributors (80+ countries)", uk="Yes - Bi-Office is sold in UK",
+         legit="Portuguese registry (NIF 500924902); Paperworld Middle East exhibitor", amazon="Whiteboards & cork boards sell well; large boards are oversize",
+         verified="Company registry (eInforma) + trade fair", pri=4, notes="", src="https://www.einforma.pt/servlet/app/portal/ENTP/prod/ETIQUETA_EMPRESA/nif/500924902",
+         amzsell="Unknown", dropship="Unknown", regid="NIF 500924902"),
+]
+
+# Batch 11: Greece
+SUPPLIERS_EU4 += [
+    dict(cat="Beauty", name="KORRES S.A. Natural Products", web="https://www.korres.com",
+         country="Greece", city="Athens (Metamorfosi)", addr="3 Drosini & Tatoiou St., 144 52 Metamorfosi, Athens", phone="", email="",
+         stype="Brand owner / manufacturer (listed)", brands="KORRES skincare, Greek Yoghurt, Wild Rose, body butters", segment="Natural skincare",
+         moq="Account based", req="Distributors in ~30 markets", uk="Ask - UK distribution exists",
+         legit="Listed on Athens Exchange (Euronext Athens)", amazon="Korres skincare sells well; check brand gating",
+         verified="Stock exchange filings + trade data", pri=4, notes="", src="https://athens.euronext.com/en/node/542840",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="Beauty", name="APIVITA S.A.", web="https://www.apivita.com",
+         country="Greece", city="Markopoulo (Attica)", addr="Industrial Park of Markopoulo, 19003 Markopoulo Mesogaias", phone="+30 210 2856350 (verify)", email="",
+         stype="Brand owner / manufacturer", brands="APIVITA natural skin & hair care (bee/propolis)", segment="Natural pharmacy cosmetics",
+         moq="Account based", req="Distributors; worldwide distribution via PUIG", uk="Ask",
+         legit="Majority owned by PUIG since 2017; EU-funded facility", amazon="Shampoos & face masks have steady demand",
+         verified="Business press + company directory", pri=3, notes="", src="https://www.amna.gr/print/183565",
+         amzsell="Unknown", dropship="Unknown"),
+]
