@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from suppliers_data import SUPPLIERS  # noqa: E402
 from suppliers_eu2 import SUPPLIERS_EU2  # noqa: E402
 from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
+from suppliers_eu4 import SUPPLIERS_EU4  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
@@ -121,9 +122,9 @@ def normalise(s, rnd):
 
 
 rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
-        + [normalise(s, "Round 3") for s in SUPPLIERS_EU3])
-# Country A-Z (pan-European platforms last), then best priority first within each country.
-rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], -s["pri"], s["cat"], s["name"]))
+        + [normalise(s, "Round 3") for s in SUPPLIERS_EU3] + [normalise(s, "Round 4") for s in SUPPLIERS_EU4])
+# Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
+rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
 COUNTRIES = []
 for s_ in rows:
     if s_["country"] not in COUNTRIES:
@@ -148,9 +149,9 @@ r = 5
 ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
-    ("Grouped by country", "The Suppliers tab is now sorted by Country A-Z, then by Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country at a time. Pan-European / online platforms are at the bottom."),
+    ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
+    ("Round 4: quality-filtered EU brands", "Round 4 adds EU-only suppliers that passed a strict quality bar: identifiable company + proof of establishment (trade-fair exhibitor, official registry, years trading or recognised brand) + a usable contact route. Weak / directory-only leads were left out. Round 4 rows are shaded green in the Company column."),
     ("Country Index tab", "Lists every country with supplier counts - click 'Go to' to jump straight to that country's first row."),
-    ("+40 more EU suppliers (Round 3)", "Mostly brand owners and established distributors in Germany, Netherlands, Poland, Belgium, France, Italy, Spain and Czech Republic (e.g. Trixie-style pet brands, goki, small foot, Depesche, Canpol, cosnova, Eveline, GTX/NEO Tools, kwb, Westmark, Beurer). Round 3 rows are shaded green in the Company column."),
     ("Also operates in", "New column showing other countries a supplier covers (the Country column now holds one main country so the grouping works)."),
     ("Keeping your tracker notes", "If you already filled in the tracker in the previous file, copy the yellow columns across by matching the Company name - or send me the old file and I'll merge it."),
 ]:
@@ -160,7 +161,7 @@ r += 1
 ws0.cell(row=r, column=2, value="How to use this workbook").font = H2
 r += 1
 for k, v in [
-    ("1. Suppliers", "The master list, grouped by Country A-Z and then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
+    ("1. Suppliers", "The master list, grouped by Country A-Z, then Category A-Z, then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
     ("1b. Country Index", "Jump to any country's block of suppliers with one click."),
     ("2. Yellow columns", "Your outreach tracker. Status, Method and Account Approved have drop-down lists. 'Suggested Follow-up' fills in automatically (5 working days after Date Contacted) and turns red when overdue."),
     ("3. LinkedIn Outreach", "One-click LinkedIn searches for each company page and its sales / account-manager staff, plus a tracker."),
@@ -254,7 +255,7 @@ for i, s in enumerate(rows, start=1):
         c.border = BORDER
         if col >= TRACK_START:
             c.fill = TRACK_FILL
-    if s["round"] == "Round 3":
+    if s["round"] == "Round 4":
         ws.cell(row=r, column=COLN["Company"]).fill = NEW_FILL
     band = BAND_FILLS[COUNTRIES.index(s["country"]) % 2]
     for nm in ("Country", "ID"):
