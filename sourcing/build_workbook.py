@@ -7,6 +7,7 @@ import sys
 from urllib.parse import quote_plus
 
 from openpyxl import Workbook
+from openpyxl.comments import Comment
 from openpyxl.formatting.rule import CellIsRule, FormulaRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
@@ -14,20 +15,24 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from suppliers_data import SUPPLIERS  # noqa: E402
+from suppliers_eu2 import SUPPLIERS_EU2  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
 FONT = "Arial"
 NAVY = "1F3864"
 HDR_FILL = PatternFill("solid", fgColor=NAVY)
+TRACK_HDR_FILL = PatternFill("solid", fgColor="BF8F00")
 TRACK_FILL = PatternFill("solid", fgColor="FFF2CC")   # yellow = cells for the user to fill in
-SECTION_FILL = PatternFill("solid", fgColor="D9E1F2")
+NEW_FILL = PatternFill("solid", fgColor="E2EFDA")     # green tint = added in round 2
 THIN = Side(style="thin", color="BFBFBF")
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 WRAP = Alignment(wrap_text=True, vertical="top")
 LINK_FONT = Font(name=FONT, size=10, color="0563C1", underline="single")
 BODY = Font(name=FONT, size=10)
 BOLD = Font(name=FONT, size=10, bold=True)
+INPUT_FONT = Font(name=FONT, size=10, color="0000FF")
+LINKED_FONT = Font(name=FONT, size=10, color="008000")
 HDR_FONT = Font(name=FONT, size=10, bold=True, color="FFFFFF")
 TITLE = Font(name=FONT, size=16, bold=True, color=NAVY)
 H2 = Font(name=FONT, size=12, bold=True, color=NAVY)
@@ -35,6 +40,23 @@ H2 = Font(name=FONT, size=12, bold=True, color=NAVY)
 STATUSES = ["Not contacted", "Contacted", "Follow-up sent", "Replied", "Application submitted",
             "Account approved", "Price list received", "First order placed", "Rejected", "Not suitable"]
 METHODS = ["Email", "LinkedIn", "Phone", "Website form", "WhatsApp", "Trade show", "In person"]
+
+# Align round-1 category names with the Amazon niches used in round 2.
+CAT_RENAME = {"Pet": "Pet Supplies", "Baby": "Baby Products", "Toys": "Toys & Games",
+              "Healthcare / Medical": "Health & Personal Care",
+              "Health & Beauty": "Beauty"}
+CAT_OVERRIDE = {  # round-1 "Health & Beauty" entries split into the two niches
+    "CLF Distribution": "Health & Personal Care",
+    "Harrisons Direct (Albert Harrison & Co Ltd)": "Health & Personal Care",
+    "Lexon (UK) Ltd": "Health & Personal Care",
+    "W Pharma Europe": "Health & Personal Care",
+    "Europe Pharma Group B.V.": "Health & Personal Care",
+    "Kinetic Natural Product Distributor (Kinetic Enterprises Ltd)": "Health & Personal Care",
+    "PB Wholesale (Protein Bargain Wholesale)": "Health & Personal Care",
+    "Suma Wholefoods": "Health & Personal Care",
+    "DK Wholesale": "General Wholesale / FMCG",
+    "West Coast Supply Group": "General Wholesale / FMCG",
+}
 
 
 def linkedin_company(name):
@@ -67,8 +89,33 @@ def set_link(cell, url, text=None):
     cell.font = LINK_FONT
 
 
+def para(ws, r, key, text, height=None):
+    ws.cell(row=r, column=2, value=key).font = BOLD
+    ws.cell(row=r, column=2).alignment = WRAP
+    c = ws.cell(row=r, column=3, value=text)
+    c.font = BODY
+    c.alignment = WRAP
+    if height:
+        ws.row_dimensions[r].height = height
+
+
 # --------------------------------------------------------------------------- data prep
-rows = sorted(SUPPLIERS, key=lambda s: (-s["pri"], s["cat"], s["name"]))
+def normalise(s, rnd):
+    s = dict(s)
+    s["cat"] = CAT_OVERRIDE.get(s["name"], CAT_RENAME.get(s["cat"], s["cat"]))
+    s.setdefault("amzsell", "Unknown")
+    s.setdefault("dropship", "Unknown")
+    s.setdefault("regid", "")
+    s["region"] = "UK" if s["country"].startswith("UK") else "EU / Other"
+    s["round"] = rnd
+    return s
+
+
+rows = [normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
+rows.sort(key=lambda s: (-s["pri"], s["cat"], s["name"]))
+CATS = sorted({s["cat"] for s in rows})
+N = len(rows)
+LAST = N + 1
 
 wb = Workbook()
 
@@ -78,26 +125,36 @@ ws0.title = "Start Here"
 ws0.sheet_view.showGridLines = False
 ws0.column_dimensions["A"].width = 3
 ws0.column_dimensions["B"].width = 30
-ws0.column_dimensions["C"].width = 95
-r = 2
-ws0.cell(row=r, column=2, value="Crowsons Distribution - Wholesale Supplier Sourcing List").font = TITLE
+ws0.column_dimensions["C"].width = 100
+ws0.cell(row=2, column=2, value="Crowsons Distribution - Wholesale Supplier Sourcing List").font = TITLE
+ws0.cell(row=3, column=2, value=(
+    f"{N} UK & EU suppliers for Amazon UK wholesale across {len(CATS)} niches. Researched Oct 2026.")).font = BODY
+r = 5
+ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
-ws0.cell(row=r, column=2, value="UK & EU suppliers for Amazon UK wholesale: fragrance, health & beauty, healthcare, toys, pet, baby, FMCG. Researched Oct 2026.").font = BODY
-r += 2
+for k, v in [
+    ("+80 suppliers (EU focus)", "Round 2 adds suppliers in Baby Products, Beauty, DIY & Tools, Health & Personal Care, Home & Kitchen, Pet Supplies, Sports & Outdoors, Stationery & Office and Toys & Games - plus multi-category EU B2B platforms. New rows are shaded green in the Company column and marked 'Round 2' in the Added column."),
+    ("New columns", "Region (UK vs EU), Sells to Online/Amazon Sellers?, Dropship?, Registry ID (Companies House / KRS / VAT / LEI) and Added."),
+    ("Niche Guide tab", "Per niche: Amazon UK gating, compliance you must have, what sells, and live supplier counts."),
+    ("Profit Calculator tab", "Landed cost (incl. EU freight & import duty), Amazon fees, profit, ROI, margin, break-even price and a Buy/Skip verdict."),
+    ("Keeping your tracker notes", "If you already filled in the tracker in the previous file, copy the yellow columns across by matching the Company name - or send me the old file and I'll merge it."),
+]:
+    para(ws0, r, k, v, 32)
+    r += 1
+r += 1
 ws0.cell(row=r, column=2, value="How to use this workbook").font = H2
 r += 1
-steps = [
-    ("1. Suppliers", "The master list. Sorted by Priority (5 = best fit for Amazon). Use the filter arrows to filter by category, country or priority."),
-    ("2. Yellow columns", "Your outreach tracker - fill these in as you go. Status, Method and Account Approved have drop-down lists. 'Suggested Follow-up' fills in automatically (5 working days after Date Contacted) and turns red when overdue."),
-    ("3. LinkedIn Outreach", "One-click LinkedIn searches for each company page and its sales / account-manager staff, plus a tracker. Message templates are on the Templates tab."),
-    ("4. Templates", "Copy-paste first-contact email, follow-up, LinkedIn connection note, LinkedIn message and invoice / ungating request."),
-    ("5. Dashboard", "Live counts of suppliers by category and outreach status (updates automatically from the Suppliers tab)."),
-    ("6. Find More Suppliers", "Directories, registries and trade shows to keep growing the list."),
-    ("7. Due Diligence", "Checklist to confirm a supplier is legitimate BEFORE you send money."),
-]
-for k, v in steps:
-    ws0.cell(row=r, column=2, value=k).font = BOLD
-    c = ws0.cell(row=r, column=3, value=v); c.font = BODY; c.alignment = WRAP
+for k, v in [
+    ("1. Suppliers", "The master list, sorted by Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Region, Country, Priority or Added."),
+    ("2. Yellow columns", "Your outreach tracker. Status, Method and Account Approved have drop-down lists. 'Suggested Follow-up' fills in automatically (5 working days after Date Contacted) and turns red when overdue."),
+    ("3. LinkedIn Outreach", "One-click LinkedIn searches for each company page and its sales / account-manager staff, plus a tracker."),
+    ("4. Niche Guide", "Read before contacting suppliers in a new niche - it lists the compliance documents to ask for."),
+    ("5. Profit Calculator", "Check every product before ordering. Blue cells are inputs; black cells are formulas."),
+    ("6. Templates", "Copy-paste first-contact email, follow-up, LinkedIn notes and invoice / ungating request."),
+    ("7. Dashboard", "Live counts by niche, region and outreach status."),
+    ("8. Find More Suppliers / Due Diligence", "Directories & trade shows to keep growing the list, and a checklist to vet suppliers before paying."),
+]:
+    para(ws0, r, k, v)
     r += 1
 r += 1
 ws0.cell(row=r, column=2, value="Priority score (1-5)").font = H2
@@ -106,141 +163,325 @@ for k, v in [
     ("5", "Established, branded stock, sells to online / Amazon sellers or provides invoices suitable for ungating. Contact first."),
     ("4", "Established and branded, but may have higher MOQs, selective accounts or a narrower range."),
     ("3", "Credible, worth contacting - confirm terms, online-selling policy and invoice details."),
-    ("2", "Lower fit (EU-only focus, pro-only brands, limited info) or larger-scale target for later."),
+    ("2", "Lower fit (territory-limited, pro-only brands, limited info) or larger-scale target for later."),
     ("1", "Low confidence, known red flag, or not suitable for Amazon - kept so you know to avoid / verify."),
 ]:
-    ws0.cell(row=r, column=2, value=k).font = BOLD
-    c = ws0.cell(row=r, column=3, value=v); c.font = BODY; c.alignment = WRAP
+    para(ws0, r, k, v)
     r += 1
 r += 1
 ws0.cell(row=r, column=2, value="Data confidence").font = H2
 r += 1
 for k, v in [
-    ("Official / company website", "Details came from the supplier's own site or an official register (Companies House, MHRA)."),
-    ("Directory / press", "Details came from trade press or business directories - confirm on the company website before relying on them."),
-    ("Marketplace / unverified", "Self-published profile only. Verify company registration (Companies House / KvK / VIES VAT) before engaging."),
-    ("Blank cells", "Information was not publicly available. MOQ is usually only given once a trade account is approved - ask in your first email."),
+    ("Official / company website", "Details came from the supplier's own site or an official register (Companies House, KRS, MHRA, LEI)."),
+    ("Directory / press / trade show", "From trade press, exhibitor lists or business directories - confirm on the company website before relying on them."),
+    ("Marketplace / unverified", "Self-published profile only. Verify registration (Companies House / KvK / KRS / VIES VAT) before engaging."),
+    ("Blank cells", "Not publicly available. MOQs are usually only shared once a trade account is approved - ask in your first email."),
 ]:
-    ws0.cell(row=r, column=2, value=k).font = BOLD
-    c = ws0.cell(row=r, column=3, value=v); c.font = BODY; c.alignment = WRAP
+    para(ws0, r, k, v)
     r += 1
 r += 1
 ws0.cell(row=r, column=2, value="Key Amazon UK considerations").font = H2
 r += 1
 for k, v in [
-    ("Brand / category gating", "Fragrance, beauty, toys (Q4), baby and health have gated brands/categories. Amazon wants invoices from a real wholesaler/distributor (not a retailer) dated within 180 days, showing supplier name, address, phone, website, your business name/address, and 10+ units."),
-    ("Hazmat (fragrance)", "Perfume / aftershave is flammable dangerous goods. You need a Safety Data Sheet (SDS) per product for Amazon's hazmat review - ask suppliers if they provide them."),
-    ("No testers / unboxed", "Amazon does not allow testers or unboxed fragrance. Ask for sealed retail stock only."),
-    ("Online-selling policies", "Some suppliers (e.g. CLF, We.pet, Faire brands) forbid Amazon resale - ask before applying so you don't waste time."),
-    ("EU suppliers after Brexit", "Buying from the EU into the UK means import VAT, possible duty and customs paperwork. Ask EU suppliers for DDP (delivered duty paid) or use a freight forwarder. Toys/cosmetics need UK compliance (UKCA/CE, UK Responsible Person for cosmetics)."),
-    ("Medicines", "GSL medicines need care on Amazon (category approval). Licensed pharma wholesalers may only supply pharmacies."),
+    ("Brand / category gating", "Many brands in fragrance, beauty, toys, baby and health need approval. Amazon wants invoices from a real wholesaler/distributor (not a retailer) dated within 180 days, showing supplier name, address, phone, website, your business details and 10+ units."),
+    ("EU suppliers after Brexit", "Buying from the EU means import VAT, possible duty and customs paperwork. Ask for DDP (delivered duty paid) quotes or use a freight forwarder, and get an EORI number. Use the Profit Calculator's freight & duty columns."),
+    ("UK product compliance", "Cosmetics need a UK Responsible Person + SCPN notification; toys need UKCA/CE marking + EN71; electricals need UK plugs + UKCA/CE. EU-only labelled stock may not be compliant for the UK."),
+    ("Online-selling policies", "Some suppliers forbid Amazon resale (see 'Sells to Online/Amazon Sellers?' column). Ask before applying."),
+    ("Hazmat", "Perfume, aerosols, lithium batteries (power tools) and gas canisters are dangerous goods on Amazon - ask suppliers for Safety Data Sheets."),
 ]:
-    ws0.cell(row=r, column=2, value=k).font = BOLD
-    c = ws0.cell(row=r, column=3, value=v); c.font = BODY; c.alignment = WRAP
-    ws0.row_dimensions[r].height = 42
+    para(ws0, r, k, v, 45)
     r += 1
 r += 1
 ws0.cell(row=r, column=2, value="About LinkedIn outreach").font = H2
 r += 1
-c = ws0.cell(row=r, column=3, value=(
+para(ws0, r, "", (
     "Messages must be sent from your own LinkedIn account. Automation tools break LinkedIn's terms and risk a ban, "
     "so this workbook gives you one-click searches + templates to make manual outreach fast. "
-    "Tip: send ~15-25 connection requests per day, personalise the first line, and follow up after 4-5 working days."))
-c.font = BODY; c.alignment = WRAP
-ws0.row_dimensions[r].height = 45
+    "Tip: send ~15-25 connection requests per day, personalise the first line, and follow up after 4-5 working days."), 45)
 
 # =========================================================================== Suppliers
 ws = wb.create_sheet("Suppliers")
 cols = [
-    ("ID", 6), ("Priority (1-5)", 9), ("Category", 16), ("Company", 30), ("Website", 30), ("Country", 13),
-    ("City / Region", 20), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
+    ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Region", 10), ("Company", 30), ("Website", 30),
+    ("Country", 13), ("City / Region", 20), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
     ("Key Brands / Products", 38), ("Segment", 20), ("MOQ / Min. Order", 22), ("Account Requirements", 28),
-    ("Ships to UK?", 18), ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36),
-    ("Data Confidence", 22), ("Source", 22), ("LinkedIn Company Search", 18),
+    ("Ships to UK?", 18), ("Sells to Online/Amazon Sellers?", 16), ("Dropship?", 11), ("Registry ID", 18),
+    ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36), ("Data Confidence", 22),
+    ("Source", 13), ("LinkedIn Company Search", 15), ("Added", 10),
     # tracker
     ("Status", 18), ("Date Contacted", 13), ("Method", 13), ("Contact Name", 18), ("Response / Notes", 30),
     ("Suggested Follow-up", 13), ("Account Approved?", 12), ("Next Step", 26),
 ]
-TRACK_START = 23
-fills = {i: PatternFill("solid", fgColor="BF8F00") for i in range(TRACK_START, len(cols) + 1)}
-header_row(ws, 1, [c[0] for c in cols], [c[1] for c in cols], fills)
+C = {name: get_column_letter(i) for i, (name, _) in enumerate(cols, start=1)}
+COLN = {name: i for i, (name, _) in enumerate(cols, start=1)}
+TRACK_START = COLN["Status"]
+header_row(ws, 1, [c[0] for c in cols], [c[1] for c in cols],
+           {i: TRACK_HDR_FILL for i in range(TRACK_START, len(cols) + 1)})
 
 for i, s in enumerate(rows, start=1):
     r = i + 1
-    vals = [i, s["pri"], s["cat"], s["name"], None, s["country"], s["city"], s["addr"], s["phone"], s["email"],
-            s["stype"], s["brands"], s["segment"], s["moq"], s["req"], s["uk"], s["legit"], s["amazon"],
-            s["notes"], s["verified"], None, None,
-            "Not contacted", None, None, None, None,
-            f'=IF(X{r}="","",WORKDAY(X{r},5))', None, None]
-    for col, v in enumerate(vals, start=1):
-        c = ws.cell(row=r, column=col, value=v)
+    vals = {
+        "ID": i, "Priority (1-5)": s["pri"], "Category": s["cat"], "Region": s["region"], "Company": s["name"],
+        "Country": s["country"], "City / Region": s["city"], "Address": s["addr"], "Phone": s["phone"],
+        "Email": s["email"], "Supplier Type": s["stype"], "Key Brands / Products": s["brands"],
+        "Segment": s["segment"], "MOQ / Min. Order": s["moq"], "Account Requirements": s["req"],
+        "Ships to UK?": s["uk"], "Sells to Online/Amazon Sellers?": s["amzsell"], "Dropship?": s["dropship"],
+        "Registry ID": s["regid"], "Legitimacy Evidence": s["legit"], "Amazon Fit Notes": s["amazon"],
+        "Notes / Red Flags": s["notes"], "Data Confidence": s["verified"], "Added": s["round"],
+        "Status": "Not contacted",
+        "Suggested Follow-up": f'=IF({C["Date Contacted"]}{r}="","",WORKDAY({C["Date Contacted"]}{r},5))',
+    }
+    for name, col in COLN.items():
+        c = ws.cell(row=r, column=col, value=vals.get(name))
         c.font = BODY
         c.alignment = WRAP
         c.border = BORDER
         if col >= TRACK_START:
             c.fill = TRACK_FILL
-    set_link(ws.cell(row=r, column=5), s["web"])
-    if not s["web"]:
-        ws.cell(row=r, column=5, value="Not confirmed - search company name")
-    set_link(ws.cell(row=r, column=21), s["src"], "Source link")
-    set_link(ws.cell(row=r, column=22), linkedin_company(s["name"]), "Search LinkedIn")
-    ws.cell(row=r, column=2).alignment = Alignment(horizontal="center", vertical="top")
-    ws.cell(row=r, column=24).number_format = "dd/mm/yyyy"
-    ws.cell(row=r, column=28).number_format = "dd/mm/yyyy"
+    if s["round"] == "Round 2":
+        ws.cell(row=r, column=COLN["Company"]).fill = NEW_FILL
+    if s["web"]:
+        set_link(ws.cell(row=r, column=COLN["Website"]), s["web"])
+    else:
+        ws.cell(row=r, column=COLN["Website"], value="Not confirmed - search company name")
+    set_link(ws.cell(row=r, column=COLN["Source"]), s["src"], "Source link")
+    set_link(ws.cell(row=r, column=COLN["LinkedIn Company Search"]), linkedin_company(s["name"]), "Search LinkedIn")
+    ws.cell(row=r, column=COLN["Priority (1-5)"]).alignment = Alignment(horizontal="center", vertical="top")
+    ws.cell(row=r, column=COLN["Date Contacted"]).number_format = "dd/mm/yyyy"
+    ws.cell(row=r, column=COLN["Suggested Follow-up"]).number_format = "dd/mm/yyyy"
 
-last = len(rows) + 1
-ws.freeze_panes = "E2"
-ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{last}"
+ws.freeze_panes = "F2"
+ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{LAST}"
 
-dv_status = DataValidation(type="list", formula1='"' + ",".join(STATUSES) + '"', allow_blank=True)
-dv_method = DataValidation(type="list", formula1='"' + ",".join(METHODS) + '"', allow_blank=True)
-dv_yes = DataValidation(type="list", formula1='"Yes,No,Pending"', allow_blank=True)
-dv_date = DataValidation(type="date", operator="greaterThan", formula1="DATE(2020,1,1)", allow_blank=True)
-for dv, col in [(dv_status, "W"), (dv_method, "Y"), (dv_yes, "AC"), (dv_date, "X")]:
+for formula, col, kind in [
+    ('"' + ",".join(STATUSES) + '"', "Status", "list"),
+    ('"' + ",".join(METHODS) + '"', "Method", "list"),
+    ('"Yes,No,Pending"', "Account Approved?", "list"),
+]:
+    dv = DataValidation(type=kind, formula1=formula, allow_blank=True)
     ws.add_data_validation(dv)
-    dv.add(f"{col}2:{col}{last}")
+    dv.add(f"{C[col]}2:{C[col]}{LAST}")
+dv_date = DataValidation(type="date", operator="greaterThan", formula1="DATE(2020,1,1)", allow_blank=True)
+ws.add_data_validation(dv_date)
+dv_date.add(f'{C["Date Contacted"]}2:{C["Date Contacted"]}{LAST}')
 
-# priority colour scale
-ws.conditional_formatting.add(f"B2:B{last}", CellIsRule(operator="equal", formula=["5"], fill=PatternFill("solid", fgColor="63BE7B")))
-ws.conditional_formatting.add(f"B2:B{last}", CellIsRule(operator="equal", formula=["4"], fill=PatternFill("solid", fgColor="B1D580")))
-ws.conditional_formatting.add(f"B2:B{last}", CellIsRule(operator="equal", formula=["1"], fill=PatternFill("solid", fgColor="F8696B")))
-# overdue follow-up
+P = C["Priority (1-5)"]
+for val, color in [("5", "63BE7B"), ("4", "B1D580"), ("1", "F8696B")]:
+    ws.conditional_formatting.add(f"{P}2:{P}{LAST}", CellIsRule(operator="equal", formula=[val],
+                                                                fill=PatternFill("solid", fgColor=color)))
+FU, ST = C["Suggested Follow-up"], C["Status"]
 ws.conditional_formatting.add(
-    f"AB2:AB{last}",
-    FormulaRule(formula=[f'AND(AB2<>"",AB2<=TODAY(),OR(W2="Contacted",W2="Follow-up sent"))'],
+    f"{FU}2:{FU}{LAST}",
+    FormulaRule(formula=[f'AND({FU}2<>"",{FU}2<=TODAY(),OR({ST}2="Contacted",{ST}2="Follow-up sent"))'],
                 fill=PatternFill("solid", fgColor="F8696B"), font=Font(name=FONT, bold=True, color="FFFFFF")))
-# red-flag notes
+NT, AF, AS = C["Notes / Red Flags"], C["Amazon Fit Notes"], C["Sells to Online/Amazon Sellers?"]
 ws.conditional_formatting.add(
-    f"S2:S{last}",
-    FormulaRule(formula=['OR(ISNUMBER(SEARCH("RED FLAG",S2)),ISNUMBER(SEARCH("NOT SUITABLE",R2)))'],
+    f"{NT}2:{NT}{LAST}",
+    FormulaRule(formula=[f'OR(ISNUMBER(SEARCH("RED FLAG",{NT}2)),ISNUMBER(SEARCH("NOT SUITABLE",{AF}2)))'],
                 fill=PatternFill("solid", fgColor="FCE4D6")))
+ws.conditional_formatting.add(
+    f"{AS}2:{AS}{LAST}",
+    FormulaRule(formula=[f'ISNUMBER(SEARCH("Yes",{AS}2))'], fill=PatternFill("solid", fgColor="C6EFCE")))
+ws.conditional_formatting.add(
+    f"{AS}2:{AS}{LAST}",
+    FormulaRule(formula=[f'ISNUMBER(SEARCH("estrict",{AS}2))'], fill=PatternFill("solid", fgColor="FFC7CE")))
 
 # =========================================================================== LinkedIn Outreach
 wl = wb.create_sheet("LinkedIn Outreach")
-lcols = [("ID", 6), ("Company", 32), ("Category", 16), ("Country", 12), ("Company Page Search", 18),
-         ("Find Sales / Account Managers", 22), ("Person Name", 20), ("Job Title", 20), ("Profile URL", 28),
+lcols = [("ID", 6), ("Company", 32), ("Category", 18), ("Country", 12), ("Company Page Search", 16),
+         ("Find Sales / Account Managers", 20), ("Person Name", 20), ("Job Title", 20), ("Profile URL", 28),
          ("Connection Sent", 12), ("Accepted?", 10), ("Message Sent", 12), ("Reply?", 10), ("Notes", 34)]
 header_row(wl, 1, [c[0] for c in lcols], [c[1] for c in lcols],
-           {i: PatternFill("solid", fgColor="BF8F00") for i in range(7, len(lcols) + 1)})
+           {i: TRACK_HDR_FILL for i in range(7, len(lcols) + 1)})
 for i, s in enumerate(rows, start=1):
     r = i + 1
-    for col, v in enumerate([f"=Suppliers!A{r}", f"=Suppliers!D{r}", f"=Suppliers!C{r}", f"=Suppliers!F{r}"], start=1):
-        c = wl.cell(row=r, column=col, value=v); c.font = Font(name=FONT, size=10, color="008000"); c.border = BORDER; c.alignment = WRAP
+    for col, src in enumerate(["ID", "Company", "Category", "Country"], start=1):
+        c = wl.cell(row=r, column=col, value=f"=Suppliers!{C[src]}{r}")
+        c.font = LINKED_FONT
+        c.border = BORDER
+        c.alignment = WRAP
     set_link(wl.cell(row=r, column=5), linkedin_company(s["name"]), "Company page")
     set_link(wl.cell(row=r, column=6), linkedin_people(s["name"]), "Find people")
     for col in (5, 6):
         wl.cell(row=r, column=col).border = BORDER
     for col in range(7, len(lcols) + 1):
-        c = wl.cell(row=r, column=col); c.fill = TRACK_FILL; c.border = BORDER; c.font = BODY; c.alignment = WRAP
+        c = wl.cell(row=r, column=col)
+        c.fill = TRACK_FILL
+        c.border = BORDER
+        c.font = BODY
+        c.alignment = WRAP
     for col in (10, 12):
         wl.cell(row=r, column=col).number_format = "dd/mm/yyyy"
-llast = len(rows) + 1
 wl.freeze_panes = "C2"
-wl.auto_filter.ref = f"A1:{get_column_letter(len(lcols))}{llast}"
+wl.auto_filter.ref = f"A1:{get_column_letter(len(lcols))}{LAST}"
 dv_yn = DataValidation(type="list", formula1='"Yes,No,Pending"', allow_blank=True)
 wl.add_data_validation(dv_yn)
-dv_yn.add(f"K2:K{llast}")
-dv_yn.add(f"M2:M{llast}")
+dv_yn.add(f"K2:K{LAST}")
+dv_yn.add(f"M2:M{LAST}")
+
+# =========================================================================== Niche Guide
+wn = wb.create_sheet("Niche Guide")
+ncols = [("Niche", 22), ("Suppliers in list", 11), ("Priority 4-5", 10), ("Amazon UK gating (check Seller Central)", 42),
+         ("Compliance / documents to ask for", 46), ("What tends to sell", 40), ("Sourcing tips", 44)]
+header_row(wn, 1, [c[0] for c in ncols], [c[1] for c in ncols])
+NICHE = {
+    "Fragrance": ("Many designer brands are brand-gated. Fragrance is also hazmat (flammable).",
+                  "Safety Data Sheet (SDS) per product for hazmat review; sealed retail stock only (no testers); UK RP on pack.",
+                  "Designer gift sets (Q4), Arabian brands (Lattafa, Armaf), mass fragrance & body sprays.",
+                  "Arabian-brand distributors are often easier to get approved with; ask designer wholesalers for authorised-distributor invoices."),
+    "Beauty": ("Many brands gated; prestige/luxury beauty is the hardest. Some topical products need approval.",
+               "UK Responsible Person + SCPN notification; batch codes & expiry/PAO; INCI ingredients; CPNP for EU stock.",
+               "K-beauty (COSRX, Beauty of Joseon, Anua), derma skincare (CeraVe), mass cosmetics, hair care.",
+               "Counterfeits are common in CeraVe/The Ordinary - insist on authorised-distributor proof. Pro-salon brands usually ban Amazon."),
+    "Health & Personal Care": ("Some brands gated; supplements, OTC medicines and topicals face extra scrutiny.",
+                               "Supplements: label compliance & batch CoA; GSL medicines: MHRA rules; electrical grooming: UKCA/CE.",
+                               "Oral care, shaving, deodorants, vitamins, sports nutrition, first aid.",
+                               "Sports nutrition and first aid are strong for wholesale; check expiry dates for FBA (min. shelf life)."),
+    "Baby Products": ("Category and many brands may need approval; formula, car seats & safety items are high scrutiny.",
+                      "EN/BS safety standards (e.g. EN 14350 feeding, EN 1888 pushchairs), UKCA/CE, age warnings.",
+                      "Feeding bottles, dummies, teethers, nappies, baby toiletries, monitors.",
+                      "Avoid infant formula and car seats until established; feeding & soothers (MAM, Tommee Tippee) are steady sellers."),
+    "Toys & Games": ("Brand-gated (LEGO, Disney, Hasbro, Mattel). Amazon has restricted new sellers in Q4 in past years.",
+                     "UKCA/CE marking, EN71 test reports, age & small-parts warnings, UK importer address on pack.",
+                     "Board games, LEGO-licensed goods, collectibles (Funko), pocket-money toys, licensed character toys.",
+                     "Official UK distributors (A.B. Gee, Wind Designs) give the best invoices; board games via EPN are low-risk."),
+    "Pet Supplies": ("Mostly open; some major brands restricted.",
+                     "Pet food: labelling & expiry; accessories: general product safety.",
+                     "Toys (KONG, Trixie), grooming, beds, treats, cat litter accessories.",
+                     "Trixie sells direct to retailers with a UK warehouse - good first call. Heavy bulky food has high FBA fees."),
+    "Home & Kitchen": ("Largely ungated; some premium brands restricted.",
+                       "Electricals: UKCA/CE + UK plug + WEEE; food-contact materials compliance for kitchenware.",
+                       "Small appliances (Tower, Swan, Kenwood), storage, kitchen gadgets, cookware.",
+                       "Brand owners like RKW (Tower/Swan) supply directly; watch MAP pricing on premium cookware."),
+    "DIY & Tools": ("Mostly ungated; big power-tool brands (DeWalt, Makita, Bosch) are often restricted.",
+                    "Lithium batteries = hazmat (SDS / UN38.3); UKCA/CE for power tools; UK plugs.",
+                    "Hand tools, accessories & consumables, garage/workshop, cordless tool kits.",
+                    "Toolbank is trade-only for resellers; Draper has a stockist programme with brand-direct invoices."),
+    "Sports & Outdoors": ("Mostly ungated; branded apparel/footwear (Nike, adidas) often restricted.",
+                          "Gas canisters & some fuels are hazmat; bike parts safety; fitness equipment weight = high FBA fees.",
+                          "Home fitness accessories, cycling accessories, camping gear, team sports.",
+                          "Small/light items (bike accessories, resistance bands) work best for FBA fees."),
+    "Stationery & Office": ("Largely ungated.",
+                            "Ink/toner: counterfeit risk - originals only from authorised distributors; art materials: toy-safety if for children.",
+                            "Branded pens (Pilot, BIC, Stabilo), notebooks, art supplies, school supplies, labels.",
+                            "Low price points - bundle/multipacks to beat FBA fees."),
+    "General Wholesale / FMCG": ("Grocery may need approval; FMCG brands vary.",
+                                 "Expiry dates (FBA min. remaining shelf life), batch codes.",
+                                 "Household cleaning, toiletries, confectionery, multipacks.",
+                                 "Cash & carry promotions can work for arbitrage-style wholesale; margins are thin."),
+    "B2B Marketplace": ("Depends on brand.", "Ask platform for commercial invoices + compliance docs per product.",
+                        "Branded H&B (Qogita), FMCG (Parallel), general merchandise (BigBuy, zentrada).",
+                        "Fastest way to test a niche with low MOQs; liquidation platforms are not suitable for 'New' Amazon listings."),
+}
+r = 2
+for cat in CATS:
+    g = NICHE.get(cat, ("", "", "", ""))
+    vals = [cat, f'=COUNTIF(Suppliers!${C["Category"]}$2:${C["Category"]}${LAST},A{r})',
+            f'=COUNTIFS(Suppliers!${C["Category"]}$2:${C["Category"]}${LAST},A{r},Suppliers!${P}$2:${P}${LAST},">=4")', *g]
+    for col, v in enumerate(vals, start=1):
+        c = wn.cell(row=r, column=col, value=v)
+        c.font = BOLD if col == 1 else BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    wn.row_dimensions[r].height = 62
+    r += 1
+wn.freeze_panes = "B2"
+wn.cell(row=r + 1, column=1, value=(
+    "Gating rules change often - always confirm in Seller Central (Add a Product > search ASIN > 'Request approval').")).font = Font(name=FONT, size=9, italic=True)
+
+# =========================================================================== Profit Calculator
+wp = wb.create_sheet("Profit Calculator")
+wp.sheet_view.showGridLines = False
+wp.cell(row=1, column=1, value="Profit Calculator - Amazon UK (FBA)").font = TITLE
+wp.cell(row=2, column=1, value="Blue = your inputs. Black = formulas. Assumes you are VAT-registered (input VAT reclaimed, fees shown ex VAT).").font = Font(name=FONT, size=9, italic=True)
+settings = [
+    ("EUR to GBP rate", 0.85, "0.0000", "Placeholder - update to today's rate (e.g. from xe.com) before using."),
+    ("UK VAT rate", 0.20, "0%", "Standard UK VAT rate. Some baby/children's items are zero-rated - adjust per row."),
+    ("Default referral fee", 0.15, "0%", "Typical Amazon UK referral fee; varies by category (check Amazon's fee schedule)."),
+    ("Target ROI", 0.30, "0%", "Your minimum ROI to buy. Change to suit your strategy."),
+]
+for i, (label, val, fmt, note) in enumerate(settings):
+    rr = 4 + i
+    wp.cell(row=rr, column=1, value=label).font = BOLD
+    c = wp.cell(row=rr, column=2, value=val)
+    c.font = INPUT_FONT
+    c.number_format = fmt
+    c.fill = TRACK_FILL
+    c.comment = Comment(note, "Crowsons")
+    wp.cell(row=rr, column=3, value=note).font = Font(name=FONT, size=9, color="595959")
+FX, VAT, REF, ROI = "$B$4", "$B$5", "$B$6", "$B$7"
+
+pcols = [("Product", 26), ("Supplier", 20), ("ASIN", 13), ("Unit cost (supplier ccy, ex VAT)", 13), ("Currency", 9),
+         ("FX to GBP", 9), ("Unit cost £", 10), ("Freight / unit £", 10), ("Import duty %", 9), ("Duty £", 9),
+         ("Prep / other £", 9), ("Landed cost £", 11), ("Sell price inc VAT £", 11), ("VAT rate", 8),
+         ("Sell price ex VAT £", 11), ("Referral %", 9), ("Referral fee £", 10), ("FBA fee £", 9),
+         ("Storage / other fees £", 10), ("Net profit £", 11), ("ROI", 9), ("Margin", 9),
+         ("Break-even price inc VAT £", 12), ("Verdict", 10)]
+HR = 10
+header_row(wp, HR, [c[0] for c in pcols], [c[1] for c in pcols])
+wp.row_dimensions[HR].height = 45
+INPUT_COLS = {"A", "B", "C", "D", "E", "H", "I", "K", "M", "N", "P", "R", "S"}
+examples = [
+    ["Example: Arabian EDP 100ml", "BJUTIP a.s.", "B0EXAMPLE1", 12.50, "EUR", None, None, 0.60, 0.0, None, 0.30,
+     None, 32.99, None, None, None, None, 3.40, 0.15],
+    ["Example: Pet toy (UK supplier)", "Pedigree Wholesale", "B0EXAMPLE2", 4.20, "GBP", None, None, 0.25, 0.0, None, 0.10,
+     None, 12.99, None, None, None, None, 2.90, 0.05],
+]
+FIRST, LASTP = HR + 1, HR + 40
+for r in range(FIRST, LASTP + 1):
+    f = {
+        "F": f'=IF(D{r}="","",IF(E{r}="EUR",{FX},1))',
+        "G": f'=IF(D{r}="","",D{r}*F{r})',
+        "J": f'=IF(D{r}="","",(G{r}+H{r})*I{r})',
+        "L": f'=IF(D{r}="","",G{r}+H{r}+J{r}+K{r})',
+        "N": f'=IF(M{r}="","",{VAT})',
+        "O": f'=IF(M{r}="","",M{r}/(1+N{r}))',
+        "P": f'=IF(M{r}="","",{REF})',
+        "Q": f'=IF(M{r}="","",M{r}*P{r})',
+        "T": f'=IF(OR(D{r}="",M{r}=""),"",O{r}-L{r}-Q{r}-R{r}-S{r})',
+        "U": f'=IF(T{r}="","",IF(L{r}=0,"",T{r}/L{r}))',
+        "V": f'=IF(T{r}="","",T{r}/O{r})',
+        "W": f'=IF(OR(D{r}="",M{r}=""),"",IF((1/(1+N{r})-P{r})<=0,"",(L{r}+R{r}+S{r})/(1/(1+N{r})-P{r})))',
+        "X": f'=IF(U{r}="","",IF(U{r}>={ROI},"BUY","SKIP"))',
+    }
+    ex = examples[r - FIRST] if r - FIRST < len(examples) else None
+    for ci in range(1, len(pcols) + 1):
+        L = get_column_letter(ci)
+        c = wp.cell(row=r, column=ci)
+        if L in f:
+            c.value = f[L]
+            c.font = BODY
+        else:
+            if ex is not None and ex[ci - 1] is not None:
+                c.value = ex[ci - 1]
+            c.font = INPUT_FONT
+            c.fill = TRACK_FILL
+        c.border = BORDER
+        if L in {"D", "G", "H", "J", "K", "L", "M", "O", "Q", "R", "S", "T", "W"}:
+            c.number_format = '£#,##0.00;[Red]-£#,##0.00;-' if L != "D" else '#,##0.00'
+        if L in {"I", "N", "P", "U", "V"}:
+            c.number_format = '0.0%;[Red]-0.0%;-'
+        if L == "F":
+            c.number_format = "0.0000"
+# Rows that use default VAT/referral still let the user overwrite N/P with a value.
+for r in range(FIRST, LASTP + 1):
+    for L in ("N", "P"):
+        wp[f"{L}{r}"].fill = TRACK_FILL
+dv_ccy = DataValidation(type="list", formula1='"GBP,EUR"', allow_blank=True)
+wp.add_data_validation(dv_ccy)
+dv_ccy.add(f"E{FIRST}:E{LASTP}")
+wp.conditional_formatting.add(f"X{FIRST}:X{LASTP}", CellIsRule(operator="equal", formula=['"BUY"'],
+                              fill=PatternFill("solid", fgColor="C6EFCE"), font=Font(name=FONT, bold=True, color="006100")))
+wp.conditional_formatting.add(f"X{FIRST}:X{LASTP}", CellIsRule(operator="equal", formula=['"SKIP"'],
+                              fill=PatternFill("solid", fgColor="FFC7CE"), font=Font(name=FONT, bold=True, color="9C0006")))
+wp.freeze_panes = f"B{FIRST}"
+wp.cell(row=LASTP + 2, column=1, value=(
+    "Notes: rows 11-12 are examples with made-up prices - overwrite them. FBA fee: use Amazon's Revenue Calculator for the ASIN. "
+    "Import duty: look up the commodity code on the UK Trade Tariff (gov.uk/trade-tariff); EU-origin goods may qualify for 0% under the UK-EU TCA with proof of origin. "
+    "VAT & Referral columns default from the settings above - type over them per product if different.")).font = Font(name=FONT, size=9, italic=True)
+wp.merge_cells(start_row=LASTP + 2, start_column=1, end_row=LASTP + 2, end_column=14)
+wp.cell(row=LASTP + 2, column=1).alignment = WRAP
+wp.row_dimensions[LASTP + 2].height = 48
 
 # =========================================================================== Templates
 wt = wb.create_sheet("Templates")
@@ -253,7 +494,7 @@ templates = [
     ("Email 1 - First contact", "Subject: Trade account enquiry - Crowsons Distribution (UK online retailer)",
      "Hi [Name / Sales Team],\n\n"
      "I'm [Your Name], founder of Crowsons Distribution, a UK-registered online retailer (Company No. [xxxx], VAT No. [xxxx]). "
-     "We sell branded [fragrance / health & beauty / toys] to UK customers through our online channels, including Amazon UK.\n\n"
+     "We sell branded [category] to UK customers through our online channels, including Amazon UK.\n\n"
      "We're looking for reliable, long-term suppliers and would like to open a trade account with [Company]. Could you please let me know:\n"
      "  1. Your trade account application process and requirements\n"
      "  2. Minimum order quantity / minimum order value\n"
@@ -262,13 +503,25 @@ templates = [
      "  5. Whether you're happy to supply retailers who sell online / on marketplaces\n\n"
      "We place repeat orders on lines that sell well, and we're happy to start with a test order.\n\n"
      "Kind regards,\n[Your Name]\nCrowsons Distribution\n[Phone] | [Email] | [Website]"),
+    ("Email 1b - EU supplier version", "Subject: Trade account enquiry - UK online retailer (delivery to UK)",
+     "Hello [Name / Sales Team],\n\n"
+     "I'm [Your Name] from Crowsons Distribution, a UK-registered online retailer (Company No. [xxxx], UK VAT No. [xxxx], EORI [GBxxxx]). "
+     "We'd like to open a trade account with [Company] for [category].\n\n"
+     "Could you please share:\n"
+     "  1. Your account requirements and minimum order value\n"
+     "  2. Your price list / stock list\n"
+     "  3. Whether you deliver to the UK - ideally DDP (delivered duty paid) or with export paperwork (commercial invoice, statement of origin)\n"
+     "  4. Whether products are labelled/compliant for the UK market (UK Responsible Person / UKCA where relevant)\n"
+     "  5. Whether you supply retailers selling on online marketplaces\n\n"
+     "Happy to start with a trial order. English is easiest for us, but we can work with a translated message if preferred.\n\n"
+     "Best regards,\n[Your Name]\nCrowsons Distribution\n[Phone] | [Email] | [Website]"),
     ("Email 2 - Follow-up (5 working days)", "Subject: Re: Trade account enquiry - Crowsons Distribution",
      "Hi [Name],\n\nJust following up on my email from [day] about opening a trade account. "
      "We're keen to place an initial order in the next few weeks - is there a price list or application form you could share?\n\n"
      "If there's a better person to speak to, I'd be grateful if you could point me in the right direction.\n\n"
      "Thanks,\n[Your Name]"),
     ("LinkedIn connection note (max 300 chars)", "",
-     "Hi [First name], I run Crowsons Distribution, a UK online retailer of branded [fragrance/beauty/toys]. "
+     "Hi [First name], I run Crowsons Distribution, a UK online retailer of branded [category]. "
      "I'm looking to open trade accounts with established distributors like [Company] and would love to connect."),
     ("LinkedIn message (after they accept)", "",
      "Thanks for connecting, [First name]!\n\n"
@@ -281,16 +534,18 @@ templates = [
      "  - Our company name and address: [Crowsons Distribution, address]\n"
      "  - Invoice date, product names/descriptions and quantities (in units)\n"
      "  - Prices are optional and can be hidden if you prefer\n\n"
-     "If available, could you also send the Safety Data Sheets (SDS) for the fragrance lines?\n\n"
+     "If available, could you also send Safety Data Sheets (SDS) / compliance documents for the products?\n\n"
      "Many thanks,\n[Your Name]"),
 ]
 r = 4
 for title, subj, body in templates:
     wt.cell(row=r, column=2, value=title).font = H2
     if subj:
-        c = wt.cell(row=r, column=3, value=subj); c.font = BOLD
+        wt.cell(row=r, column=3, value=subj).font = BOLD
         r += 1
-    c = wt.cell(row=r, column=3, value=body); c.font = BODY; c.alignment = WRAP
+    c = wt.cell(row=r, column=3, value=body)
+    c.font = BODY
+    c.alignment = WRAP
     c.fill = PatternFill("solid", fgColor="F2F2F2")
     wt.row_dimensions[r].height = max(45, 15 * (body.count("\n") + 2 + len(body) // 110))
     r += 2
@@ -300,106 +555,140 @@ wd = wb.create_sheet("Dashboard")
 wd.sheet_view.showGridLines = False
 wd.column_dimensions["A"].width = 3
 wd.column_dimensions["B"].width = 28
-for col in "CDEFG":
+for col in "CDEFGH":
     wd.column_dimensions[col].width = 14
 wd.cell(row=2, column=2, value="Outreach dashboard").font = TITLE
 wd.cell(row=3, column=2, value="All figures are formulas linked to the Suppliers tab.").font = BODY
 
-rng = f"Suppliers!$C$2:$C${last}"
-st = f"Suppliers!$W$2:$W${last}"
-pr = f"Suppliers!$B$2:$B${last}"
-ap = f"Suppliers!$AC$2:$AC${last}"
-hdr = ["Category", "Suppliers", "Priority 4-5", "Contacted+", "Approved"]
+rng = f'Suppliers!${C["Category"]}$2:${C["Category"]}${LAST}'
+reg = f'Suppliers!${C["Region"]}$2:${C["Region"]}${LAST}'
+st = f'Suppliers!${C["Status"]}$2:${C["Status"]}${LAST}'
+pr = f'Suppliers!${P}$2:${P}${LAST}'
+ap = f'Suppliers!${C["Account Approved?"]}$2:${C["Account Approved?"]}${LAST}'
+hdr = ["Niche", "Suppliers", "UK", "EU / Other", "Priority 4-5", "Contacted+", "Approved"]
 for i, h in enumerate(hdr):
-    c = wd.cell(row=5, column=2 + i, value=h); c.font = HDR_FONT; c.fill = HDR_FILL; c.border = BORDER
-cats = sorted({s["cat"] for s in rows})
+    c = wd.cell(row=5, column=2 + i, value=h)
+    c.font = HDR_FONT
+    c.fill = HDR_FILL
+    c.border = BORDER
 r = 6
-for cat in cats:
-    wd.cell(row=r, column=2, value=cat).font = BODY
+for cat in CATS:
+    wd.cell(row=r, column=2, value=cat)
     wd.cell(row=r, column=3, value=f'=COUNTIF({rng},B{r})')
-    wd.cell(row=r, column=4, value=f'=COUNTIFS({rng},B{r},{pr},">=4")')
-    wd.cell(row=r, column=5, value=f'=COUNTIFS({rng},B{r},{st},"<>Not contacted")')
-    wd.cell(row=r, column=6, value=f'=COUNTIFS({rng},B{r},{ap},"Yes")')
-    for col in range(2, 7):
+    wd.cell(row=r, column=4, value=f'=COUNTIFS({rng},B{r},{reg},"UK")')
+    wd.cell(row=r, column=5, value=f'=COUNTIFS({rng},B{r},{reg},"EU / Other")')
+    wd.cell(row=r, column=6, value=f'=COUNTIFS({rng},B{r},{pr},">=4")')
+    wd.cell(row=r, column=7, value=f'=COUNTIFS({rng},B{r},{st},"<>Not contacted")')
+    wd.cell(row=r, column=8, value=f'=COUNTIFS({rng},B{r},{ap},"Yes")')
+    for col in range(2, 9):
         wd.cell(row=r, column=col).border = BORDER
         wd.cell(row=r, column=col).font = BODY
     r += 1
 wd.cell(row=r, column=2, value="Total").font = BOLD
-for col in range(3, 7):
-    L = get_column_letter(col)
-    c = wd.cell(row=r, column=col, value=f"=SUM({L}6:{L}{r - 1})"); c.font = BOLD; c.border = BORDER
 wd.cell(row=r, column=2).border = BORDER
+for col in range(3, 9):
+    L = get_column_letter(col)
+    c = wd.cell(row=r, column=col, value=f"=SUM({L}6:{L}{r - 1})")
+    c.font = BOLD
+    c.border = BORDER
 
 r += 3
 for i, h in enumerate(["Outreach status", "Count", "% of list"]):
-    c = wd.cell(row=r, column=2 + i, value=h); c.font = HDR_FONT; c.fill = HDR_FILL; c.border = BORDER
+    c = wd.cell(row=r, column=2 + i, value=h)
+    c.font = HDR_FONT
+    c.fill = HDR_FILL
+    c.border = BORDER
 r += 1
-first_status = r
 for s_ in STATUSES:
     wd.cell(row=r, column=2, value=s_).font = BODY
     wd.cell(row=r, column=3, value=f'=COUNTIF({st},B{r})').font = BODY
-    c = wd.cell(row=r, column=4, value=f'=IF(COUNTA({rng})=0,0,C{r}/COUNTA({rng}))'); c.number_format = "0.0%"; c.font = BODY
+    c = wd.cell(row=r, column=4, value=f'=IF(COUNTA({rng})=0,0,C{r}/COUNTA({rng}))')
+    c.number_format = "0.0%"
+    c.font = BODY
     for col in range(2, 5):
         wd.cell(row=r, column=col).border = BORDER
     r += 1
 r += 1
+fu = f'Suppliers!${FU}$2:${FU}${LAST}'
 wd.cell(row=r, column=2, value="Follow-ups overdue").font = BOLD
 wd.cell(row=r, column=3, value=(
-    f'=SUMPRODUCT((Suppliers!$AB$2:$AB${last}<>"")*(Suppliers!$AB$2:$AB${last}<=TODAY())*'
-    f'((Suppliers!$W$2:$W${last}="Contacted")+(Suppliers!$W$2:$W${last}="Follow-up sent")))')).font = BOLD
+    f'=SUMPRODUCT(({fu}<>"")*({fu}<=TODAY())*(({st}="Contacted")+({st}="Follow-up sent")))')).font = BOLD
 
 # =========================================================================== Find More Suppliers
 wf = wb.create_sheet("Find More Suppliers")
-fcols = [("Resource", 32), ("Type", 18), ("Use it for", 60), ("Link", 45)]
+fcols = [("Resource", 34), ("Type", 18), ("Use it for", 62), ("Link", 45)]
 header_row(wf, 1, [c[0] for c in fcols], [c[1] for c in fcols])
 resources = [
     ("Companies House", "UK registry", "Verify any UK supplier: status, address, directors, SIC 46450 = perfume & cosmetics wholesale", "https://find-and-update.company-information.service.gov.uk/"),
     ("EU VIES VAT checker", "EU registry", "Confirm an EU supplier's VAT number is real and active", "https://ec.europa.eu/taxation_customs/vies/"),
-    ("KvK (Netherlands)", "EU registry", "Verify Dutch companies (many EU beauty wholesalers are Dutch)", "https://www.kvk.nl/en/"),
+    ("KvK (Netherlands)", "EU registry", "Verify Dutch companies (many EU wholesalers are Dutch)", "https://www.kvk.nl/en/"),
+    ("KRS / rejestr.io (Poland)", "EU registry", "Verify Polish companies by KRS / NIP number", "https://rejestr.io/"),
+    ("Handelsregister (Germany)", "EU registry", "Verify German companies (also check the website 'Impressum')", "https://www.handelsregister.de/"),
+    ("GLEIF LEI search", "Global registry", "Check a company's Legal Entity Identifier", "https://search.gleif.org/"),
     ("MHRA licence register", "UK regulator", "Check a health/pharma wholesaler holds a wholesale dealer licence", "https://cms.mhra.gov.uk/mhra/wholesale-dealer-licences"),
+    ("UK Trade Tariff", "UK gov tool", "Look up commodity codes & import duty for EU purchases", "https://www.gov.uk/trade-tariff"),
     ("Better Retailing Supplier Directory", "UK directory", "UK wholesalers incl. toys, health & beauty, grocery", "https://supplier-directory.betterretailing.com/"),
-    ("Unitas Wholesale - find a wholesaler", "UK directory", "Independent UK cash & carry / delivered wholesalers", "https://unitaswholesale.co.uk/"),
+    ("Bira supplier directory", "UK directory", "Suppliers to independent retailers (housewares, DIY, toys, gifts)", "https://bira.co.uk/"),
+    ("BHETA (housewares association)", "UK directory", "UK housewares & electrical suppliers", "https://www.bheta.co.uk/"),
     ("Pet Business World trade directory", "UK directory", "Pet wholesalers & distributors", "https://www.petbusinessworld.co.uk/trade-directory/"),
-    ("great.gov.uk Find a Supplier", "UK gov directory", "UK companies listing their export / supply capability", "https://www.great.gov.uk/international/buy-from-the-uk/find-a-supplier/"),
+    ("great.gov.uk Find a Supplier", "UK gov directory", "UK companies listing their supply capability", "https://www.great.gov.uk/international/buy-from-the-uk/find-a-supplier/"),
+    ("trade.gov.pl exporter catalogue", "PL gov directory", "Polish exporters & wholesalers by sector", "https://www.trade.gov.pl/en/"),
+    ("CzechTrade exporters catalogue", "CZ gov directory", "Czech exporters (pet, toys, household)", "https://exporters.czechtrade.cz/en"),
+    ("Enterprise Europe Network partnering", "EU gov directory", "EU companies seeking distributors / buyers", "https://een.ec.europa.eu/partnering-opportunities"),
     ("Europages", "EU directory", "Search EU wholesalers by product & country", "https://www.europages.co.uk/"),
+    ("wer liefert was (wlw)", "DE directory", "German B2B supplier search", "https://www.wlw.de/"),
     ("Kompass", "Global directory", "Company search by NACE code (e.g. 46.45 perfume & cosmetics wholesale)", "https://www.kompass.com/"),
     ("CosmeticIndex - EU distributors", "Beauty directory", "Cosmetic distributors & wholesalers across Europe", "https://www.cosmeticindex.com/~cosmetic-distributors-wholesalers_Europe"),
-    ("Qogita blog - UK & EU H&B suppliers", "Guide", "Lists of health & beauty wholesalers (marketing content, but useful leads)", "https://www.qogita.com/blog/top-10-wholesale-health-beauty-suppliers-in-the-uk-eu/"),
-    ("London Toy Fair (January)", "Trade show", "Meet UK toy distributors - exhibitor list is a ready-made supplier list", "https://www.toyfair.co.uk/"),
+    ("Interzoo exhibitor list (Nuremberg)", "Trade show", "Every major EU pet brand & distributor - exhibitor pages list contacts", "https://www.interzoo.com/en/exhibitors"),
+    ("Zoomark exhibitor catalogue (Bologna)", "Trade show", "Pet suppliers with full contact details", "https://www.zoomark.it/en/"),
+    ("Ambiente (Frankfurt, Feb)", "Trade show", "Housewares, kitchen & home suppliers", "https://ambiente.messefrankfurt.com/"),
+    ("IFA Berlin (Sept)", "Trade show", "Consumer electronics & small appliances wholesalers", "https://www.ifa-berlin.com/"),
+    ("FIBO Cologne (April)", "Trade show", "Fitness & sports nutrition distributors", "https://www.fibo.com/"),
+    ("Eurobike Frankfurt", "Trade show", "Cycling brands & distributors", "https://www.eurobike.com/"),
+    ("Kind + Jugend Cologne", "Trade show", "Baby & nursery brands and distributors", "https://www.kindundjugend.com/"),
+    ("Paperworld / Creativeworld (Frankfurt)", "Trade show", "Stationery, office & art/craft suppliers", "https://creativeworld.messefrankfurt.com/"),
+    ("London Toy Fair (January)", "Trade show", "UK toy distributors - exhibitor list is a ready-made supplier list", "https://www.toyfair.co.uk/"),
     ("Spielwarenmesse Nuremberg (Jan/Feb)", "Trade show", "World's biggest toy fair - EU toy distributors", "https://www.spielwarenmesse.de/"),
     ("Cosmoprof Worldwide Bologna (March)", "Trade show", "Beauty & fragrance brands and distributors", "https://www.cosmoprof.com/"),
-    ("Esxence Milan", "Trade show", "Niche / artistic perfumery brands and distributors", "https://www.esxence.com/"),
     ("Spring Fair Birmingham (Feb)", "Trade show", "UK gifts, toys, beauty & home wholesale", "https://www.springfair.com/"),
     ("Brand 'Where to buy' / 'Trade' pages", "Method", "Go to a brand's UK site and look for 'Stockists', 'Trade' or 'Distributors' to find authorised wholesalers", ""),
-    ("LinkedIn search: 'distributor' + brand", "Method", "e.g. search 'Lattafa distributor UK' or 'Hasbro distributor' and filter by Companies / People", "https://www.linkedin.com/search/results/companies/?keywords=fragrance%20distributor"),
+    ("LinkedIn search: 'distributor' + brand", "Method", "e.g. 'Trixie distributor UK' or 'Hasbro distributor' and filter by Companies / People", "https://www.linkedin.com/search/results/companies/?keywords=distributor"),
 ]
 for i, (a, b, c_, d) in enumerate(resources, start=2):
     for col, v in enumerate([a, b, c_], start=1):
-        cell = wf.cell(row=i, column=col, value=v); cell.font = BODY; cell.alignment = WRAP; cell.border = BORDER
+        cell = wf.cell(row=i, column=col, value=v)
+        cell.font = BODY
+        cell.alignment = WRAP
+        cell.border = BORDER
     set_link(wf.cell(row=i, column=4), d)
     wf.cell(row=i, column=4).border = BORDER
 wf.freeze_panes = "A2"
 
 # =========================================================================== Due Diligence
 wq = wb.create_sheet("Due Diligence")
-qcols = [("Check", 44), ("Why it matters", 60), ("How", 50)]
+qcols = [("Check", 44), ("Why it matters", 60), ("How", 54)]
 header_row(wq, 1, [c[0] for c in qcols], [c[1] for c in qcols])
 checks = [
-    ("Company is registered & active", "Fake wholesalers often use made-up company names", "Companies House (UK), KvK (NL), VIES VAT check (EU)"),
+    ("Company is registered & active", "Fake wholesalers often use made-up company names", "Companies House (UK), KvK (NL), KRS (PL), Handelsregister (DE), VIES VAT check (EU)"),
     ("Physical address matches registry", "A real warehouse/office is a good sign; residential or virtual offices are a warning", "Google Maps Street View + registry address"),
     ("Business email domain (not Gmail/Hotmail)", "Free email addresses are common with scam suppliers", "Ask for a contact on the company domain"),
     ("VAT number on invoices", "Needed for Amazon ungating and your VAT reclaim", "Check the VAT number on HMRC / VIES"),
     ("Brand authorisation (for gated brands)", "Authorised-distributor invoices are the most accepted for Amazon ungating", "Ask: 'Are you an authorised distributor for [brand]? Can you share a letter?'"),
     ("Prices are realistic", "Prices far below other wholesalers suggest counterfeit or grey stock", "Compare to 2-3 other suppliers and the Amazon Buy Box"),
     ("Reviews & reputation", "Past complaints reveal problems", "Trustpilot, Google reviews, UK Business Forums, Amazon seller forums, council / Trading Standards news"),
+    ("Insolvency check", "Suppliers in administration may not deliver or honour returns", "Companies House filing history + The Gazette insolvency notices"),
     ("Safe payment for first order", "Bank transfer to a new supplier is hard to recover", "Start small; use credit card / trade credit where possible; never pay a personal account"),
-    ("Product compliance", "Non-compliant stock gets removed from Amazon", "Fragrance: SDS + UK Responsible Person on pack. Toys: UKCA/CE marks. Cosmetics: CPNP / SCPN registered"),
+    ("UK product compliance", "Non-compliant stock gets removed from Amazon", "Cosmetics: UK RP + SCPN. Toys: UKCA/CE + EN71. Electricals: UK plug + UKCA/CE. Fragrance/batteries: SDS"),
+    ("EU import paperwork", "Missing paperwork = customs delays and surprise charges", "Get EORI; ask for commercial invoice + statement of origin; agree Incoterms (DDP easiest)"),
     ("Online / marketplace selling allowed", "Some suppliers cancel accounts that sell on Amazon", "Ask in your first email"),
-    ("Sealed retail stock (no testers)", "Testers / unboxed fragrance cannot be sold as new on Amazon", "Confirm in writing before ordering"),
+    ("Sealed retail stock (no testers / returns)", "Testers, unboxed or returned goods cannot be sold as new on Amazon", "Confirm in writing before ordering"),
 ]
 for i, row in enumerate(checks, start=2):
     for col, v in enumerate(row, start=1):
-        c = wq.cell(row=i, column=col, value=v); c.font = BODY; c.alignment = WRAP; c.border = BORDER
+        c = wq.cell(row=i, column=col, value=v)
+        c.font = BODY
+        c.alignment = WRAP
+        c.border = BORDER
 
 wb.save(OUT)
-print("saved", OUT, "suppliers:", len(rows))
+print("saved", OUT, "suppliers:", N, "categories:", len(CATS))
