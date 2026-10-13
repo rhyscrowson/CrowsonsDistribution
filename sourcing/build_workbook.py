@@ -18,6 +18,7 @@ from suppliers_data import SUPPLIERS  # noqa: E402
 from suppliers_eu2 import SUPPLIERS_EU2  # noqa: E402
 from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
 from suppliers_eu4 import SUPPLIERS_EU4  # noqa: E402
+from suppliers_eu5 import SUPPLIERS_EU5  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
@@ -29,6 +30,21 @@ TRACK_FILL = PatternFill("solid", fgColor="FFF2CC")   # yellow = cells for the u
 NEW_FILL = PatternFill("solid", fgColor="E2EFDA")     # green tint = added in the latest round
 BAND_FILLS = [PatternFill("solid", fgColor="DDEBF7"), PatternFill("solid", fgColor="FCE4D6")]  # alternate per country
 PAN_EU = "Pan-European / Online"
+LATEST_ROUND = "Round 5"
+# Rough country price level for buying stock (based on EU price-level indices and local
+# manufacturing costs). Low-cost countries usually give the cheapest unit prices on their
+# own home-made brands; "Higher" countries are often still best for big branded distributors.
+COST_TIER = {
+    "Bulgaria": "Low-cost", "Romania": "Low-cost", "Poland": "Low-cost", "Hungary": "Low-cost",
+    "Czech Republic": "Low-cost", "Lithuania": "Low-cost", "Latvia": "Low-cost", "Estonia": "Low-cost",
+    "Slovakia": "Low-cost", "Croatia": "Low-cost", "Slovenia": "Low-cost", "Portugal": "Low-cost",
+    "Greece": "Low-cost",
+    "Spain": "Mid", "Italy": "Mid", "Cyprus": "Mid", "Malta": "Mid",
+    "Germany": "Higher", "France": "Higher", "Netherlands": "Higher", "Belgium": "Higher",
+    "Austria": "Higher", "Ireland": "Higher", "Luxembourg": "Higher", "Denmark": "Higher",
+    "Sweden": "Higher", "Finland": "Higher",
+    "UK": "UK (no import)", "Switzerland": "Higher (non-EU)", PAN_EU: "Varies",
+}
 THIN = Side(style="thin", color="BFBFBF")
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 WRAP = Alignment(wrap_text=True, vertical="top")
@@ -118,11 +134,13 @@ def normalise(s, rnd):
         s["country"], s["also"] = parts[0], ", ".join(p for p in parts[1:] if p != "EU")
     s["region"] = "UK" if s["country"] == "UK" else ("Pan-EU" if s["country"] == PAN_EU else "EU / Europe")
     s["round"] = rnd
+    s["cost"] = COST_TIER.get(s["country"], "Varies")
     return s
 
 
 rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
-        + [normalise(s, "Round 3") for s in SUPPLIERS_EU3] + [normalise(s, "Round 4") for s in SUPPLIERS_EU4])
+        + [normalise(s, "Round 3") for s in SUPPLIERS_EU3] + [normalise(s, "Round 4") for s in SUPPLIERS_EU4]
+        + [normalise(s, "Round 5") for s in SUPPLIERS_EU5])
 # Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
 rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
 COUNTRIES = []
@@ -150,7 +168,9 @@ ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
     ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
-    ("Round 4: quality-filtered EU brands", "Round 4 adds EU-only suppliers that passed a strict quality bar: identifiable company + proof of establishment (trade-fair exhibitor, official registry, years trading or recognised brand) + a usable contact route. Weak / directory-only leads were left out. Round 4 rows are shaded green in the Company column."),
+    ("Round 5: cheapest-country sourcing", "Round 5 targets the EU countries where stock is cheapest to buy - mainly Poland, Czech Republic, Bulgaria, Romania, the Baltics, Portugal and Greece - and their home-grown manufacturers. Most Round 5 suppliers are verified through a government export agency (CzechTrade, Poland's trade.gov.pl, Bulgarian/Lithuanian registries) or a major trade fair, which is the best protection against fake 'wholesalers'. Round 5 rows are shaded green in the Company column."),
+    ("Country Price Level column + Best-Value Countries tab", "Each supplier now shows whether its country is Low-cost, Mid or Higher for buying stock. The new Best-Value Countries tab lists, for every niche, the cheapest EU countries to source from, why, and how many suppliers you already have there."),
+    ("Round 4: quality-filtered EU brands", "Round 4 added EU-only suppliers that passed a strict quality bar: identifiable company + proof of establishment (trade-fair exhibitor, official registry, years trading or recognised brand) + a usable contact route. Weak / directory-only leads were left out."),
     ("Country Index tab", "Lists every country with supplier counts - click 'Go to' to jump straight to that country's first row."),
     ("Also operates in", "New column showing other countries a supplier covers (the Country column now holds one main country so the grouping works)."),
     ("Keeping your tracker notes", "If you already filled in the tracker in the previous file, copy the yellow columns across by matching the Company name - or send me the old file and I'll merge it."),
@@ -220,7 +240,7 @@ para(ws0, r, "", (
 ws = wb.create_sheet("Suppliers")
 cols = [
     ("Country", 14), ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Company", 30), ("Website", 30),
-    ("City / Region", 20), ("Also operates in", 16), ("Region", 10), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
+    ("City / Region", 20), ("Also operates in", 16), ("Region", 10), ("Country Price Level", 12), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
     ("Key Brands / Products", 38), ("Segment", 20), ("MOQ / Min. Order", 22), ("Account Requirements", 28),
     ("Ships to UK?", 18), ("Sells to Online/Amazon Sellers?", 16), ("Dropship?", 11), ("Registry ID", 18),
     ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36), ("Data Confidence", 22),
@@ -238,7 +258,7 @@ header_row(ws, 1, [c[0] for c in cols], [c[1] for c in cols],
 for i, s in enumerate(rows, start=1):
     r = i + 1
     vals = {
-        "ID": i, "Priority (1-5)": s["pri"], "Category": s["cat"], "Region": s["region"], "Company": s["name"],
+        "ID": i, "Priority (1-5)": s["pri"], "Category": s["cat"], "Region": s["region"], "Country Price Level": s["cost"], "Company": s["name"],
         "Country": s["country"], "City / Region": s["city"], "Also operates in": s["also"], "Address": s["addr"], "Phone": s["phone"],
         "Email": s["email"], "Supplier Type": s["stype"], "Key Brands / Products": s["brands"],
         "Segment": s["segment"], "MOQ / Min. Order": s["moq"], "Account Requirements": s["req"],
@@ -255,7 +275,7 @@ for i, s in enumerate(rows, start=1):
         c.border = BORDER
         if col >= TRACK_START:
             c.fill = TRACK_FILL
-    if s["round"] == "Round 4":
+    if s["round"] == LATEST_ROUND:
         ws.cell(row=r, column=COLN["Company"]).fill = NEW_FILL
     band = BAND_FILLS[COUNTRIES.index(s["country"]) % 2]
     for nm in ("Country", "ID"):
@@ -299,6 +319,10 @@ ws.conditional_formatting.add(
     f"{FU}2:{FU}{LAST}",
     FormulaRule(formula=[f'AND({FU}2<>"",{FU}2<=TODAY(),OR({ST}2="Contacted",{ST}2="Follow-up sent"))'],
                 fill=PatternFill("solid", fgColor="F8696B"), font=Font(name=FONT, bold=True, color="FFFFFF")))
+CL = C["Country Price Level"]
+for val, color in [("Low-cost", "C6EFCE"), ("Mid", "FFEB9C")]:
+    ws.conditional_formatting.add(f"{CL}2:{CL}{LAST}", CellIsRule(operator="equal", formula=[f'"{val}"'],
+                                                                  fill=PatternFill("solid", fgColor=color)))
 NT, AF, AS = C["Notes / Red Flags"], C["Amazon Fit Notes"], C["Sells to Online/Amazon Sellers?"]
 ws.conditional_formatting.add(
     f"{NT}2:{NT}{LAST}",
@@ -347,7 +371,8 @@ dv_yn.add(f"M2:M{LAST}")
 # =========================================================================== Niche Guide
 # =========================================================================== Country Index
 wc = wb.create_sheet("Country Index")
-ccols = [("Country", 24), ("Suppliers", 11), ("Priority 4-5", 11), ("Niches covered", 70), ("Jump to list", 14)]
+ccols = [("Country", 24), ("Suppliers", 11), ("Priority 4-5", 11), ("Niches covered", 70), ("Jump to list", 14),
+         ("Price Level", 14)]
 header_row(wc, 1, [c[0] for c in ccols], [c[1] for c in ccols])
 crng = f'Suppliers!${C["Country"]}$2:${C["Country"]}${LAST}'
 cpr = f'Suppliers!${C["Priority (1-5)"]}$2:${C["Priority (1-5)"]}${LAST}'
@@ -366,11 +391,103 @@ for k, country in enumerate(COUNTRIES):
     link.hyperlink = f"#Suppliers!A{first_row}"
     link.font = LINK_FONT
     link.border = BORDER
+    pl = wc.cell(row=r, column=6, value=COST_TIER.get(country, "Varies"))
+    pl.font = BODY
+    pl.border = BORDER
+    if pl.value == "Low-cost":
+        pl.fill = PatternFill("solid", fgColor="C6EFCE")
+    elif pl.value == "Mid":
+        pl.fill = PatternFill("solid", fgColor="FFEB9C")
 tr = len(COUNTRIES) + 2
 wc.cell(row=tr, column=1, value="Total").font = BOLD
 wc.cell(row=tr, column=2, value=f"=SUM(B2:B{tr - 1})").font = BOLD
 wc.cell(row=tr, column=3, value=f"=SUM(C2:C{tr - 1})").font = BOLD
 wc.freeze_panes = "A2"
+
+# =========================================================================== Best-Value Countries
+wv = wb.create_sheet("Best-Value Countries")
+wv.sheet_view.showGridLines = False
+wv.cell(row=1, column=1, value="Where to buy each niche cheapest in the EU").font = TITLE
+wv.cell(row=2, column=1, value=(
+    "Guide only - always compare landed cost (unit price + freight + duty/VAT) in the Profit Calculator. "
+    "Low-cost countries are cheapest for their OWN manufacturers' brands; big international brands are often "
+    "cheapest from large German / Dutch distributors because of volume. 'On your list' counts are live formulas.")).font = BODY
+wv.merge_cells("A2:F2")
+wv.cell(row=2, column=1).alignment = WRAP
+wv.row_dimensions[2].height = 42
+vcols = [("Niche", 22), ("Cheapest EU countries (best first)", 30), ("Why it's cheaper there", 52),
+         ("Good brands / makers to start with", 46), ("On your list: Low-cost countries", 16), ("On your list: total", 12)]
+header_row(wv, 4, [c[0] for c in vcols], [c[1] for c in vcols])
+BEST_VALUE = [
+    ("Baby Products", "Poland, Spain, Lithuania",
+     "Poland is a major nursery-goods producer with low labour costs (bottles, teethers, prams, car seats). Spain has big feeding/soother makers at mid prices.",
+     "Canpol babies, BabyOno, Lionelo, Kinderkraft (PL); Suavinex, Jané (ES)"),
+    ("Beauty", "Poland, Bulgaria, Czech Republic, Romania, Spain",
+     "Poland has one of Europe's largest cosmetics industries with very low unit prices; Bulgaria is cheapest for rose-based products; Czech & Romanian brands are cheap with little UK competition.",
+     "Ziaja, Eveline, Bielenda, Farmona, Delia (PL); Bulgarian Rose, Lema (BG); Dermacol, Manufaktura (CZ); Gerovital (RO)"),
+    ("DIY & Tools", "Poland, Czech Republic, Spain",
+     "Polish tool groups (TOYA/YATO, GTX/NEO, Dedra) import and assemble at scale and sell well below German brand prices.",
+     "TOYA/YATO, GTX Poland, Dedra, Logo-Tools (PL); Bellota, EGA Master (ES)"),
+    ("Fragrance", "Poland, Spain, Netherlands/Germany (distributors)",
+     "Polish & Spanish fragrance houses make cheap 'inspired' and own-brand lines; genuine designer fragrance is usually cheapest from large NL/DE distributors - but check authenticity and invoices carefully.",
+     "Parfum Company (PL); Instituto Español (ES); verified NL/DE distributors only"),
+    ("General Wholesale / FMCG", "Poland, Netherlands, Germany",
+     "Poland for cheap local FMCG; NL/DE for large multi-brand distributors and clearance stock.",
+     "Check Due Diligence tab before any clearance / stock-lot deal"),
+    ("Health & Personal Care", "Poland, Hungary, Czech Republic",
+     "Poland & Hungary are big sports-nutrition producers (Olimp, Trec, BioTechUSA); Czech makers are cheap for oral care & brushes.",
+     "Olimp, Trec (PL); BioTechUSA (HU); Nutrend, Spokar, Alpa (CZ)"),
+    ("Home & Kitchen", "Poland, Czech Republic, Portugal",
+     "Low manufacturing costs for cookware, cleaning tools, kitchen utensils and storage; Portugal is cheap for cookware, ceramics and textiles.",
+     "Gerlach, Konex, Homla (PL); Tescoma, BLEX, Dřevotvar (CZ); Silampos (PT)"),
+    ("Pet Supplies", "Poland, Czech Republic, Spain",
+     "Poland is a major pet food & accessories producer (86-88% of its pet food is exported within the EU); Spanish & Italian accessory makers are mid-priced.",
+     "Dingo, Vitapol, DermaPharm (PL); Funky Dog (CZ); Gaun (ES); Georplast (IT)"),
+    ("Sports & Outdoors", "Poland, Czech Republic, Spain",
+     "Polish fitness/sports accessory brands are cheap and well known in Central Europe; Spain for padel & fitness accessories.",
+     "Spokey, Meteor, Bacha Sport (PL); Softee/Jim Sports (ES)"),
+    ("Stationery & Office", "Poland, Czech Republic, Spain, Portugal",
+     "Local paper & stationery industries with low costs; Spain's APLI & MILAN are cheap for labels and school supplies.",
+     "Interdruk (PL); KOH-I-NOOR (CZ); APLI, MILAN (ES); Bi-silque (PT)"),
+    ("Toys & Games", "Poland, Czech Republic, Spain",
+     "Poland & Czechia make puzzles and board games cheaply in-house (Trefl, Dino); Spain's Ibi/Onil toy cluster for dolls, ride-ons and outdoor toys.",
+     "Trefl, COBI, Wader, Granna (PL); Dino Toys, Albi (CZ); Miniland, Colorbaby, Famosa (ES)"),
+    ("B2B Marketplace", "Varies",
+     "Marketplaces aggregate many sellers - prices vary by seller. Verify each seller's company registration and VAT number.",
+     "See Due Diligence tab"),
+]
+crng_v = f'Suppliers!${C["Category"]}$2:${C["Category"]}${LAST}'
+cl_v = f'Suppliers!${C["Country Price Level"]}$2:${C["Country Price Level"]}${LAST}'
+r = 5
+for niche, ctys, why, brands in BEST_VALUE:
+    if niche not in CATS:
+        continue
+    vals = [niche, ctys, why, brands, f'=COUNTIFS({crng_v},A{r},{cl_v},"Low-cost")', f'=COUNTIF({crng_v},A{r})']
+    for col, v in enumerate(vals, start=1):
+        c = wv.cell(row=r, column=col, value=v)
+        c.font = BOLD if col == 1 else BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    wv.cell(row=r, column=2).fill = PatternFill("solid", fgColor="C6EFCE")
+    wv.row_dimensions[r].height = 58
+    r += 1
+r += 1
+wv.cell(row=r, column=1, value="Avoiding scammers when buying cheap").font = H2
+r += 1
+for tip in [
+    "Prices far below every other quote are the #1 warning sign - genuine low-cost countries are cheaper, not 70% cheaper.",
+    "Check the company on the official register: Poland KRS/CEIDG, Czech ARES/justice.cz, Bulgaria Commercial Register (EIK), Romania ONRC, Lithuania Registrų centras, Spain Registro Mercantil, Portugal NIF. Then check the VAT number on the EU VIES site.",
+    "Prefer suppliers listed by a government export agency (CzechTrade, trade.gov.pl / PAIH, ICEX, AICEP) or exhibiting at major trade fairs - these are noted in the Legitimacy Evidence column.",
+    "Bank details must be in the company's own name and country. Never pay a personal account, crypto, or a 'new' bank account sent by email - phone the supplier on a number from their website to confirm.",
+    "Start with a small test order, ask for an invoice that meets Amazon's requirements, and use a card or escrow-style payment where possible for the first order.",
+]:
+    c = wv.cell(row=r, column=1, value="- " + tip)
+    c.font = BODY
+    c.alignment = WRAP
+    wv.merge_cells(start_row=r, start_column=1, end_row=r, end_column=6)
+    wv.row_dimensions[r].height = 30
+    r += 1
+wv.freeze_panes = "A5"
 
 wn = wb.create_sheet("Niche Guide")
 ncols = [("Niche", 22), ("Suppliers in list", 11), ("Priority 4-5", 10), ("Amazon UK gating (check Seller Central)", 42),
@@ -607,7 +724,7 @@ wd = wb.create_sheet("Dashboard")
 wd.sheet_view.showGridLines = False
 wd.column_dimensions["A"].width = 3
 wd.column_dimensions["B"].width = 28
-for col in "CDEFGH":
+for col in "CDEFGHI":
     wd.column_dimensions[col].width = 14
 wd.cell(row=2, column=2, value="Outreach dashboard").font = TITLE
 wd.cell(row=3, column=2, value="All figures are formulas linked to the Suppliers tab.").font = BODY
@@ -617,7 +734,8 @@ reg = f'Suppliers!${C["Region"]}$2:${C["Region"]}${LAST}'
 st = f'Suppliers!${C["Status"]}$2:${C["Status"]}${LAST}'
 pr = f'Suppliers!${P}$2:${P}${LAST}'
 ap = f'Suppliers!${C["Account Approved?"]}$2:${C["Account Approved?"]}${LAST}'
-hdr = ["Niche", "Suppliers", "UK", "EU / Europe", "Priority 4-5", "Contacted+", "Approved"]
+lc = f'Suppliers!${C["Country Price Level"]}$2:${C["Country Price Level"]}${LAST}'
+hdr = ["Niche", "Suppliers", "UK", "EU / Europe", "Priority 4-5", "Contacted+", "Approved", "Low-cost country"]
 for i, h in enumerate(hdr):
     c = wd.cell(row=5, column=2 + i, value=h)
     c.font = HDR_FONT
@@ -632,13 +750,14 @@ for cat in CATS:
     wd.cell(row=r, column=6, value=f'=COUNTIFS({rng},B{r},{pr},">=4")')
     wd.cell(row=r, column=7, value=f'=COUNTIFS({rng},B{r},{st},"<>Not contacted")')
     wd.cell(row=r, column=8, value=f'=COUNTIFS({rng},B{r},{ap},"Yes")')
-    for col in range(2, 9):
+    wd.cell(row=r, column=9, value=f'=COUNTIFS({rng},B{r},{lc},"Low-cost")')
+    for col in range(2, 10):
         wd.cell(row=r, column=col).border = BORDER
         wd.cell(row=r, column=col).font = BODY
     r += 1
 wd.cell(row=r, column=2, value="Total").font = BOLD
 wd.cell(row=r, column=2).border = BORDER
-for col in range(3, 9):
+for col in range(3, 10):
     L = get_column_letter(col)
     c = wd.cell(row=r, column=col, value=f"=SUM({L}6:{L}{r - 1})")
     c.font = BOLD
