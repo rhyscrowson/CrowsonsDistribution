@@ -34,6 +34,16 @@ UPDATES = {
                                    segment="Oral care & natural cosmetics", req="Products sold in 50+ countries; export sales team",
                                    amazon="Ecodenta toothpastes are cheap, light and repeat-purchase - strong Amazon fit", pri=4),
     "Colorbaby S.L.": dict(regid="CIF B03170578 / LEI 95980020140005590772"),
+    "Olivit Sp. z o.o.": dict(web="https://olivit.pl", city="Poznań", addr="ul. Blacharska 11, 61-006 Poznań"),
+    "Laroy Group (Duvo+)": dict(phone="+32 9 258 13 00 (verify)"),
+    "Creativ Company A/S": dict(city="Holstebro", addr="Rasmus Færchs Vej 23, 7500 Holstebro (verify)", regid="CVR 28692927"),
+    "YAMANN Sp. z o.o.": dict(addr="ul. Polna 1, 55-040 Bielany Wrocławskie"),
+    "Absolut Bikes GmbH": dict(addr="Robert-Bosch-Straße 17, 73760 Ostfildern", phone="+49 711 933 0870 (verify)",
+                               notes="Acquired by investor FIELDS Group; serves 2,500+ bike shops across Europe (B2B e-commerce)"),
+    "PMS International": dict(addr="International House, Cricketers Way, Basildon, Essex SS13 1ST", regid="Companies House 01439694"),
+    "Burton McCall": dict(addr="163 Parker Drive, Leicester LE4 0JP", email="sales@burton-mccall.co.uk", regid="Companies House 02168907"),
+    "West Design Products": dict(addr="West House, Shearway Business Park, Pent Road, Folkestone CT19 4RJ",
+                                 phone="+44 1303 297888 (verify)", regid="Companies House 02723202"),
 }
 # Suppliers dropped after the audit because no verifiable contact route or registry ID could be found.
 REMOVE = {
