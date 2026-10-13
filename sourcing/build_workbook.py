@@ -177,6 +177,9 @@ rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") 
 rows = [s for s in rows if s["name"] not in REMOVE]
 REMOVED = [s for s in rows if s["name"] in SC.FAIL]
 rows = [s for s in rows if s["name"] not in SC.FAIL]
+# Priority 1-2 suppliers go on their own tab so the main list is quality-only.
+LOW = [s for s in rows if s["pri"] <= 2]
+rows = [s for s in rows if s["pri"] >= 3]
 # Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
 rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
 COUNTRIES = []
@@ -204,7 +207,8 @@ ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
     ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
-    ("Anti-scam check (latest)", "Every wholesaler, trader and marketplace was checked against company registers (Companies House, KvK, KRS, ARES, SIREN...), insolvency notices, regulator fines and independent reviews. 24 suppliers failed (liquidation, dissolved, administration, fines, or no evidence the business exists) and were moved to the 'Removed - Failed Check' tab. Every remaining supplier has a 'Scam Check' result: PASS (green), CHECK (yellow - limited public info, verify before paying) or CAUTION (orange - specific risk noted). The Contact First tab now only lists PASS suppliers."),
+    ("Low Priority tab + 2nd scam check", "Priority 1-2 suppliers (weak Amazon fit, marketplaces, retailers, capped after the scam check) have moved off the Suppliers tab to a separate 'Low Priority' tab, so the main list is priority 3-5 only. A second check scanned 2025-26 insolvency notices and EU Safety Gate alerts: Tunturi was removed (parent Accell Group declared bankrupt Aug 2026) and INGLOT and La Rive were flagged CAUTION."),
+    ("Anti-scam check", "Every wholesaler, trader and marketplace was checked against company registers (Companies House, KvK, KRS, ARES, SIREN...), insolvency notices, regulator fines and independent reviews. 25 suppliers failed (liquidation, dissolved, administration, fines, or no evidence the business exists) and were moved to the 'Removed - Failed Check' tab. Every remaining supplier has a 'Scam Check' result: PASS (green), CHECK (yellow - limited public info, verify before paying) or CAUTION (orange - specific risk noted). The Contact First tab now only lists PASS suppliers."),
     ("Quality check", "Every supplier was re-checked: missing phone numbers, emails, addresses and registry IDs were filled in for ~30 suppliers; 3 suppliers with no verifiable contact or registration were removed; websites we could not confirm are now a click-to-search link; and a new 'Contact First' tab lists the best EU suppliers with a direct phone/email, cheapest countries first."),
     ("Round 5: cheapest-country sourcing", "Round 5 targets the EU countries where stock is cheapest to buy - mainly Poland, Czech Republic, Bulgaria, Romania, the Baltics, Portugal and Greece - and their home-grown manufacturers. Most Round 5 suppliers are verified through a government export agency (CzechTrade, Poland's trade.gov.pl, Bulgarian/Lithuanian registries) or a major trade fair, which is the best protection against fake 'wholesalers'. Round 5 rows are shaded green in the Company column."),
     ("Country Price Level column + Best-Value Countries tab", "Each supplier now shows whether its country is Low-cost, Mid or Higher for buying stock. The new Best-Value Countries tab lists, for every niche, the cheapest EU countries to source from, why, and how many suppliers you already have there."),
@@ -220,6 +224,7 @@ ws0.cell(row=r, column=2, value="How to use this workbook").font = H2
 r += 1
 for k, v in [
     ("1. Suppliers", "The master list, grouped by Country A-Z, then Category A-Z, then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
+    ("1a. Low Priority", "Priority 1-2 suppliers kept for reference only - weaker Amazon fit or higher risk. Use only once the main list is worked through."),
     ("1b. Country Index", "Jump to any country's block of suppliers with one click."),
     ("1d. Contact First", "Your shortlist: every priority 4-5 EU supplier with a direct phone/email, cheapest countries first. Start your outreach here."),
     ("1c. Best-Value Countries", "For each niche: the cheapest EU countries to buy from, why, and how many low-cost-country suppliers you already have. Plus anti-scam checks."),
@@ -951,6 +956,42 @@ for i, row in enumerate(checks, start=2):
         c.font = BODY
         c.alignment = WRAP
         c.border = BORDER
+
+# =========================================================================== Low Priority
+wlp = wb.create_sheet("Low Priority", index=wb.sheetnames.index("Suppliers") + 1)
+wlp.cell(row=1, column=1, value="Low Priority suppliers (priority 1-2) - reference only").font = TITLE
+wlp.cell(row=2, column=1, value=(
+    f"{len(LOW)} suppliers moved off the main Suppliers tab: weak Amazon fit, marketplaces/retailers, or capped after the scam check. "
+    "Work the main list first; vet these carefully before paying.")).font = BODY
+wlp.merge_cells("A2:L2")
+wlp.cell(row=2, column=1).alignment = WRAP
+wlp.row_dimensions[2].height = 30
+lcols = [("Country", 14), ("Category", 18), ("Priority", 9), ("Company", 32), ("Website", 30), ("Phone", 18),
+         ("Email", 28), ("Supplier Type", 22), ("Key Brands", 34), ("Why low priority / notes", 50),
+         ("Scam Check", 40), ("Source", 30)]
+header_row(wlp, 4, [c[0] for c in lcols], [c[1] for c in lcols])
+LOW.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
+for k, s_ in enumerate(LOW, start=5):
+    why = "; ".join(x for x in [s_["notes"], s_["amazon"]] if x)
+    vals = [s_["country"], s_["cat"], s_["pri"], s_["name"], None, s_["phone"], s_["email"], s_["stype"],
+            s_["brands"], why, s_["scam"], None]
+    for col, v in enumerate(vals, start=1):
+        c = wlp.cell(row=k, column=col, value=v)
+        c.font = BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    if s_["web"]:
+        set_link(wlp.cell(row=k, column=5), s_["web"])
+    if s_["src"]:
+        set_link(wlp.cell(row=k, column=12), s_["src"])
+    for col in (5, 12):
+        wlp.cell(row=k, column=col).border = BORDER
+    sc = s_["scam"]
+    wlp.cell(row=k, column=11).fill = PatternFill("solid", fgColor=(
+        "C6EFCE" if sc.startswith("PASS") else "FFEB9C" if sc.startswith("CHECK") else "F8CBAD"))
+wlp.freeze_panes = "E5"
+if LOW:
+    wlp.auto_filter.ref = f"A4:L{4 + len(LOW)}"
 
 # =========================================================================== Removed - Failed Check
 wx = wb.create_sheet("Removed - Failed Check")

@@ -32,10 +32,13 @@ FAIL = {
     "Shure Cosmetics (Shure Enterprises UK Ltd)": "Fined ~GBP 23k by Royal Greenwich Council (2025) for selling unapproved perfume.",
     "Filip i S-ka Dromader Sp. j.": "Sanctioned by Poland's UOKiK for non-compliant toys (incl. a 2022 fine) - toy safety risk.",
     "Extrabiuro.pl": "No company, registry entry or reviews found.",
+    "Tunturi New Fitness B.V.": "Parent company Accell Group declared bankrupt (11 Aug 2026); Tunturi brand being sold off - supply and invoices uncertain.",
     "Patner Iberia SL (European Tools)": "Online retail store (ManoMano seller), not a wholesaler; CIF not found - retailer invoices won't support Amazon ungating.",
 }
 
 CAUTION = {
+    "INGLOT Sp. z o.o.": "Genuine brand owner, but in a public dispute with its Spanish distributor Hipercosmo (Sept 2026) - get distribution terms in writing.",
+    "LA RIVE S.A.": "Real manufacturer, but La Rive fragrances were named in an EU Safety Gate alert (May 2025, banned Lilial/BMHCA) - ask for current CPNP + IFRA compliance documents.",
     "Grupo Saphir Parfums": "Large real manufacturer (~EUR 57m turnover) but had a trademark / unfair-competition case brought by Puig - buy own-brand or licensed lines only.",
     "Beautinow B.V.": "Parallel importer; Trustpilot 3.8 but some reports of non-delivery and a suspected counterfeit (2025). Small test order only.",
     "CSP Cosmetics": "Real company (SIREN 904632312, ~EUR 36m revenue) but loss-making with negative equity - avoid large prepayments.",
@@ -126,6 +129,7 @@ PASS = {
 
 # Priority caps applied after the check (risk found -> lower priority).
 PRIORITY_CAP = {
+    "LA RIVE S.A.": 3,
     "Beautinow B.V.": 2,
     "BJUTIP a.s.": 4,
     "CSP Cosmetics": 2,
@@ -166,7 +170,6 @@ WELL_KNOWN = {
     "Mepal B.V.": "Well-known Dutch housewares maker.",
     "Brabantia Export BV": "Brabantia's official export desk.",
     "Beeztees": "Major Dutch pet-accessory brand owner.",
-    "Tunturi New Fitness B.V.": "Tunturi brand owner (heritage Finnish fitness brand).",
     "ALSO Nederland": "Part of ALSO Holding (SIX Swiss Exchange listed IT distributor).",
     "Koninklijke Jumbo B.V. (Jumbo Group)": "Royal Dutch games publisher (since 1853).",
     "Ceba Sp. z o.o. (Ceba Baby)": "Large Polish changing-mat maker; named EU responsible person on major retailers.",
