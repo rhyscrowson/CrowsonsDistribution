@@ -20,6 +20,8 @@ from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
 from suppliers_eu4 import SUPPLIERS_EU4  # noqa: E402
 from suppliers_eu5 import SUPPLIERS_EU5  # noqa: E402
 from supplier_updates import REMOVE, UPDATES  # noqa: E402
+import scam_check as SC  # noqa: E402
+import re  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
@@ -121,6 +123,32 @@ def para(ws, r, key, text, height=None):
 
 
 # --------------------------------------------------------------------------- data prep
+STRONG_EVIDENCE = [
+    (r"stock exchange|euronext|nasdaq|NewConnect|frankfurt-listed|\(listed\)|\bplc\b", "listed company"),
+    (r"CzechTrade|trade\.gov\.pl|government|ICEX|AICEP|ASEPRI", "government export agency / trade body listing"),
+    (r"KRS|IČO|IČ |CIF|NIF|EIK|CUI|CVR|SIREN|LEI|Companies House|KvK|HRB|registry|register|NIP", "company register entry"),
+    (r"exhibitor|Interzoo|Ambiente|Spielwarenmesse|Heimtextil|Zoomark|Kind \+ Jugend|ISPO|Cosmoprof|Toy Fair|FIBO|IFA|Paperworld|Creativeworld|Kids' Time", "major trade-fair exhibitor"),
+    (r"MHRA|WDA|HPRA|wholesale (dealer )?licen", "regulator licence"),
+    (r"subsidiar|group|acquired|owned by|since 19|since 20|founded|established|years", "established brand / group"),
+]
+
+
+def scam_status(s):
+    """Legitimacy check result shown in the 'Scam Check' column."""
+    n = s["name"]
+    if n in SC.CAUTION:
+        return "CAUTION - " + SC.CAUTION[n]
+    if n in SC.PASS:
+        return "PASS (checked) - " + SC.PASS[n]
+    if n in SC.WELL_KNOWN:
+        return "PASS - well-known company: " + SC.WELL_KNOWN[n]
+    txt = " ".join(str(s.get(k, "")) for k in ("legit", "verified", "regid", "stype"))
+    for pat, label in STRONG_EVIDENCE:
+        if re.search(pat, txt, re.I):
+            return "PASS - " + label
+    return "CHECK - limited public info: verify registration & bank details before paying"
+
+
 def normalise(s, rnd):
     s = dict(s)
     s.update(UPDATES.get(s["name"], {}))
@@ -137,6 +165,9 @@ def normalise(s, rnd):
     s["region"] = "UK" if s["country"] == "UK" else ("Pan-EU" if s["country"] == PAN_EU else "EU / Europe")
     s["round"] = rnd
     s["cost"] = COST_TIER.get(s["country"], "Varies")
+    s["scam"] = scam_status(s)
+    if s["name"] in SC.PRIORITY_CAP:
+        s["pri"] = min(s["pri"], SC.PRIORITY_CAP[s["name"]])
     return s
 
 
@@ -144,6 +175,8 @@ rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") 
         + [normalise(s, "Round 3") for s in SUPPLIERS_EU3] + [normalise(s, "Round 4") for s in SUPPLIERS_EU4]
         + [normalise(s, "Round 5") for s in SUPPLIERS_EU5])
 rows = [s for s in rows if s["name"] not in REMOVE]
+REMOVED = [s for s in rows if s["name"] in SC.FAIL]
+rows = [s for s in rows if s["name"] not in SC.FAIL]
 # Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
 rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
 COUNTRIES = []
@@ -171,7 +204,8 @@ ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
     ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
-    ("Quality check (latest)", "Every supplier was re-checked: missing phone numbers, emails, addresses and registry IDs were filled in for ~30 suppliers; 3 suppliers with no verifiable contact or registration were removed; websites we could not confirm are now a click-to-search link; and a new 'Contact First' tab lists the best EU suppliers with a direct phone/email, cheapest countries first."),
+    ("Anti-scam check (latest)", "Every wholesaler, trader and marketplace was checked against company registers (Companies House, KvK, KRS, ARES, SIREN...), insolvency notices, regulator fines and independent reviews. 24 suppliers failed (liquidation, dissolved, administration, fines, or no evidence the business exists) and were moved to the 'Removed - Failed Check' tab. Every remaining supplier has a 'Scam Check' result: PASS (green), CHECK (yellow - limited public info, verify before paying) or CAUTION (orange - specific risk noted). The Contact First tab now only lists PASS suppliers."),
+    ("Quality check", "Every supplier was re-checked: missing phone numbers, emails, addresses and registry IDs were filled in for ~30 suppliers; 3 suppliers with no verifiable contact or registration were removed; websites we could not confirm are now a click-to-search link; and a new 'Contact First' tab lists the best EU suppliers with a direct phone/email, cheapest countries first."),
     ("Round 5: cheapest-country sourcing", "Round 5 targets the EU countries where stock is cheapest to buy - mainly Poland, Czech Republic, Bulgaria, Romania, the Baltics, Portugal and Greece - and their home-grown manufacturers. Most Round 5 suppliers are verified through a government export agency (CzechTrade, Poland's trade.gov.pl, Bulgarian/Lithuanian registries) or a major trade fair, which is the best protection against fake 'wholesalers'. Round 5 rows are shaded green in the Company column."),
     ("Country Price Level column + Best-Value Countries tab", "Each supplier now shows whether its country is Low-cost, Mid or Higher for buying stock. The new Best-Value Countries tab lists, for every niche, the cheapest EU countries to source from, why, and how many suppliers you already have there."),
     ("Round 4: quality-filtered EU brands", "Round 4 added EU-only suppliers that passed a strict quality bar: identifiable company + proof of establishment (trade-fair exhibitor, official registry, years trading or recognised brand) + a usable contact route. Weak / directory-only leads were left out."),
@@ -249,7 +283,7 @@ cols = [
     ("City / Region", 20), ("Also operates in", 16), ("Region", 10), ("Country Price Level", 12), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
     ("Key Brands / Products", 38), ("Segment", 20), ("MOQ / Min. Order", 22), ("Account Requirements", 28),
     ("Ships to UK?", 18), ("Sells to Online/Amazon Sellers?", 16), ("Dropship?", 11), ("Registry ID", 18),
-    ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36), ("Data Confidence", 22),
+    ("Legitimacy Evidence", 34), ("Amazon Fit Notes", 36), ("Notes / Red Flags", 36), ("Data Confidence", 22), ("Scam Check (Oct 2026)", 40),
     ("Source", 13), ("LinkedIn Company Search", 15), ("Added", 10),
     # tracker
     ("Status", 18), ("Date Contacted", 13), ("Method", 13), ("Contact Name", 18), ("Response / Notes", 30),
@@ -270,7 +304,7 @@ for i, s in enumerate(rows, start=1):
         "Segment": s["segment"], "MOQ / Min. Order": s["moq"], "Account Requirements": s["req"],
         "Ships to UK?": s["uk"], "Sells to Online/Amazon Sellers?": s["amzsell"], "Dropship?": s["dropship"],
         "Registry ID": s["regid"], "Legitimacy Evidence": s["legit"], "Amazon Fit Notes": s["amazon"],
-        "Notes / Red Flags": s["notes"], "Data Confidence": s["verified"], "Added": s["round"],
+        "Notes / Red Flags": s["notes"], "Data Confidence": s["verified"], "Scam Check (Oct 2026)": s["scam"], "Added": s["round"],
         "Status": "Not contacted",
         "Suggested Follow-up": f'=IF({C["Date Contacted"]}{r}="","",WORKDAY({C["Date Contacted"]}{r},5))',
     }
@@ -327,6 +361,10 @@ ws.conditional_formatting.add(
     f"{FU}2:{FU}{LAST}",
     FormulaRule(formula=[f'AND({FU}2<>"",{FU}2<=TODAY(),OR({ST}2="Contacted",{ST}2="Follow-up sent"))'],
                 fill=PatternFill("solid", fgColor="F8696B"), font=Font(name=FONT, bold=True, color="FFFFFF")))
+SCK = C["Scam Check (Oct 2026)"]
+for prefix, color in [("PASS", "C6EFCE"), ("CHECK", "FFEB9C"), ("CAUTION", "F8CBAD")]:
+    ws.conditional_formatting.add(f"{SCK}2:{SCK}{LAST}", FormulaRule(
+        formula=[f'LEFT({SCK}2,{len(prefix)})="{prefix}"'], fill=PatternFill("solid", fgColor=color)))
 CL = C["Country Price Level"]
 for val, color in [("Low-cost", "C6EFCE"), ("Mid", "FFEB9C")]:
     ws.conditional_formatting.add(f"{CL}2:{CL}{LAST}", CellIsRule(operator="equal", formula=[f'"{val}"'],
@@ -501,12 +539,12 @@ wv.freeze_panes = "A5"
 # Shortlist: priority 4-5 EU suppliers with a direct phone/email, cheapest countries first.
 TIER_ORDER = {"Low-cost": 0, "Mid": 1, "Higher": 2}
 picks = [(i + 2, s_) for i, s_ in enumerate(rows)
-         if s_["pri"] >= 4 and s_["cost"] in TIER_ORDER and ("@" in s_["email"] or any(ch.isdigit() for ch in s_["phone"]))]
+         if s_["pri"] >= 4 and s_["cost"] in TIER_ORDER and s_["scam"].startswith("PASS") and ("@" in s_["email"] or any(ch.isdigit() for ch in s_["phone"]))]
 picks.sort(key=lambda t: (TIER_ORDER[t[1]["cost"]], t[1]["country"], t[1]["cat"], -t[1]["pri"], t[1]["name"].lower()))
 wk = wb.create_sheet("Contact First")
 wk.cell(row=1, column=1, value="Contact First - best EU suppliers with a direct phone or email").font = TITLE
 wk.cell(row=2, column=1, value=(
-    f"{len(picks)} priority 4-5 EU suppliers that list a phone number or email, ordered cheapest country first "
+    f"{len(picks)} priority 4-5 EU suppliers that passed the scam check and list a phone number or email, ordered cheapest country first "
     "(Low-cost > Mid > Higher), then country and niche. Status updates live from the Suppliers tab - "
     "click 'Open row' to log your outreach there.")).font = BODY
 wk.merge_cells("A2:J2")
@@ -913,6 +951,26 @@ for i, row in enumerate(checks, start=2):
         c.font = BODY
         c.alignment = WRAP
         c.border = BORDER
+
+# =========================================================================== Removed - Failed Check
+wx = wb.create_sheet("Removed - Failed Check")
+wx.cell(row=1, column=1, value="Suppliers removed after the anti-scam check (Oct 2026)").font = TITLE
+wx.cell(row=2, column=1, value=(
+    f"{len(REMOVED)} suppliers were taken off the Suppliers tab because they showed scam warning signs, insolvency, "
+    "regulator fines, or no independent evidence that the business exists. Do NOT order from these.")).font = BODY
+wx.merge_cells("A2:E2")
+wx.cell(row=2, column=1).alignment = WRAP
+wx.row_dimensions[2].height = 30
+xcols = [("Company", 36), ("Country", 16), ("Category", 20), ("Why it failed", 80), ("Website (do not use)", 34)]
+header_row(wx, 4, [c[0] for c in xcols], [c[1] for c in xcols])
+for k, s_ in enumerate(sorted(REMOVED, key=lambda x: (x["country"], x["name"].lower())), start=5):
+    for col, v in enumerate([s_["name"], s_["country"], s_["cat"], SC.FAIL[s_["name"]], s_["web"]], start=1):
+        c = wx.cell(row=k, column=col, value=v)
+        c.font = BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    wx.cell(row=k, column=4).fill = PatternFill("solid", fgColor="FCE4D6")
+wx.freeze_panes = "A5"
 
 wb.save(OUT)
 print("saved", OUT, "suppliers:", N, "categories:", len(CATS))
