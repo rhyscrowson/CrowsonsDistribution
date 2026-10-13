@@ -518,3 +518,58 @@ SUPPLIERS_EU5 += [
          verified="Company registry (Scoris) + press", pri=3, notes="Made a small loss in 2024", src="https://scoris.lt/en/imone/120536985",
          amzsell="Unknown", dropship="Unknown", regid="Code 120536985 / VAT LT205369811"),
 ]
+
+SUPPLIERS_EU5 += [
+    dict(cat="Home & Kitchen", name="Guardini S.p.A.", web="http://www.guardini.com",
+         country="Italy", city="Volpiano (Turin)", addr="Via Cravero 9, 10088 Volpiano (TO)", phone="+39 011 995 2890", email="",
+         stype="Manufacturer / brand owner", brands="Guardini bakeware, cake tins, baking trays, muffin pans", segment="Bakeware",
+         moq="On request", req="Distributors worldwide; also private label (PLMA exhibitor)", uk="Ask",
+         legit="Ambiente 2025/2026 & PLMA Amsterdam exhibitor; ICE (Italian Trade Agency) listing", amazon="Non-stick bakeware sells all year; Q4 baking peak",
+         verified="Trade fair listings + Italian trade agency", pri=4, notes="", src="https://ambiente.messefrankfurt.com/frankfurt/en/exhibitor-search.detail.html/guardini-spa/mf_1_0010424340_4081532_10000001202501.html",
+         amzsell="Unknown", dropship="Unknown"),
+]
+
+# Batch 12: Poland - supplements & toys
+# (Excluded: Castor / Castorland puzzles - producer partnership listed 'w likwidacji' (in liquidation);
+#  Hencz Toys - UOKiK toy-safety proceedings, no current contact.)
+SUPPLIERS_EU5 += [
+    dict(cat="Health & Personal Care", name="SFD S.A. (Allnutrition)", web="",
+         country="Poland", city="Opole", addr="ul. Głogowska 41, 45-315 Opole", phone="", email="",
+         stype="Brand owner / manufacturer (listed)", brands="SFD Nutrition, Allnutrition, Alldeynn, FitKing, NutLove", segment="Sports nutrition & healthy food",
+         moq="Account based", req="Sells to foreign wholesale buyers; 20+ European countries", uk="Ask",
+         legit="Listed on Warsaw Stock Exchange (NewConnect, ticker SFD); KRS 0000373427; ~300 staff", amazon="Protein, creatine & peanut butters at Polish prices; supplements need Amazon approval",
+         verified="Stock exchange profile + KRS registry", pri=4, notes="", src="https://www.bankier.pl/gielda/notowania/akcje/SFD/podstawowe-dane",
+         amzsell="Unknown", dropship="Unknown", regid="KRS 0000373427"),
+    dict(cat="Health & Personal Care", name="OstroVit Sp. z o.o.", web="",
+         country="Poland", city="Zambrów", addr="ul. Sitarska 16, 18-300 Zambrów", phone="", email="Wholesale-export B2B portal (see website)",
+         stype="Brand owner / manufacturer", brands="OstroVit vitamins, supplements, protein, healthy snacks", segment="Supplements & sports nutrition",
+         moq="Via B2B wholesale portal", req="Separate wholesale-export channel; sold in 40-70 countries", uk="Ask",
+         legit="KRS 0000994529; NIP 7231641151; REGON 523562090; sold via Qogita", amazon="Very cheap vitamins (D3+K2 etc.) - check UK labelling & Amazon approval",
+         verified="KRS registry + wholesale marketplace", pri=4, notes="", src="https://krs-pobierz.pl/ostrovit-spolka-z-ograniczona-odpowiedzialnoscia-i0000994529",
+         amzsell="Unknown", dropship="Unknown", regid="KRS 0000994529 / NIP 7231641151"),
+    dict(cat="Toys & Games", name="MARIOINEX Fabryka Zabawek Marian Suchanek", web="",
+         country="Poland", city="Częstochowa", addr="ul. Bieszczadzka 6/8, 42-226 Częstochowa", phone="+48 34 368 25 06", email="biuro@marioinex.com.pl",
+         stype="Manufacturer", brands="Marioinex Waffle construction blocks, mini waffle, building bricks", segment="Construction toys",
+         moq="On request", req="Wholesale / retail chains (Media Expert)", uk="Ask",
+         legit="Family toy factory since 1986; GPSR contact published (gpsr@marioinex.com.pl)", amazon="Waffle blocks are a cheap LEGO-alternative niche; some items made in China",
+         verified="Retailer GPSR data + employer registry", pri=3, notes="Check country of origin per product", src="https://www.mediaexpert.pl/marioinex",
+         amzsell="Unknown", dropship="Unknown"),
+]
+
+# Batch 13: Spanish baby (ASEPRI - Spanish children's products association / ICEX pavilion members)
+SUPPLIERS_EU5 += [
+    dict(cat="Baby Products", name="R&J Cambrass S.A.", web="",
+         country="Spain", city="Ontinyent (Valencia)", addr="Ontinyent, Valencia", phone="+34 96 291 2965", email="Contact form via ASEPRI brand page",
+         stype="Manufacturer / brand owner", brands="Cambrass baby textiles - cot bedding, sleeping bags, changing bags, muslins", segment="Baby textiles",
+         moq="On request", req="70%+ of production exported to 60+ countries", uk="Ask",
+         legit="ASEPRI member; Kind + Jugend exhibitor (Spanish pavilion, ICEX-backed); since 1984", amazon="Made-in-Spain baby textiles; changing bags & sleeping bags sell well",
+         verified="Trade association + trade fair", pri=4, notes="", src="https://asepri.com/en/brand/cambrass/",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="Baby Products", name="SARO Baby", web="",
+         country="Spain", city="Madrid", addr="Head office Madrid (see ASEPRI showroom)", phone="", email="",
+         stype="Brand owner / distributor", brands="Saro feeding, teethers, pacifiers, bibs, baby grooming, safety, Saro Nature eco line", segment="Baby accessories",
+         moq="On request (stock list available via ASEPRI)", req="Distributors & points of sale in 35+ countries", uk="Ask",
+         legit="ASEPRI member & Kind + Jugend exhibitor; founded 1976", amazon="Broad, cheap baby accessory range - good for bundles",
+         verified="Trade association showroom", pri=3, notes="Get full registered address/CIF before ordering", src="https://asepri.com/en/showroom-saro",
+         amzsell="Unknown", dropship="Unknown"),
+]
