@@ -19,6 +19,7 @@ from suppliers_eu2 import SUPPLIERS_EU2  # noqa: E402
 from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
 from suppliers_eu4 import SUPPLIERS_EU4  # noqa: E402
 from suppliers_eu5 import SUPPLIERS_EU5  # noqa: E402
+from supplier_updates import REMOVE, UPDATES  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
 
@@ -105,7 +106,7 @@ def set_link(cell, url, text=None):
     if not url:
         return
     cell.value = text or url
-    cell.hyperlink = url
+    cell.hyperlink = url.replace(" ", "%20")  # some registry URLs contain spaces
     cell.font = LINK_FONT
 
 
@@ -122,6 +123,7 @@ def para(ws, r, key, text, height=None):
 # --------------------------------------------------------------------------- data prep
 def normalise(s, rnd):
     s = dict(s)
+    s.update(UPDATES.get(s["name"], {}))
     s["cat"] = CAT_OVERRIDE.get(s["name"], CAT_RENAME.get(s["cat"], s["cat"]))
     s.setdefault("amzsell", "Unknown")
     s.setdefault("dropship", "Unknown")
@@ -141,6 +143,7 @@ def normalise(s, rnd):
 rows = ([normalise(s, "Round 1") for s in SUPPLIERS] + [normalise(s, "Round 2") for s in SUPPLIERS_EU2]
         + [normalise(s, "Round 3") for s in SUPPLIERS_EU3] + [normalise(s, "Round 4") for s in SUPPLIERS_EU4]
         + [normalise(s, "Round 5") for s in SUPPLIERS_EU5])
+rows = [s for s in rows if s["name"] not in REMOVE]
 # Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
 rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
 COUNTRIES = []
@@ -183,6 +186,7 @@ r += 1
 for k, v in [
     ("1. Suppliers", "The master list, grouped by Country A-Z, then Category A-Z, then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
     ("1b. Country Index", "Jump to any country's block of suppliers with one click."),
+    ("1d. Contact First", "Your shortlist: every priority 4-5 EU supplier with a direct phone/email, cheapest countries first. Start your outreach here."),
     ("1c. Best-Value Countries", "For each niche: the cheapest EU countries to buy from, why, and how many low-cost-country suppliers you already have. Plus anti-scam checks."),
     ("2. Yellow columns", "Your outreach tracker. Status, Method and Account Approved have drop-down lists. 'Suggested Follow-up' fills in automatically (5 working days after Date Contacted) and turns red when overdue."),
     ("3. LinkedIn Outreach", "One-click LinkedIn searches for each company page and its sales / account-manager staff, plus a tracker."),
@@ -289,7 +293,9 @@ for i, s in enumerate(rows, start=1):
     if s["web"]:
         set_link(ws.cell(row=r, column=COLN["Website"]), s["web"])
     else:
-        ws.cell(row=r, column=COLN["Website"], value="Not confirmed - search company name")
+        set_link(ws.cell(row=r, column=COLN["Website"]),
+                 "https://www.google.com/search?q=" + quote_plus(f'{s["name"]} {s["country"]} official website'),
+                 "Not confirmed - click to search")
     set_link(ws.cell(row=r, column=COLN["Source"]), s["src"], "Source link")
     set_link(ws.cell(row=r, column=COLN["LinkedIn Company Search"]), linkedin_company(s["name"]), "Search LinkedIn")
     ws.cell(row=r, column=COLN["Priority (1-5)"]).alignment = Alignment(horizontal="center", vertical="top")
@@ -489,6 +495,41 @@ for tip in [
     wv.row_dimensions[r].height = 30
     r += 1
 wv.freeze_panes = "A5"
+
+# =========================================================================== Contact First
+# Shortlist: priority 4-5 EU suppliers with a direct phone/email, cheapest countries first.
+TIER_ORDER = {"Low-cost": 0, "Mid": 1, "Higher": 2}
+picks = [(i + 2, s_) for i, s_ in enumerate(rows)
+         if s_["pri"] >= 4 and s_["cost"] in TIER_ORDER and ("@" in s_["email"] or any(ch.isdigit() for ch in s_["phone"]))]
+picks.sort(key=lambda t: (TIER_ORDER[t[1]["cost"]], t[1]["country"], t[1]["cat"], -t[1]["pri"], t[1]["name"].lower()))
+wk = wb.create_sheet("Contact First")
+wk.cell(row=1, column=1, value="Contact First - best EU suppliers with a direct phone or email").font = TITLE
+wk.cell(row=2, column=1, value=(
+    f"{len(picks)} priority 4-5 EU suppliers that list a phone number or email, ordered cheapest country first "
+    "(Low-cost > Mid > Higher), then country and niche. Status updates live from the Suppliers tab - "
+    "click 'Open row' to log your outreach there.")).font = BODY
+wk.merge_cells("A2:J2")
+wk.cell(row=2, column=1).alignment = WRAP
+wk.row_dimensions[2].height = 30
+kcols = [("Price Level", 12), ("Country", 14), ("Category", 20), ("Priority", 8), ("Company", 34), ("Phone", 22),
+         ("Email", 32), ("Key Brands / Products", 44), ("Status (live)", 16), ("Go to", 10)]
+header_row(wk, 4, [c[0] for c in kcols], [c[1] for c in kcols])
+for k, (srow, s_) in enumerate(picks):
+    r = k + 5
+    vals = [s_["cost"], s_["country"], s_["cat"], s_["pri"], s_["name"], s_["phone"], s_["email"], s_["brands"],
+            f'=Suppliers!{C["Status"]}{srow}']
+    for col, v in enumerate(vals, start=1):
+        c = wk.cell(row=r, column=col, value=v)
+        c.font = LINKED_FONT if col == 9 else BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    wk.cell(row=r, column=1).fill = PatternFill("solid", fgColor={"Low-cost": "C6EFCE", "Mid": "FFEB9C"}.get(s_["cost"], "F2F2F2"))
+    link = wk.cell(row=r, column=10, value="Open row >")
+    link.hyperlink = f"#Suppliers!A{srow}"
+    link.font = LINK_FONT
+    link.border = BORDER
+wk.freeze_panes = "F5"
+wk.auto_filter.ref = f"A4:{get_column_letter(len(kcols))}{len(picks) + 4}"
 
 wn = wb.create_sheet("Niche Guide")
 ncols = [("Niche", 22), ("Suppliers in list", 11), ("Priority 4-5", 10), ("Amazon UK gating (check Seller Central)", 42),
