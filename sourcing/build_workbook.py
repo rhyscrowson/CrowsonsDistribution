@@ -20,7 +20,8 @@ from suppliers_eu3 import SUPPLIERS_EU3  # noqa: E402
 from suppliers_eu4 import SUPPLIERS_EU4  # noqa: E402
 from suppliers_eu5 import SUPPLIERS_EU5  # noqa: E402
 from supplier_updates import REMOVE, UPDATES  # noqa: E402
-import scam_check as SC  # noqa: E402
+import scam_check as SC
+from amazon_demand import DEMAND  # noqa: E402
 import re  # noqa: E402
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Crowsons_Wholesale_Suppliers.xlsx")
@@ -166,6 +167,7 @@ def normalise(s, rnd):
     s["round"] = rnd
     s["cost"] = COST_TIER.get(s["country"], "Varies")
     s["scam"] = scam_status(s)
+    s["demand"] = DEMAND.get(s["name"], "C")
     if s["name"] in SC.PRIORITY_CAP:
         s["pri"] = min(s["pri"], SC.PRIORITY_CAP[s["name"]])
     return s
@@ -181,7 +183,8 @@ rows = [s for s in rows if s["name"] not in SC.FAIL]
 LOW = [s for s in rows if s["pri"] <= 2]
 rows = [s for s in rows if s["pri"] >= 3]
 # Country A-Z (pan-European platforms last), then Category A-Z, then best priority first.
-rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], -s["pri"], s["name"].lower()))
+rows.sort(key=lambda s: (s["country"] == PAN_EU, s["country"], s["cat"], s["demand"], -s["pri"], s["name"].lower()))
+DEMAND_LABEL = {"A": "A - Strong (household name)", "B": "B - Moderate", "C": "C - Low / little UK demand"}
 COUNTRIES = []
 for s_ in rows:
     if s_["country"] not in COUNTRIES:
@@ -206,7 +209,8 @@ r = 5
 ws0.cell(row=r, column=2, value="What's new in this version").font = H2
 r += 1
 for k, v in [
-    ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Priority (best first). Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
+    ("Sorted Country > Category > Priority", "The Suppliers tab is sorted by Country A-Z, then Category A-Z within each country, then Amazon UK Demand (A first), then Priority. Country is the first column and each country is shaded in alternating bands, so you can work through one country - and one niche - at a time. Pan-European / online platforms are at the bottom."),
+    ("NEW: Top Picks tab + Amazon UK Demand", "Start with the Top Picks tab: the suppliers whose brands are household names that already sell well on Amazon UK (A-rated). Every supplier now has an 'Amazon UK Demand' rating - A Strong (green), B Moderate (yellow), C Low / little UK demand (grey) - and within each country and niche the A-rated suppliers are listed first. Filter the Suppliers tab on A or B to skip small local brands with little UK demand."),
     ("Low Priority tab + 2nd scam check", "Priority 1-2 suppliers (weak Amazon fit, marketplaces, retailers, capped after the scam check) have moved off the Suppliers tab to a separate 'Low Priority' tab, so the main list is priority 3-5 only. A second check scanned 2025-26 insolvency notices and EU Safety Gate alerts: Tunturi was removed (parent Accell Group declared bankrupt Aug 2026) and INGLOT and La Rive were flagged CAUTION."),
     ("Anti-scam check", "Every wholesaler, trader and marketplace was checked against company registers (Companies House, KvK, KRS, ARES, SIREN...), insolvency notices, regulator fines and independent reviews. 25 suppliers failed (liquidation, dissolved, administration, fines, or no evidence the business exists) and were moved to the 'Removed - Failed Check' tab. Every remaining supplier has a 'Scam Check' result: PASS (green), CHECK (yellow - limited public info, verify before paying) or CAUTION (orange - specific risk noted). The Contact First tab now only lists PASS suppliers."),
     ("Quality check", "Every supplier was re-checked: missing phone numbers, emails, addresses and registry IDs were filled in for ~30 suppliers; 3 suppliers with no verifiable contact or registration were removed; websites we could not confirm are now a click-to-search link; and a new 'Contact First' tab lists the best EU suppliers with a direct phone/email, cheapest countries first."),
@@ -224,6 +228,7 @@ ws0.cell(row=r, column=2, value="How to use this workbook").font = H2
 r += 1
 for k, v in [
     ("1. Suppliers", "The master list, grouped by Country A-Z, then Category A-Z, then Priority (5 = best fit for Amazon). Use the filter arrows to filter by Category, Country, Priority or Added."),
+    ("0. Top Picks", "START HERE: suppliers of brands with proven Amazon UK demand, grouped by niche, with direct contact details and a link to the full row."),
     ("1a. Low Priority", "Priority 1-2 suppliers kept for reference only - weaker Amazon fit or higher risk. Use only once the main list is worked through."),
     ("1b. Country Index", "Jump to any country's block of suppliers with one click."),
     ("1d. Contact First", "Your shortlist: every priority 4-5 EU supplier with a direct phone/email, cheapest countries first. Start your outreach here."),
@@ -284,7 +289,7 @@ para(ws0, r, "", (
 # =========================================================================== Suppliers
 ws = wb.create_sheet("Suppliers")
 cols = [
-    ("Country", 14), ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Company", 30), ("Website", 30),
+    ("Country", 14), ("ID", 6), ("Priority (1-5)", 9), ("Category", 18), ("Company", 30), ("Amazon UK Demand", 16), ("Website", 30),
     ("City / Region", 20), ("Also operates in", 16), ("Region", 10), ("Country Price Level", 12), ("Address", 34), ("Phone", 18), ("Email", 28), ("Supplier Type", 20),
     ("Key Brands / Products", 38), ("Segment", 20), ("MOQ / Min. Order", 22), ("Account Requirements", 28),
     ("Ships to UK?", 18), ("Sells to Online/Amazon Sellers?", 16), ("Dropship?", 11), ("Registry ID", 18),
@@ -304,7 +309,7 @@ for i, s in enumerate(rows, start=1):
     r = i + 1
     vals = {
         "ID": i, "Priority (1-5)": s["pri"], "Category": s["cat"], "Region": s["region"], "Country Price Level": s["cost"], "Company": s["name"],
-        "Country": s["country"], "City / Region": s["city"], "Also operates in": s["also"], "Address": s["addr"], "Phone": s["phone"],
+        "Amazon UK Demand": DEMAND_LABEL[s["demand"]], "Country": s["country"], "City / Region": s["city"], "Also operates in": s["also"], "Address": s["addr"], "Phone": s["phone"],
         "Email": s["email"], "Supplier Type": s["stype"], "Key Brands / Products": s["brands"],
         "Segment": s["segment"], "MOQ / Min. Order": s["moq"], "Account Requirements": s["req"],
         "Ships to UK?": s["uk"], "Sells to Online/Amazon Sellers?": s["amzsell"], "Dropship?": s["dropship"],
@@ -342,7 +347,7 @@ for i, s in enumerate(rows, start=1):
     ws.cell(row=r, column=COLN["Date Contacted"]).number_format = "dd/mm/yyyy"
     ws.cell(row=r, column=COLN["Suggested Follow-up"]).number_format = "dd/mm/yyyy"
 
-ws.freeze_panes = "F2"
+ws.freeze_panes = "G2"
 ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}{LAST}"
 
 for formula, col, kind in [
@@ -370,6 +375,10 @@ SCK = C["Scam Check (Oct 2026)"]
 for prefix, color in [("PASS", "C6EFCE"), ("CHECK", "FFEB9C"), ("CAUTION", "F8CBAD")]:
     ws.conditional_formatting.add(f"{SCK}2:{SCK}{LAST}", FormulaRule(
         formula=[f'LEFT({SCK}2,{len(prefix)})="{prefix}"'], fill=PatternFill("solid", fgColor=color)))
+AD = C["Amazon UK Demand"]
+for prefix, color in [("A", "63BE7B"), ("B", "FFEB9C"), ("C", "D9D9D9")]:
+    ws.conditional_formatting.add(f"{AD}2:{AD}{LAST}", FormulaRule(
+        formula=[f'LEFT({AD}2,1)="{prefix}"'], fill=PatternFill("solid", fgColor=color)))
 CL = C["Country Price Level"]
 for val, color in [("Low-cost", "C6EFCE"), ("Mid", "FFEB9C")]:
     ws.conditional_formatting.add(f"{CL}2:{CL}{LAST}", CellIsRule(operator="equal", formula=[f'"{val}"'],
@@ -956,6 +965,47 @@ for i, row in enumerate(checks, start=2):
         c.font = BODY
         c.alignment = WRAP
         c.border = BORDER
+
+# =========================================================================== Top Picks
+wtp = wb.create_sheet("Top Picks", index=1)
+TOP = [(i + 2, s_) for i, s_ in enumerate(rows) if s_["demand"] == "A"]
+TOP.sort(key=lambda x: (x[1]["cat"], -x[1]["pri"], x[1]["country"], x[1]["name"].lower()))
+wtp.cell(row=1, column=1, value="Top Picks - suppliers of brands that already sell well on Amazon UK").font = TITLE
+wtp.cell(row=2, column=1, value=(
+    f"{len(TOP)} suppliers whose brands are household names with established, well-selling Amazon UK listings - "
+    "so you can join existing listings instead of building demand. Grouped by Category, best priority first. "
+    "Demand is our estimate: check each ASIN on Keepa / SellerAmp (sales rank, number of sellers, Amazon on the listing) "
+    "before ordering, and watch for brand-gated listings.")).font = BODY
+wtp.merge_cells("A2:L2")
+wtp.cell(row=2, column=1).alignment = WRAP
+wtp.row_dimensions[2].height = 45
+tcols = [("Category", 18), ("Priority", 9), ("Company", 32), ("Country", 13), ("Supplier Type", 22),
+         ("Key Brands / Products", 40), ("Amazon Fit Notes", 40), ("Phone", 18), ("Email", 28), ("Website", 28),
+         ("Scam Check", 34), ("Go to row", 11)]
+header_row(wtp, 4, [c[0] for c in tcols], [c[1] for c in tcols])
+for k, (srow, s_) in enumerate(TOP, start=5):
+    vals = [s_["cat"], s_["pri"], s_["name"], s_["country"], s_["stype"], s_["brands"], s_["amazon"],
+            s_["phone"], s_["email"], None, s_["scam"], None]
+    for col, v in enumerate(vals, start=1):
+        c = wtp.cell(row=k, column=col, value=v)
+        c.font = BODY
+        c.alignment = WRAP
+        c.border = BORDER
+    wtp.cell(row=k, column=3).font = BOLD
+    if s_["web"]:
+        set_link(wtp.cell(row=k, column=10), s_["web"])
+    link = wtp.cell(row=k, column=12, value="Go to row")
+    link.hyperlink = f"#Suppliers!A{srow}"
+    link.font = LINK_FONT
+    sc = s_["scam"]
+    wtp.cell(row=k, column=11).fill = PatternFill("solid", fgColor=(
+        "C6EFCE" if sc.startswith("PASS") else "FFEB9C" if sc.startswith("CHECK") else "F8CBAD"))
+    if k == 5 or TOP[k - 6][1]["cat"] != s_["cat"]:
+        for col in range(1, len(tcols) + 1):
+            wtp.cell(row=k, column=col).border = Border(left=THIN, right=THIN, bottom=THIN,
+                                                         top=Side(style="medium", color=NAVY))
+wtp.freeze_panes = "D5"
+wtp.auto_filter.ref = f"A4:L{4 + len(TOP)}"
 
 # =========================================================================== Low Priority
 wlp = wb.create_sheet("Low Priority", index=wb.sheetnames.index("Suppliers") + 1)
