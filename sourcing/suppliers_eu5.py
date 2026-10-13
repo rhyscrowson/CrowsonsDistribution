@@ -573,3 +573,46 @@ SUPPLIERS_EU5 += [
          verified="Trade association showroom", pri=3, notes="Get full registered address/CIF before ordering", src="https://asepri.com/en/showroom-saro",
          amzsell="Unknown", dropship="Unknown"),
 ]
+
+# Batch 14 (quality pass): sports & DIY gap-fill, Czech Republic & Poland
+# (Skipped: Fanar - industrial machine tooling (Sandvik/Seco), poor Amazon fit; RADANSPORT/MERCO - only e-shop address found.)
+SUPPLIERS_EU5 += [
+    dict(cat="DIY & Tools", name="HECHT MOTORS s.r.o.", web="https://en.hecht.cz",
+         country="Czech Republic", city="Prague", addr="Prague 4, Czech Republic (see website)", phone="", email="export@hecht.cz",
+         stype="Brand owner / importer-distributor", brands="HECHT lawn mowers, trimmers, chainsaws, pressure washers, workshop tools, e-scooters", segment="Garden machinery & power tools",
+         moq="On request (export price list)", req="Export dealers; subsidiaries in SK, PL, HU; ~600 staff", uk="Ask - actively expanding export",
+         legit="Brand owner since 1994; largest CZ/SK garden & power-products supplier; publishes English export catalogues", amazon="Battery garden tools & pressure washers sell well; petrol items are hazmat; need UK plugs",
+         verified="Company export catalogues + company site", pri=4, notes="Products largely made in Asia under the Hecht brand - check CE/UKCA documents", src="https://en.hecht.cz/info/about-hecht",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="Sports & Outdoors", name="Sedco s.r.o.", web="",
+         country="Czech Republic", city="Prostějov", addr="Průmyslová 3143/5, 796 01 Prostějov", phone="", email="obchod@sedco.cz",
+         stype="Wholesaler / importer + own brand", brands="Sedco sports & recreation equipment (balls, fitness, rackets, outdoor games)", segment="Sports & recreation wholesale",
+         moq="Trade account", req="Wholesale customers; sells on Decathlon marketplace", uk="Ask",
+         legit="Registered 2000 (EMIS); own warehouse complex in Prostějov; Decathlon marketplace seller (CZ & PL)", amazon="Cheap fitness & garden-game items; check own-brand vs third-party lines",
+         verified="Marketplace seller data + business database", pri=3, notes="", src="https://www.decathlon.pl/mp/seller/sedco-pl/ce40a55e-9425-4578-969c-0599ab87e39c",
+         amzsell="Unknown", dropship="Unknown"),
+    dict(cat="DIY & Tools", name="STALCO S.K.A.", web="https://www.stalco.pl",
+         country="Poland", city="Skawina (Kraków)", addr="ul. Ofiar Katynia 1, 32-050 Skawina", phone="", email="",
+         stype="Brand owner / manufacturer-distributor", brands="Stalco hand & power tools, fasteners, painting accessories, PPE, building chemicals", segment="DIY tools & fixings",
+         moq="On request", req="DIY chains & builders' merchants", uk="Ask",
+         legit="KRS 0000425156; trade.gov.pl listing", amazon="Fixings assortments & hand tools - cheap Polish pricing",
+         verified="KRS registry + government export portal", pri=3, notes="Don't confuse with Stalco-Industries (waste compactors)", src="https://compabase.com/companies/krs/0000425156",
+         amzsell="Unknown", dropship="Unknown", regid="KRS 0000425156"),
+]
+
+SUPPLIERS_EU5 += [
+    dict(cat="Sports & Outdoors", name="Cumulus Sp. z o.o.", web="https://cumulus.equipment",
+         country="Poland", city="Gdynia", addr="ul. Opata Hackiego 19, Gdynia", phone="+48 58 620 94 12", email="",
+         stype="Manufacturer / brand owner", brands="Cumulus down sleeping bags, down jackets, quilts", segment="Camping & bikepacking sleep gear",
+         moq="On request", req="Retail partners in Europe & beyond", uk="Ask",
+         legit="KRS 0000709355; makes in Gdynia; featured by Bikepacking.com", amazon="Premium down bags - higher ticket, lower competition than budget bags",
+         verified="KRS registry + company site + trade press", pri=4, notes="", src="https://compabase.com/companies/krs/0000709355",
+         amzsell="Unknown", dropship="Unknown", regid="KRS 0000709355"),
+    dict(cat="Sports & Outdoors", name="BP Lumen s.r.o.", web="",
+         country="Czech Republic", city="Úpice", addr="Puškinova 546, 542 32 Úpice", phone="", email="",
+         stype="Manufacturer + parts wholesaler", brands="Levit & Qayron bikes/e-bikes; wholesale bicycle parts & accessories; private-label assembly", segment="Bicycle parts & accessories wholesale",
+         moq="On request", req="Exports to 20+ European countries", uk="Ask",
+         legit="CzechTrade listing; IČO 05565375; trading since 1991; 51-250 staff", amazon="Bike parts/accessories wholesale (tubes, tyres, lights) - small items suit FBA",
+         verified="Government export directory", pri=3, notes="E-bikes have lithium batteries (hazmat)", src="https://exporters.czechtrade.gov.cz/bp-lumen-s-r-o",
+         amzsell="Unknown", dropship="Unknown", regid="IČO 05565375"),
+]

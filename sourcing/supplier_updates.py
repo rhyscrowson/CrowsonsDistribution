@@ -17,8 +17,26 @@ UPDATES = {
                                city="Santa Llogaia d'Àlguema (Girona)", addr="Crta. N-IIa km 1.5, 17771 Santa Llogaia d'Àlguema, Girona"),
     "SFD S.A. (Allnutrition)": dict(web="https://sfdsa.pl", phone="+48 77 549 25 00", email="sekretariat@sfd.pl (ask for export / wholesale)"),
     "Plastkon product s.r.o. (Gizmo Riders)": dict(web="http://www.plastkon.cz"),
+    "BLEX, a.s.": dict(addr="Závodu míru 327/4, 360 17 Karlovy Vary", regid="IČO 25247409"),
+    "Dřevotvar družstvo": dict(web="https://www.drevotvar.cz", phone="+420 465 677 111 (sales: +420 465 677 219)",
+                               email="drevotvar@drevotvar.cz", addr="Slezská 535, 561 64 Jablonné nad Orlicí", regid="IČO 00029882"),
+    "Ernesto Grilo Sucessores, Lda.": dict(web="http://www.grilofactory.com", phone="+351 22 762 6830",
+                                          city="Serzedo (Vila Nova de Gaia)", addr="Rua Caminho do Senhor 408, 4410-083 Serzedo, V.N. Gaia",
+                                          notes=""),
+    "RENA - Luís Ferreira & Ferreira, S.A.": dict(phone="+351 22 986 7000", addr="Lugar da Carriça, Lotes 18/19/20, 4745-312 Muro",
+                                                 legit="Ambiente 2025 exhibitor; founded 1997; IAPMEI PME Líder 2024"),
+    "Alumínios Manuel G. Vieira & Filhos, Lda.": dict(addr="Rua do Mergulhão, 3700-627 Cesar", regid="NIF 503905267"),
+    "Pereira & Freitas, Lda.": dict(web="https://www.valentinibianco.com", city="Polvoreira (Guimarães)",
+                                   addr="Rua da Estrada Nacional 105, 4835-164 Polvoreira, Guimarães",
+                                   legit="Heimtextil 2025 exhibitor; since 1974; active LEI 549300WCUQWUDCXVDK62"),
+    "BIOK laboratorija, UAB": dict(web="https://bioklab.com", phone="+370 614 03676 (verify)",
+                                   brands="Ecodenta toothpaste & oral care, Margarita, RASA, BIOK natural cosmetics",
+                                   segment="Oral care & natural cosmetics", req="Products sold in 50+ countries; export sales team",
+                                   amazon="Ecodenta toothpastes are cheap, light and repeat-purchase - strong Amazon fit", pri=4),
+    "Colorbaby S.L.": dict(regid="CIF B03170578 / LEI 95980020140005590772"),
 }
 # Suppliers dropped after the audit because no verifiable contact route or registry ID could be found.
 REMOVE = {
     "JUKO petfood s.r.o.",
+    "SARO Baby",
 }
