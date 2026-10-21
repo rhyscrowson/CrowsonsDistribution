@@ -108,17 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
   document.querySelector('.nav-links').addEventListener('mouseleave', moveIndicator);
 
-  /* ---------- Supply chain builds itself on scroll ---------- */
-  const chain = document.querySelector('.chain');
-  if (chain && 'IntersectionObserver' in window && !prefersReducedMotion) {
-    chain.classList.add('will-build');
-    const chainObserver = new IntersectionObserver((entries) => {
-      if (entries.some(e => e.isIntersecting)) {
-        chain.classList.add('is-built');
-        chainObserver.disconnect();
-      }
-    }, { threshold: 0.35 });
-    chainObserver.observe(chain);
+  /* ---------- Supply chain + partnership lines build on scroll ---------- */
+  if ('IntersectionObserver' in window && !prefersReducedMotion) {
+    document.querySelectorAll('.chain, .merge').forEach(el => {
+      el.classList.add('will-build');
+      const buildObserver = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          el.classList.add('is-built');
+          buildObserver.disconnect();
+        }
+      }, { threshold: 0.35 });
+      buildObserver.observe(el);
+    });
   }
 
   /* ---------- About globe: load and play only while on screen ---------- */
