@@ -335,6 +335,51 @@ h1, h2, h3, h4 {
 
 .globe-svg { width: 100%; height: 100%; opacity: 0.9; }
 
+/* Video background: remove `hero--video` from the section to bring the globe back */
+.hero--video .hero-globe { display: none; }
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--hero-bg) url("../assets/hero/crow-poster.jpg") 70% 40% / cover no-repeat;
+}
+
+.hero-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 40%;
+}
+
+.hero-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 15, 13, 0.85) 0%, rgba(10, 15, 13, 0.6) 38%, rgba(10, 15, 13, 0.18) 68%, rgba(10, 15, 13, 0.35) 100%),
+    linear-gradient(180deg, rgba(31, 111, 168, 0.26) 0%, rgba(31, 111, 168, 0.08) 55%, rgba(10, 15, 13, 0.6) 100%);
+}
+
+.hero--video .feat-card {
+  backdrop-filter: blur(1.5px);
+  background: linear-gradient(160deg, rgba(10, 15, 13, 0.42), rgba(10, 15, 13, 0.22));
+}
+.hero--video .feat-card--glow {
+  background: linear-gradient(160deg, rgba(31, 52, 46, 0.55), rgba(10, 15, 13, 0.25));
+}
+
+@media (max-width: 720px) {
+  .hero-video video { object-position: 82% 30%; }
+  .hero-video { background-position: 82% 30%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-video video { display: none; }
+}
+
 .star { fill: #f3efe4; }
 .star--twinkle { animation: star-twinkle 3.4s ease-in-out infinite; }
 @keyframes star-twinkle {

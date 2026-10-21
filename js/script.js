@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ---------- Hero globe parallax ---------- */
-  const heroGlobe = document.querySelector('.hero-globe');
+  const heroGlobe = document.querySelector('.hero--video .hero-video') || document.querySelector('.hero-globe');
   const heroSection = document.querySelector('.hero');
   if (heroGlobe && heroSection && !prefersReducedMotion) {
     window.addEventListener('scroll', () => {
