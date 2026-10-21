@@ -1003,8 +1003,58 @@ a.who-signature:hover { opacity: 0.75; }
 }
 .chain-tags span { margin: 0 6px; opacity: 0.6; }
 
+/* Numbers fill with blue as the travelling dot reaches them (same 6s cycle) */
+.chain-num { animation: chain-num-fill 6s ease-out infinite; }
+.chain-step:nth-child(1) .chain-num { animation-delay: 0.85s; }
+.chain-step:nth-child(2) .chain-num { animation-delay: 2.85s; }
+.chain-step:nth-child(3) .chain-num { animation-delay: 4.85s; }
+@keyframes chain-num-fill {
+  0% { color: transparent; text-shadow: none; }
+  4% { color: var(--color-accent-blue); text-shadow: 0 0 26px rgba(91, 159, 208, 0.45); }
+  24% { color: transparent; text-shadow: none; }
+  100% { color: transparent; text-shadow: none; }
+}
+
+/* Scroll-in build: the line draws from brand to buyer and each stage appears as it's reached.
+   Hidden states only apply once JS adds .will-build, so the section is always readable without it. */
+.chain.will-build::before {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.chain.will-build.is-built::before { transform: scaleX(1); }
+
+.chain.will-build .chain-end { opacity: 0; transition: opacity 0.6s ease; }
+.chain.will-build .chain-end--finish { transition-delay: 1.7s; }
+.chain.will-build.is-built .chain-end { opacity: 1; }
+
+.chain.will-build .chain-pulse { opacity: 0; transition: opacity 0.5s ease 2s; }
+.chain.will-build.is-built .chain-pulse { opacity: 1; }
+
+.chain-step:nth-child(1) { --d: 0.3s; }
+.chain-step:nth-child(2) { --d: 0.9s; }
+.chain-step:nth-child(3) { --d: 1.5s; }
+
+.chain.will-build .chain-node {
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.45s ease var(--d), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d);
+}
+.chain.will-build .chain-step > :not(.chain-node) {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s var(--ease);
+}
+.chain.will-build .chain-step > :nth-child(2) { transition-delay: calc(var(--d) + 0.1s); }
+.chain.will-build .chain-step > :nth-child(3) { transition-delay: calc(var(--d) + 0.18s); }
+.chain.will-build .chain-step > :nth-child(4) { transition-delay: calc(var(--d) + 0.26s); }
+.chain.will-build .chain-step > :nth-child(5) { transition-delay: calc(var(--d) + 0.34s); }
+.chain.will-build .chain-step > :nth-child(6) { transition-delay: calc(var(--d) + 0.42s); }
+.chain.will-build.is-built .chain-node,
+.chain.will-build.is-built .chain-step > * { opacity: 1; transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
-  .chain-pulse, .chain-node { animation: none; }
+  .chain-pulse, .chain-node, .chain-num { animation: none; }
 }
 
 /* Phones: the chain runs top to bottom */
@@ -1027,6 +1077,9 @@ a.who-signature:hover { opacity: 0.75; }
   .chain-steps { grid-template-columns: 1fr; gap: 44px; }
   .chain-step { text-align: left; align-items: flex-start; padding-left: 82px; }
   .chain-node { position: absolute; left: 0; top: 18px; animation: none; }
+  .chain-num { animation: none; }
+  .chain.will-build::before { transform: scaleY(0); transform-origin: center top; }
+  .chain.will-build.is-built::before { transform: scaleY(1); }
   .chain-num { margin-top: 0; font-size: 64px; }
   .chain-step h3 { font-size: 34px; }
 }

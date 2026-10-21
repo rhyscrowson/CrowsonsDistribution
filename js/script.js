@@ -108,6 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
   document.querySelector('.nav-links').addEventListener('mouseleave', moveIndicator);
 
+  /* ---------- Supply chain builds itself on scroll ---------- */
+  const chain = document.querySelector('.chain');
+  if (chain && 'IntersectionObserver' in window && !prefersReducedMotion) {
+    chain.classList.add('will-build');
+    const chainObserver = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        chain.classList.add('is-built');
+        chainObserver.disconnect();
+      }
+    }, { threshold: 0.35 });
+    chainObserver.observe(chain);
+  }
+
   /* ---------- Scroll reveal ---------- */
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
   const revealObserver = new IntersectionObserver((entries) => {
