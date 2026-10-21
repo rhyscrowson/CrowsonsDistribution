@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Tilt-on-hover cards ---------- */
   if (!prefersReducedMotion) {
-    document.querySelectorAll('.service-card, .pillar, .feat-card').forEach(card => {
+    document.querySelectorAll('.service-card, .pillar').forEach(card => {
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const px = (e.clientX - rect.left) / rect.width - 0.5;
