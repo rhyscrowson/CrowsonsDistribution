@@ -121,6 +121,21 @@ document.addEventListener('DOMContentLoaded', () => {
     chainObserver.observe(chain);
   }
 
+  /* ---------- About globe: load and play only while on screen ---------- */
+  const globeVideo = document.querySelector('.who-globe-video');
+  if (globeVideo && 'IntersectionObserver' in window && !prefersReducedMotion) {
+    new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (globeVideo.preload !== 'auto') { globeVideo.preload = 'auto'; globeVideo.load(); }
+          globeVideo.play().catch(() => {});
+        } else {
+          globeVideo.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' }).observe(globeVideo);
+  }
+
   /* ---------- Scroll reveal ---------- */
   const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
   const revealObserver = new IntersectionObserver((entries) => {
