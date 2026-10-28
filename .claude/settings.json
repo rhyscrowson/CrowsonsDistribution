@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Gmail__send_message",
+      "mcp__Gmail__create_draft",
+      "mcp__Gmail__delete_draft",
+      "mcp__Google-Drive__create_file",
+      "mcp__Google-Drive__trash_file",
+      "mcp__Google_Drive__create_file",
+      "mcp__Google_Drive__trash_file"
+    ]
+  }
+}
