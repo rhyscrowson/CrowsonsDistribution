@@ -61,8 +61,8 @@ exports.handler = async (event) => {
   params.append('mode', 'payment');
 
   const origin = process.env.URL || `https://${event.headers.host}`;
-  params.append('success_url', `${origin}/order-complete.html?paid=1&session_id={CHECKOUT_SESSION_ID}`);
-  params.append('cancel_url', `${origin}/shop.html?basket=open`);
+  params.append('success_url', `${origin}/order-complete.html?paid=1`);
+  params.append('cancel_url', `${origin}/basket.html`);
 
   const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST',

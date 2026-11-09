@@ -1,0 +1,211 @@
+{
+  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). Replace these placeholder products with your real stock. 'image' is optional: put the photo in shop/assets/products/ and set e.g. \"assets/products/mop.jpg\". 'featured': true shows the product under Best sellers on the home page. Set 'stock' to 0 to show 'Sold out'. Add 'compareAt' (the old price) to show the item as on offer.",
+  "currency": "GBP",
+  "shipping": {
+    "standard": 399,
+    "freeOver": 3000
+  },
+  "categories": [
+    {
+      "id": "home-kitchen",
+      "name": "Home & Kitchen",
+      "blurb": "Cookware, storage & cleaning"
+    },
+    {
+      "id": "health-beauty",
+      "name": "Health & Beauty",
+      "blurb": "Grooming, skincare & personal care"
+    },
+    {
+      "id": "toys-games",
+      "name": "Toys & Games",
+      "blurb": "Toys, puzzles & games"
+    },
+    {
+      "id": "pet-supplies",
+      "name": "Pet Supplies",
+      "blurb": "Beds, toys & everyday essentials"
+    }
+  ],
+  "products": [
+    {
+      "id": "hk-001",
+      "name": "Stainless Steel Food Storage Set (5 pcs)",
+      "brand": "Placeholder Brand",
+      "category": "home-kitchen",
+      "price": 2499,
+      "compareAt": 2999,
+      "stock": 24,
+      "description": "Five nesting stainless steel containers with airtight lids. Freezer and dishwasher safe.",
+      "bullets": [
+        "5 sizes, 300ml to 2.4L",
+        "Leak-proof silicone seals",
+        "Dishwasher safe"
+      ],
+      "featured": true
+    },
+    {
+      "id": "hk-002",
+      "name": "Non-Stick Frying Pan 28cm",
+      "brand": "Placeholder Brand",
+      "category": "home-kitchen",
+      "price": 1999,
+      "stock": 15,
+      "description": "Induction-ready aluminium pan with a PFOA-free non-stick coating and soft-touch handle.",
+      "bullets": [
+        "Suitable for all hobs incl. induction",
+        "PFOA-free coating",
+        "Oven safe to 180°C"
+      ]
+    },
+    {
+      "id": "hk-003",
+      "name": "Microfibre Cleaning Cloths (12 pack)",
+      "brand": "Placeholder Brand",
+      "category": "home-kitchen",
+      "price": 899,
+      "stock": 60,
+      "description": "Lint-free, streak-free microfibre cloths for glass, stainless steel and every surface in between.",
+      "bullets": [
+        "30 x 30cm",
+        "Machine washable",
+        "Colour coded"
+      ],
+      "featured": true
+    },
+    {
+      "id": "hb-001",
+      "name": "Electric Beard Trimmer",
+      "brand": "Placeholder Brand",
+      "category": "health-beauty",
+      "price": 2999,
+      "compareAt": 3499,
+      "stock": 12,
+      "description": "Cordless rechargeable trimmer with 20 length settings and a washable head.",
+      "bullets": [
+        "90 minutes runtime",
+        "USB-C charging",
+        "20 length settings"
+      ],
+      "featured": true
+    },
+    {
+      "id": "hb-002",
+      "name": "Hydrating Facial Moisturiser 50ml",
+      "brand": "Placeholder Brand",
+      "category": "health-beauty",
+      "price": 1299,
+      "stock": 30,
+      "description": "Lightweight daily moisturiser with hyaluronic acid. Suitable for all skin types.",
+      "bullets": [
+        "Fragrance free",
+        "Dermatologically tested",
+        "Vegan"
+      ],
+      "featured": true
+    },
+    {
+      "id": "hb-003",
+      "name": "Bamboo Toothbrushes (4 pack)",
+      "brand": "Placeholder Brand",
+      "category": "health-beauty",
+      "price": 649,
+      "stock": 80,
+      "description": "Biodegradable bamboo handles with soft BPA-free bristles.",
+      "bullets": [
+        "Soft bristles",
+        "Plastic-free packaging",
+        "4 colour-coded brushes"
+      ]
+    },
+    {
+      "id": "tg-001",
+      "name": "Wooden Building Blocks (100 pcs)",
+      "brand": "Placeholder Brand",
+      "category": "toys-games",
+      "price": 2299,
+      "stock": 18,
+      "description": "Classic wooden blocks in natural and coloured finishes, supplied in a storage tub.",
+      "bullets": [
+        "Ages 3+",
+        "Water-based paints",
+        "Storage tub included"
+      ],
+      "featured": true
+    },
+    {
+      "id": "tg-002",
+      "name": "1000 Piece Jigsaw Puzzle",
+      "brand": "Placeholder Brand",
+      "category": "toys-games",
+      "price": 1499,
+      "stock": 25,
+      "description": "A detailed 1000-piece puzzle with a poster guide included.",
+      "bullets": [
+        "Finished size 70 x 50cm",
+        "Thick recycled board",
+        "Poster guide included"
+      ],
+      "featured": true
+    },
+    {
+      "id": "tg-003",
+      "name": "Family Card Game",
+      "brand": "Placeholder Brand",
+      "category": "toys-games",
+      "price": 999,
+      "stock": 0,
+      "description": "Fast, easy-to-learn card game for 2 to 6 players.",
+      "bullets": [
+        "Ages 7+",
+        "15 minute games",
+        "2 to 6 players"
+      ]
+    },
+    {
+      "id": "ps-001",
+      "name": "Orthopaedic Dog Bed (Large)",
+      "brand": "Placeholder Brand",
+      "category": "pet-supplies",
+      "price": 3999,
+      "compareAt": 4999,
+      "stock": 8,
+      "description": "Memory foam dog bed with a removable, machine-washable cover.",
+      "bullets": [
+        "90 x 70cm",
+        "Non-slip base",
+        "Washable cover"
+      ],
+      "featured": true
+    },
+    {
+      "id": "ps-002",
+      "name": "Cat Scratching Post",
+      "brand": "Placeholder Brand",
+      "category": "pet-supplies",
+      "price": 1799,
+      "stock": 14,
+      "description": "Sisal-wrapped scratching post with a plush top platform and hanging toy.",
+      "bullets": [
+        "60cm tall",
+        "Weighted base",
+        "Replaceable toy"
+      ],
+      "featured": true
+    },
+    {
+      "id": "ps-003",
+      "name": "Dog Poo Bags (300 bags)",
+      "brand": "Placeholder Brand",
+      "category": "pet-supplies",
+      "price": 799,
+      "stock": 100,
+      "description": "Thick, leak-proof bags on 20 rolls, with a dispenser included.",
+      "bullets": [
+        "20 rolls of 15",
+        "Leak-proof",
+        "Dispenser included"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All products | Crowsons</title>
+<meta name="description" content="Browse every product in the Crowsons shop. Free UK delivery over £30.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Crowsons">
+<meta property="og:title" content="All products | Crowsons">
+<meta property="og:description" content="Browse every product in the Crowsons shop. Free UK delivery over £30.">
+<link rel="icon" type="image/png" href="assets/crow-mark.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1f2a27">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body data-page="products">
+<a href="#main" class="sr-only">Skip to content</a>
+<header id="siteHeader"></header>
+
+<main id="main">
+<section class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><span id="listCrumb">All products</span></nav>
+    <h1 id="listTitle">All products</h1>
+    <p id="listSub"></p>
+  </div>
+</section>
+<div class="wrap">
+  <div class="listing">
+    <aside class="filters" id="filters" aria-label="Filters">
+      <section>
+        <h2>Category</h2>
+        <ul class="filter-list" id="catList"></ul>
+      </section>
+      <section>
+        <h2>Show</h2>
+        <label class="check"><input type="checkbox" id="inStock"> In stock only</label>
+        <label class="check"><input type="checkbox" id="offersOnly"> On offer</label>
+      </section>
+    </aside>
+    <div>
+      <div class="toolbar">
+        <button type="button" class="btn btn-outline filters-toggle" id="filtersToggle" aria-controls="filters" aria-expanded="false">Filters</button>
+        <p id="resultCount" aria-live="polite"></p>
+        <label><span class="sr-only">Sort by</span>
+          <select id="sort">
+            <option value="featured">Sort: Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name: A&ndash;Z</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid grid--3" id="grid"></div>
+    </div>
+  </div>
+</div>
+</main>
+
+<div id="siteFooter"></div>
+<script src="js/shop.js"></script>
+</body>
+</html>

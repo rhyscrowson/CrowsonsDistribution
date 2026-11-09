@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crowsons | Everyday essentials, delivered across the UK</title>
+<meta name="description" content="Shop home & kitchen, health & beauty, toys & games and pet supplies. Free UK delivery over £30 and 30-day returns.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Crowsons">
+<meta property="og:title" content="Crowsons | Everyday essentials, delivered across the UK">
+<meta property="og:description" content="Shop home & kitchen, health & beauty, toys & games and pet supplies. Free UK delivery over £30 and 30-day returns.">
+<link rel="icon" type="image/png" href="assets/crow-mark.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#1f2a27">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body data-page="home">
+<a href="#main" class="sr-only">Skip to content</a>
+<header id="siteHeader"></header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="hero-kicker">Home &middot; Beauty &middot; Toys &middot; Pets</span>
+      <h1>Everyday essentials, delivered to your door.</h1>
+      <p>Quality products from brands you know, packed and posted from the UK. Free delivery on orders over &pound;30.</p>
+      <div class="hero-cta">
+        <a href="products.html" class="btn btn-primary btn-lg">Shop all products</a>
+        <a href="products.html?offers=1" class="btn btn-outline btn-lg">View offers</a>
+      </div>
+    </div>
+    <div class="hero-tiles" id="heroTiles" aria-label="Shop by category"></div>
+  </div>
+</section>
+
+<section class="perks" aria-label="Why shop with us">
+  <div class="wrap">
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"/><path d="M14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg><div><strong>Free UK delivery</strong><span>On orders over &pound;30</span></div></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><div><strong>Fast dispatch</strong><span>Within 1&ndash;2 working days</span></div></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l-5-5 5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><div><strong>30-day returns</strong><span>Hassle-free</span></div></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><div><strong>Secure checkout</strong><span>Cards, Apple &amp; Google Pay</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><h2>Best sellers</h2><a href="products.html">Shop all &rarr;</a></div>
+    <div class="grid" id="bestSellers"></div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head"><h2>Shop by category</h2></div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="offersSection">
+  <div class="wrap">
+    <div class="section-head"><h2>On offer now</h2><a href="products.html?offers=1">All offers &rarr;</a></div>
+    <div class="grid" id="offersGrid"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="banner">
+      <div>
+        <h2>Need a hand with an order?</h2>
+        <p>Real people, based in the UK. We usually reply within one working day.</p>
+      </div>
+      <a href="contact.html" class="btn btn-cream btn-lg">Contact us</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="siteFooter"></div>
+<script src="js/shop.js"></script>
+</body>
+</html>
