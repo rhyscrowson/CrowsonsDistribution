@@ -1,5 +1,5 @@
 {
-  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). Replace these placeholder products with your real stock. 'image' is optional: put the photo in shop/assets/products/ and set e.g. \"assets/products/mop.jpg\". 'featured': true shows the product under Best sellers on the home page. Set 'stock' to 0 to show 'Sold out'. Add 'compareAt' (the old price) to show the item as on offer.",
+  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). Replace these placeholder products with your real stock. 'image' is optional: put the photo in shop/assets/products/ and set e.g. \"assets/products/mop.jpg\". 'featured': true shows the product under Best sellers on the home page. Set 'stock' to 0 to show 'Sold out'. Add 'compareAt' (the old price) to show the item as on offer. Each product's 'subcategory' must match an id in its category's 'subcategories' list. A category can also have an 'image' (e.g. \"assets/categories/pets.jpg\") for its tile on the home page.",
   "currency": "GBP",
   "shipping": {
     "standard": 399,
@@ -9,22 +9,118 @@
     {
       "id": "home-kitchen",
       "name": "Home & Kitchen",
-      "blurb": "Cookware, storage & cleaning"
+      "blurb": "Cookware, storage & cleaning",
+      "subcategories": [
+        {
+          "id": "cookware",
+          "name": "Cookware & Bakeware"
+        },
+        {
+          "id": "food-storage",
+          "name": "Food Storage"
+        },
+        {
+          "id": "utensils",
+          "name": "Kitchen Utensils"
+        },
+        {
+          "id": "cleaning",
+          "name": "Cleaning"
+        },
+        {
+          "id": "laundry",
+          "name": "Laundry & Utility"
+        },
+        {
+          "id": "home-decor",
+          "name": "Home Décor"
+        }
+      ]
     },
     {
       "id": "health-beauty",
       "name": "Health & Beauty",
-      "blurb": "Grooming, skincare & personal care"
+      "blurb": "Grooming, skincare & personal care",
+      "subcategories": [
+        {
+          "id": "grooming",
+          "name": "Shaving & Grooming"
+        },
+        {
+          "id": "skincare",
+          "name": "Skincare"
+        },
+        {
+          "id": "oral-care",
+          "name": "Oral Care"
+        },
+        {
+          "id": "hair-care",
+          "name": "Hair Care"
+        },
+        {
+          "id": "bath-body",
+          "name": "Bath & Body"
+        }
+      ]
     },
     {
       "id": "toys-games",
       "name": "Toys & Games",
-      "blurb": "Toys, puzzles & games"
+      "blurb": "Toys, puzzles & games",
+      "subcategories": [
+        {
+          "id": "building",
+          "name": "Building & Construction"
+        },
+        {
+          "id": "puzzles",
+          "name": "Jigsaws & Puzzles"
+        },
+        {
+          "id": "games",
+          "name": "Board & Card Games"
+        },
+        {
+          "id": "outdoor-toys",
+          "name": "Outdoor Toys"
+        },
+        {
+          "id": "arts-crafts",
+          "name": "Arts & Crafts"
+        }
+      ]
     },
     {
       "id": "pet-supplies",
       "name": "Pet Supplies",
-      "blurb": "Beds, toys & everyday essentials"
+      "blurb": "Beds, toys & everyday essentials",
+      "subcategories": [
+        {
+          "id": "dog",
+          "name": "Dog"
+        },
+        {
+          "id": "cat",
+          "name": "Cat"
+        },
+        {
+          "id": "small-animal",
+          "name": "Small Animal"
+        },
+        {
+          "id": "pet-beds",
+          "name": "Beds & Bedding"
+        },
+        {
+          "id": "pet-toys",
+          "name": "Toys & Treats"
+        },
+        {
+          "id": "pet-hygiene",
+          "name": "Cleaning & Hygiene"
+        }
+      ]
     }
   ],
   "products": [
@@ -33,6 +129,7 @@
       "name": "Stainless Steel Food Storage Set (5 pcs)",
       "brand": "Placeholder Brand",
       "category": "home-kitchen",
+      "subcategory": "food-storage",
       "price": 2499,
       "compareAt": 2999,
       "stock": 24,
@@ -49,6 +146,7 @@
       "name": "Non-Stick Frying Pan 28cm",
       "brand": "Placeholder Brand",
       "category": "home-kitchen",
+      "subcategory": "cookware",
       "price": 1999,
       "stock": 15,
       "description": "Induction-ready aluminium pan with a PFOA-free non-stick coating and soft-touch handle.",
@@ -63,6 +161,7 @@
       "name": "Microfibre Cleaning Cloths (12 pack)",
       "brand": "Placeholder Brand",
       "category": "home-kitchen",
+      "subcategory": "cleaning",
       "price": 899,
       "stock": 60,
       "description": "Lint-free, streak-free microfibre cloths for glass, stainless steel and every surface in between.",
@@ -78,6 +177,7 @@
       "name": "Electric Beard Trimmer",
       "brand": "Placeholder Brand",
       "category": "health-beauty",
+      "subcategory": "grooming",
       "price": 2999,
       "compareAt": 3499,
       "stock": 12,
@@ -94,6 +194,7 @@
       "name": "Hydrating Facial Moisturiser 50ml",
       "brand": "Placeholder Brand",
       "category": "health-beauty",
+      "subcategory": "skincare",
       "price": 1299,
       "stock": 30,
       "description": "Lightweight daily moisturiser with hyaluronic acid. Suitable for all skin types.",
@@ -109,6 +210,7 @@
       "name": "Bamboo Toothbrushes (4 pack)",
       "brand": "Placeholder Brand",
       "category": "health-beauty",
+      "subcategory": "oral-care",
       "price": 649,
       "stock": 80,
       "description": "Biodegradable bamboo handles with soft BPA-free bristles.",
@@ -123,6 +225,7 @@
       "name": "Wooden Building Blocks (100 pcs)",
       "brand": "Placeholder Brand",
       "category": "toys-games",
+      "subcategory": "building",
       "price": 2299,
       "stock": 18,
       "description": "Classic wooden blocks in natural and coloured finishes, supplied in a storage tub.",
@@ -138,6 +241,7 @@
       "name": "1000 Piece Jigsaw Puzzle",
       "brand": "Placeholder Brand",
       "category": "toys-games",
+      "subcategory": "puzzles",
       "price": 1499,
       "stock": 25,
       "description": "A detailed 1000-piece puzzle with a poster guide included.",
@@ -153,6 +257,7 @@
       "name": "Family Card Game",
       "brand": "Placeholder Brand",
       "category": "toys-games",
+      "subcategory": "games",
       "price": 999,
       "stock": 0,
       "description": "Fast, easy-to-learn card game for 2 to 6 players.",
@@ -167,6 +272,7 @@
       "name": "Orthopaedic Dog Bed (Large)",
       "brand": "Placeholder Brand",
       "category": "pet-supplies",
+      "subcategory": "pet-beds",
       "price": 3999,
       "compareAt": 4999,
       "stock": 8,
@@ -183,6 +289,7 @@
       "name": "Cat Scratching Post",
       "brand": "Placeholder Brand",
       "category": "pet-supplies",
+      "subcategory": "cat",
       "price": 1799,
       "stock": 14,
       "description": "Sisal-wrapped scratching post with a plush top platform and hanging toy.",
@@ -198,6 +305,7 @@
       "name": "Dog Poo Bags (300 bags)",
       "brand": "Placeholder Brand",
       "category": "pet-supplies",
+      "subcategory": "pet-hygiene",
       "price": 799,
       "stock": 100,
       "description": "Thick, leak-proof bags on 20 rolls, with a dispenser included.",
