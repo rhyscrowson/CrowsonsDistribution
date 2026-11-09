@@ -1,5 +1,5 @@
 {
-  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). 'stock' is how many you have to sell. 'image' is a product photo path, e.g. \"assets/products/cg4829.jpg\". 'featured': true shows it under Trending. Add 'compareAt' (a genuine previous price) to show it as on offer. 'hidden': true keeps a product off the shop. ",
+  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). 'stock' is how many you have to sell. 'image' is a product photo path, e.g. \"assets/products/cg4829.jpg\". 'featured': true shows it under Trending. Add 'compareAt' (a genuine previous price) to show it as on offer. 'hidden': true keeps a product off the shop. 'images' (optional) is a list of extra photos for the product page gallery; the first should match 'image'.",
   "currency": "GBP",
   "shipping": {
     "standard": 399,
@@ -607,17 +607,27 @@
     {
       "id": "cg4832",
       "asin": "B0FBSC92FW",
-      "name": "Samsung Galaxy Watch8 Smartwatch, Silver",
+      "name": "Samsung Galaxy Watch8 44mm LTE Smartwatch, Silver, SM-L335F",
       "brand": "Samsung",
       "category": "tech",
       "subcategory": "wearables",
       "price": 24300,
       "stock": 3,
-      "description": "Samsung Galaxy Watch8 smartwatch with a cushion-style design, health and fitness tracking, and Wear OS.",
+      "description": "Samsung Galaxy Watch8 in a 44mm silver case with a white sport band. The LTE model works without your phone nearby, and adds GPS, sapphire crystal glass and 5ATM water resistance.",
       "bullets": [
-        "Cushion design",
-        "Health and fitness tracking",
-        "Wear OS by Samsung"
+        "44mm case, silver with white sport band",
+        "LTE (cellular) and GPS",
+        "Sapphire crystal glass",
+        "5ATM water resistance",
+        "Health and fitness tracking with Samsung Health",
+        "Model SM-L335F",
+        "Needs an Android phone (Android 12 or later); some features need a Samsung Galaxy phone",
+        "In the box: Galaxy Watch8 and wireless charger"
+      ],
+      "image": "assets/products/cg4832.jpg",
+      "images": [
+        "assets/products/cg4832.jpg",
+        "assets/products/cg4832-2.jpg"
       ]
     },
     {

@@ -287,6 +287,11 @@ h1, h2, h3 { font-family: var(--font-head); font-weight: 700; line-height: 1.2; 
 .pdp-media { aspect-ratio: 1; position: relative; }
 .pdp-media .ph { border-radius: var(--r); }
 .pdp-media img { width: 100%; height: 100%; object-fit: contain; }
+.pdp-thumbs { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.pdp-thumbs button { width: 72px; height: 72px; padding: 4px; border: 2px solid var(--line); border-radius: var(--r); background: #fff; cursor: pointer; }
+.pdp-thumbs button:hover { border-color: #b9b9b0; }
+.pdp-thumbs button.is-active { border-color: var(--brand-mid); }
+.pdp-thumbs img { width: 100%; height: 100%; object-fit: contain; }
 .pdp-brand { font-size: 14px; color: var(--link); }
 .pdp h1 { font-size: clamp(24px, 2.6vw, 30px); margin: 4px 0 6px; }
 .pdp-code { font-size: 12.5px; color: var(--ink-3); margin-bottom: 16px; }

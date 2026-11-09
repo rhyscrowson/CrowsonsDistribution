@@ -593,9 +593,18 @@
         ${s ? `<span>/</span><a href="${listUrl({ category: p.category, sub: s.id })}">${esc(s.name)}</a>` : ''}
       </nav>
       <div class="pdp">
-        <div class="pdp-media">
-          ${onSale(p) && !out ? `<span class="badge">Save ${pctOff(p)}%</span>` : ''}
-          ${imageHTML(p)}
+        <div>
+          <div class="pdp-media">
+            ${onSale(p) && !out ? `<span class="badge">Save ${pctOff(p)}%</span>` : ''}
+            ${imageHTML(p)}
+          </div>
+          ${p.images?.length > 1 ? `
+          <div class="pdp-thumbs" role="group" aria-label="More photos">
+            ${p.images.map((src, i) => `
+              <button type="button" class="${i === 0 ? 'is-active' : ''}" data-photo="${esc(src)}" aria-label="Photo ${i + 1} of ${p.images.length}">
+                <img src="${esc(src)}" alt="" loading="lazy">
+              </button>`).join('')}
+          </div>` : ''}
         </div>
         <div>
           ${p.brand ? `<a class="pdp-brand" href="${listUrl({ q: p.brand })}">${esc(p.brand)}</a>` : ''}
@@ -627,6 +636,13 @@
         <p>${esc(p.description)}</p>
         ${p.bullets?.length ? `<ul>${p.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
       </section>`;
+
+    root.querySelector('.pdp-thumbs')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-photo]');
+      if (!btn) return;
+      root.querySelector('.pdp-media img').src = btn.dataset.photo;
+      root.querySelectorAll('.pdp-thumbs button').forEach(t => t.classList.toggle('is-active', t === btn));
+    });
 
     const qty = document.getElementById('pdpQty');
     root.querySelector('[data-stepper]')?.addEventListener('click', (e) => {
