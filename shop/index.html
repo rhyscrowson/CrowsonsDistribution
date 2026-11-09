@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crowsons | Home, beauty, toys & pet essentials delivered across the UK</title>
+<meta name="description" content="Shop home & kitchen, health & beauty, toys & games and pet supplies. Free UK delivery over £30 and 30-day returns.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Crowsons">
+<meta property="og:title" content="Crowsons | Home, beauty, toys & pet essentials delivered across the UK">
+<meta property="og:description" content="Shop home & kitchen, health & beauty, toys & games and pet supplies. Free UK delivery over £30 and 30-day returns.">
+<link rel="icon" type="image/png" href="assets/crow-mark.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#2b3a36">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body data-page="home">
+<a href="#main" class="sr-only skip">Skip to content</a>
+<header id="siteHeader"></header>
+
+<main id="main">
+<section class="promo-strip" id="promoStrip"></section>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-banner" id="heroBanner"></div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="block-title"><h2>Shop by department</h2><a href="products.html">Shop everything</a></div>
+    <div class="tiles" id="catTiles"></div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:0">
+  <div class="wrap">
+    <div class="block-title"><h2>Shop by brand</h2></div>
+    <div class="brands" id="brands"></div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="block-title"><h2>Trending</h2><a href="products.html">See all</a></div>
+    <div class="carousel" data-carousel>
+      <button type="button" class="carousel-btn carousel-btn--prev" aria-label="Previous products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="carousel-track" id="trending"></div>
+      <button type="button" class="carousel-btn carousel-btn--next" aria-label="Next products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="block-title"><h2>Shop by price</h2></div>
+    <div class="price-tiles" id="priceTiles"></div>
+  </div>
+</section>
+
+<section class="block" id="offersBlock">
+  <div class="wrap">
+    <div class="block-title"><h2>Deals of the week</h2><a href="products.html?offers=1">All offers</a></div>
+    <div class="grid" id="offersGrid"></div>
+  </div>
+</section>
+
+<section class="help-band">
+  <div class="wrap">
+    <ul>
+      <li><h3>Delivery</h3><p>Standard UK delivery &pound;3.99, free on orders over &pound;30. <a href="delivery-returns.html">Delivery details</a></p></li>
+      <li><h3>Returns</h3><p>Changed your mind? Send most items back within 30 days. <a href="delivery-returns.html#returns">How returns work</a></p></li>
+      <li><h3>Need help?</h3><p>Questions about an order or a product? <a href="contact.html">Contact our team</a></p></li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<div id="siteFooter"></div>
+<form name="newsletter" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="email" name="email"><input name="bot-field">
+</form>
+<script src="js/shop.js"></script>
+</body>
+</html>

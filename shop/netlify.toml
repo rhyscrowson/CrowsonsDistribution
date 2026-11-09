@@ -1,0 +1,10 @@
+# Netlify settings for the shop. When creating the Netlify site, set
+# "Base directory" to: shop
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
