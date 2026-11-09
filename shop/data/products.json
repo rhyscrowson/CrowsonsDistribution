@@ -594,7 +594,7 @@
       "category": "tech",
       "subcategory": "audio",
       "price": 8881,
-      "stock": 3,
+      "stock": 0,
       "description": "A rugged, waterproof portable Bluetooth speaker from Ultimate Ears with 360-degree sound.",
       "bullets": [
         "360-degree sound",
@@ -918,7 +918,7 @@
       "brand": "Good Boy",
       "category": "pet-supplies",
       "subcategory": "dog",
-      "price": 679,
+      "price": 225,
       "stock": 600,
       "description": "Good Boy beef strips: tasty, chewy treats for dogs.",
       "bullets": [
