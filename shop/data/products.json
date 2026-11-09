@@ -1,5 +1,5 @@
 {
-  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). 'stock' is how many you have to sell. 'image' is a product photo path, e.g. \"assets/products/cg4829.jpg\". 'featured': true shows it under Trending. Add 'compareAt' (a genuine previous price) to show it as on offer. 'hidden': true keeps a product off the shop. '_note' fields are reminders and are never shown to customers.",
+  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). 'stock' is how many you have to sell. 'image' is a product photo path, e.g. \"assets/products/cg4829.jpg\". 'featured': true shows it under Trending. Add 'compareAt' (a genuine previous price) to show it as on offer. 'hidden': true keeps a product off the shop. ",
   "currency": "GBP",
   "shipping": {
     "standard": 399,
@@ -165,7 +165,8 @@
         "Assorted Lindor flavours",
         "Individually wrapped truffles"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4829.jpg"
     },
     {
       "id": "cg4830",
@@ -181,12 +182,13 @@
         "600g box",
         "Silver assortment of Lindor flavours",
         "Individually wrapped truffles"
-      ]
+      ],
+      "image": "assets/products/cg4830.jpg"
     },
     {
       "id": "cg4826",
       "asin": "B00LMUKJR6",
-      "name": "Charbonnel et Walker Pink Marc de Champagne Truffles, Heart Shaped Box",
+      "name": "Charbonnel et Walker Pink Marc de Champagne Truffles, Heart Shaped Box, 200g",
       "brand": "Charbonnel et Walker",
       "category": "food-drink",
       "subcategory": "chocolate",
@@ -194,11 +196,10 @@
       "stock": 12,
       "description": "Charbonnel et Walker's signature pink Marc de Champagne truffles, presented in a heart-shaped gift box.",
       "bullets": [
+        "200g heart-shaped gift box",
         "Pink Marc de Champagne truffles",
-        "Heart-shaped gift box",
         "From the British chocolatier Charbonnel et Walker"
-      ],
-      "_note": "Name cut off in screenshot: confirm box size"
+      ]
     },
     {
       "id": "cg4844",
@@ -214,24 +215,25 @@
         "24 x 20g packs",
         "Vegan",
         "Gluten free"
-      ]
+      ],
+      "image": "assets/products/cg4844.jpg"
     },
     {
       "id": "cg4831",
       "asin": "B078D693G8",
-      "name": "Nature Valley Protein Salted Caramel Nut Cereal Bars, 4 x 40g",
+      "name": "Nature Valley Protein Salted Caramel Nut Cereal Bars, 8 x 4 x 40g (32 Bars)",
       "brand": "Nature Valley",
       "category": "food-drink",
       "subcategory": "snacks",
       "price": 2099,
       "stock": 12,
-      "description": "Nature Valley Protein bars with salted caramel and nuts. Gluten free.",
+      "description": "A multipack of Nature Valley Protein bars with salted caramel and nuts. Gluten free.",
       "bullets": [
-        "4 x 40g bars per box",
+        "8 boxes of 4 x 40g bars (32 bars in total)",
         "Gluten free",
         "Salted caramel and nut"
       ],
-      "_note": "Name cut off in screenshot: confirm how many boxes are in the pack"
+      "image": "assets/products/cg4831.jpg"
     },
     {
       "id": "cg4839",
@@ -248,7 +250,7 @@
         "Ready in moments with boiling water",
         "Golden Vegetable flavour"
       ],
-      "_note": "Merged spreadsheet rows 4839 and 4840"
+      "image": "assets/products/cg4839.jpg"
     },
     {
       "id": "cg4799",
@@ -264,7 +266,8 @@
         "200 sachets",
         "11.5g per sachet",
         "The Original HP Sauce"
-      ]
+      ],
+      "image": "assets/products/cg4799.jpg"
     },
     {
       "id": "cg4836",
@@ -279,8 +282,10 @@
       "bullets": [
         "3kg bag",
         "GMO free",
-        "Vegan"
-      ]
+        "Vegan",
+        "High fibre and high protein"
+      ],
+      "image": "assets/products/cg4836.jpg"
     },
     {
       "id": "cg4845",
@@ -297,7 +302,8 @@
         "1.8g per stick",
         "NESCAFÉ Gold Blend"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4845.jpg"
     },
     {
       "id": "cg4813",
@@ -313,7 +319,8 @@
         "8-in-1 body groomer",
         "Model BG7555",
         "Grey"
-      ]
+      ],
+      "image": "assets/products/cg4813.jpg"
     },
     {
       "id": "cg4828",
@@ -330,7 +337,8 @@
         "Model AIO956",
         "Grey"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4828.jpg"
     },
     {
       "id": "cg4812",
@@ -345,22 +353,26 @@
       "bullets": [
         "AeroTouch technology",
         "Graphite finish"
-      ]
+      ],
+      "image": "assets/products/cg4812.jpg"
     },
     {
       "id": "cg4822",
       "asin": "B07H39BLHP",
-      "name": "Panasonic ER-GN300-K503 Nose Hair Trimmer for Men",
+      "name": "Panasonic ER-GN300-K503 Nose, Ear & Eyebrow Trimmer for Men, Black",
       "brand": "Panasonic",
       "category": "health-beauty",
       "subcategory": "shaving",
       "price": 3999,
       "stock": 6,
-      "description": "Panasonic nose and ear hair trimmer for quick, comfortable trimming.",
+      "description": "Panasonic trimmer for nose, ear and eyebrow hair. Waterproof and battery operated.",
       "bullets": [
+        "Nose, ear and eyebrow trimming",
+        "Waterproof",
+        "Battery operated",
         "Model ER-GN300-K503"
       ],
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4822.jpg"
     },
     {
       "id": "cg4815",
@@ -375,7 +387,8 @@
       "bullets": [
         "Model SES9-441",
         "White/Silver"
-      ]
+      ],
+      "image": "assets/products/cg4815.jpg"
     },
     {
       "id": "cg4821",
@@ -391,24 +404,26 @@
         "IPL hair removal",
         "Model PL5137",
         "White/Gold"
-      ]
+      ],
+      "image": "assets/products/cg4821.jpg"
     },
     {
       "id": "cg4810",
       "asin": "B0F7Y5CL74",
-      "name": "Panasonic EH-NA9N-H895 Hair Dryer with Diffuser, nanoe & Mineral Ions",
+      "name": "Panasonic EH-NA9N-H895 Hair Dryer with nanoe & Mineral Ions, Diffuser, 1600W",
       "brand": "Panasonic",
       "category": "health-beauty",
       "subcategory": "hair-care",
       "price": 13000,
       "stock": 6,
-      "description": "Panasonic hair dryer with nanoe and mineral ion technology, supplied with a diffuser.",
+      "description": "Panasonic hair dryer with nanoe and mineral ion technology to help protect hair, with intelligent sensing and scalp and skin modes.",
       "bullets": [
         "nanoe and mineral ions",
-        "Diffuser included",
-        "Model EH-NA9N-H895"
+        "Intelligent sensing; scalp and skin modes",
+        "Diffuser and concentrator attachments",
+        "1600W"
       ],
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4810.jpg"
     },
     {
       "id": "cg4790",
@@ -419,33 +434,34 @@
       "subcategory": "lip-oral",
       "price": 926,
       "stock": 400,
-      "description": "A gift set of Burt's Bees lip balms.",
+      "description": "A festive gift set of Burt's Bees beeswax lip balms in assorted flavours.",
       "bullets": [
-        "Burt's Bees lip balms",
-        "Gift set"
-      ]
+        "Assorted lip balms",
+        "Gift boxed"
+      ],
+      "image": "assets/products/cg4790.jpg"
     },
     {
       "id": "cg4841",
       "asin": "B09VXKZ1NB",
-      "name": "Teeth Whitening Pen Gel Kit, 5 Pack, Enamel-Safe & Sensitivity-Free",
-      "brand": "",
+      "name": "Pankoo Teeth Whitening Pen Kit, 4 Whitening Pens + 1 Desensitising Pen",
+      "brand": "Pankoo",
       "category": "health-beauty",
       "subcategory": "lip-oral",
       "price": 2999,
       "stock": 1,
-      "description": "Teeth whitening pens in a pack of five, designed to be enamel-safe and sensitivity-free.",
+      "description": "A teeth whitening kit with four whitening pens and one desensitising pen, designed to be enamel-safe and sensitivity-free.",
       "bullets": [
-        "5 pens",
+        "4 whitening pens plus 1 desensitising pen",
         "Enamel-safe",
-        "Sensitivity-free"
+        "Sensitivity-free formula"
       ],
-      "_note": "Name cut off in screenshot; brand unknown"
+      "image": "assets/products/cg4841.jpg"
     },
     {
       "id": "cg4842",
       "asin": "B081XWLQKS",
-      "name": "CORSAIR VENGEANCE RGB PRO DDR4 RAM 32GB (2x16GB) up to 3200MHz",
+      "name": "CORSAIR VENGEANCE RGB PRO DDR4 32GB (2x16GB) 3200MHz CL16 Desktop Memory, Black",
       "brand": "CORSAIR",
       "category": "tech",
       "subcategory": "computing",
@@ -454,15 +470,17 @@
       "description": "CORSAIR VENGEANCE RGB PRO DDR4 desktop memory kit with RGB lighting.",
       "bullets": [
         "32GB kit (2 x 16GB)",
-        "DDR4, up to 3200MHz",
-        "RGB lighting"
+        "DDR4, up to 3200MHz, CL16",
+        "Intel XMP and AMD EXPO support",
+        "Dynamic RGB lighting",
+        "Model CMW32GX4M2E3200C16"
       ],
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4842.jpg"
     },
     {
       "id": "cg4818",
       "asin": "B0BKRJ9HQH",
-      "name": "MSI AX1800 WiFi 6 Dual-Band USB Adapter, up to 1800 Mbps",
+      "name": "MSI AX1800 WiFi 6 Dual-Band USB Adapter with Cradle Stand",
       "brand": "MSI",
       "category": "tech",
       "subcategory": "computing",
@@ -470,28 +488,33 @@
       "stock": 9,
       "description": "MSI WiFi 6 USB adapter to add fast dual-band wireless to a PC or laptop.",
       "bullets": [
-        "WiFi 6 (AX1800)",
-        "Dual band",
-        "USB adapter"
+        "WiFi 6, up to 1800 Mbps (5GHz and 2.4GHz)",
+        "USB 3.2 Gen 1 Type-A",
+        "MU-MIMO and beamforming, WPA3",
+        "Adjustable antenna",
+        "Wired cradle stand included"
       ],
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4818.jpg"
     },
     {
       "id": "cg4846",
       "asin": "B0FBT5G3VT",
-      "name": "Lenovo IdeaPad Slim 3 16\" 2.8K OLED Laptop, AMD Ryzen 7 7735HS",
+      "name": "Lenovo IdeaPad Slim 3 16\" 2.8K OLED Laptop, AMD Ryzen 7 7735HS, 8GB RAM, 512GB SSD, Luna Grey",
       "brand": "Lenovo",
       "category": "tech",
       "subcategory": "computing",
       "price": 60000,
       "stock": 2,
-      "description": "Lenovo IdeaPad Slim 3 laptop with a 16-inch 2.8K OLED display and an AMD Ryzen 7 7735HS processor.",
+      "description": "Lenovo IdeaPad Slim 3 laptop with a 16-inch 2.8K OLED display, AMD Ryzen 7 7735HS processor, 8GB RAM and a 512GB SSD, running Windows 11 Home.",
       "bullets": [
         "16-inch 2.8K OLED display",
-        "AMD Ryzen 7 7735HS"
+        "AMD Ryzen 7 7735HS",
+        "8GB RAM, 512GB SSD",
+        "Windows 11 Home",
+        "Luna Grey"
       ],
       "featured": true,
-      "_note": "Name cut off in screenshot: confirm RAM and storage"
+      "image": "assets/products/cg4846.jpg"
     },
     {
       "id": "cg4770",
@@ -507,12 +530,13 @@
         "Official Samsung accessory",
         "For Galaxy Z Flip8",
         "Pink"
-      ]
+      ],
+      "image": "assets/products/cg4770.jpg"
     },
     {
       "id": "cg4825",
       "asin": "B0F7RHB6QY",
-      "name": "Philips DLC7060C USB-C Cable, 240W PD, 2m",
+      "name": "Philips DLC7060C USB-C to USB-C Cable, 240W PD, 2m, Nylon Braided",
       "brand": "Philips",
       "category": "tech",
       "subcategory": "phone-accessories",
@@ -520,15 +544,17 @@
       "stock": 2,
       "description": "Philips USB-C to USB-C cable supporting up to 240W Power Delivery fast charging, with an E-Marker chip.",
       "bullets": [
-        "240W Power Delivery",
-        "2m / 6.6ft",
-        "E-Marker chip"
-      ]
+        "Up to 240W Power Delivery fast charging",
+        "2m / 6.6ft, nylon braided",
+        "E-Marker chip",
+        "For MacBook, iPad, iPhone, Nintendo Switch, Android and laptops"
+      ],
+      "image": "assets/products/cg4825.jpg"
     },
     {
       "id": "cg4787",
       "asin": "B0F673RJ66",
-      "name": "Garmin Instinct 3 Tactical Edition 50mm Rugged GPS Smartwatch, Black",
+      "name": "Garmin Instinct 3 Tactical Edition, 50mm Rugged GPS Smartwatch, Black",
       "brand": "Garmin",
       "category": "tech",
       "subcategory": "wearables",
@@ -540,7 +566,8 @@
         "Rugged GPS smartwatch",
         "Black"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4787.jpg"
     },
     {
       "id": "cg4817",
@@ -557,75 +584,85 @@
         "Speed camera and hazard alerts",
         "Premium Pack with extra mounts"
       ],
-      "_note": "Merged rows 4817 (£79.99) and 4807 (£69.99): confirm price"
+      "image": "assets/products/cg4817.jpg"
     },
     {
       "id": "cg4805",
       "asin": "B0D3WPJ672",
-      "name": "Ultimate Ears speaker",
+      "name": "Ultimate Ears Portable Waterproof Bluetooth Speaker with 360-Degree Sound, Red",
       "brand": "Ultimate Ears",
       "category": "tech",
       "subcategory": "audio",
       "price": 8881,
       "stock": 3,
-      "description": "",
-      "bullets": "",
-      "hidden": true,
-      "_note": "Which Ultimate Ears product? Hidden until confirmed"
+      "description": "A rugged, waterproof portable Bluetooth speaker from Ultimate Ears with 360-degree sound.",
+      "bullets": [
+        "360-degree sound",
+        "Waterproof",
+        "Bluetooth",
+        "Red"
+      ],
+      "image": "assets/products/cg4805.jpg"
     },
     {
       "id": "cg4832",
       "asin": "B0FBSC92FW",
-      "name": "Samsung Galaxy Watch",
+      "name": "Samsung Galaxy Watch8 Smartwatch, Silver",
       "brand": "Samsung",
       "category": "tech",
       "subcategory": "wearables",
       "price": 24300,
       "stock": 3,
-      "description": "",
-      "bullets": "",
-      "hidden": true,
-      "_note": "Which model, size and colour? Hidden until confirmed"
+      "description": "Samsung Galaxy Watch8 smartwatch with a cushion-style design, health and fitness tracking, and Wear OS.",
+      "bullets": [
+        "Cushion design",
+        "Health and fitness tracking",
+        "Wear OS by Samsung"
+      ]
     },
     {
       "id": "cg4804",
       "asin": "B0CTVLFH8M",
-      "name": "Breville Halo Flexi Air Fryer & Large Mesh Tray, Digital Dual Air Fryer Oven, 11L",
+      "name": "Breville Halo Flexi Air Fryer Oven with Large Mesh Tray, 11L, 2400W, Black [VDF138]",
       "brand": "Breville",
       "category": "home-kitchen",
       "subcategory": "small-appliances",
       "price": 17772,
       "stock": 6,
-      "description": "Breville Halo Flexi digital air fryer oven with an 11L capacity and a large mesh tray.",
+      "description": "Breville Halo Flexi digital dual air fryer oven. With an 11L capacity it serves 10+, and it can fry, bake, grill, roast and reheat.",
       "bullets": [
-        "11L capacity",
-        "Digital controls",
-        "Large mesh tray included"
+        "11L capacity, serves 10+",
+        "Fry, bake, grill, roast and reheat",
+        "2400W",
+        "Large mesh tray included",
+        "Model VDF138"
       ],
       "featured": true,
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4804.jpg"
     },
     {
       "id": "cg4811",
       "asin": "B0BB7ZSV27",
-      "name": "Swan Alexa Smart Kettle, 1.5L, Voice-Controlled with LED Touch Panel",
+      "name": "Swan Alexa Smart Kettle, 1.5L, Black, SK14650BLKN",
       "brand": "Swan",
       "category": "home-kitchen",
       "subcategory": "small-appliances",
       "price": 14000,
       "stock": 9,
-      "description": "Swan smart kettle that works with Amazon Alexa, with an LED touch panel.",
+      "description": "Swan smart kettle that works with Amazon Alexa. Choose from six temperatures and keep your water warm, all from the LED touch panel or by voice.",
       "bullets": [
         "1.5L capacity",
-        "Works with Alexa",
-        "LED touch panel"
+        "Works with Alexa voice control",
+        "6 temperature settings and keep warm",
+        "Double wall insulated, stainless steel interior",
+        "Model SK14650BLKN"
       ],
-      "_note": "Price £140 is over twice the buy price: confirm"
+      "image": "assets/products/cg4811.jpg"
     },
     {
       "id": "cg4798",
       "asin": "B01MG81CHA",
-      "name": "Swan Retro 3.5 Litre Slow Cooker, 3 Temperature Settings, Keep Warm Function",
+      "name": "Swan Retro 3.5 Litre Slow Cooker, Black, SF17021BN",
       "brand": "Swan",
       "category": "home-kitchen",
       "subcategory": "small-appliances",
@@ -634,9 +671,12 @@
       "description": "Swan Retro slow cooker with three temperature settings and a keep warm function.",
       "bullets": [
         "3.5 litre",
-        "3 temperature settings",
-        "Keep warm function"
-      ]
+        "3 temperature settings and keep warm",
+        "Removable ceramic inner pot",
+        "200W",
+        "Model SF17021BN"
+      ],
+      "image": "assets/products/cg4798.jpg"
     },
     {
       "id": "cg4824",
@@ -669,7 +709,8 @@
         "20cm",
         "Stainless steel",
         "Thermo-Spot heat indicator"
-      ]
+      ],
+      "image": "assets/products/cg4823.jpg"
     },
     {
       "id": "cg4819",
@@ -685,7 +726,8 @@
         "2.3L tank",
         "960W",
         "Model EX150UKCP"
-      ]
+      ],
+      "image": "assets/products/cg4819.jpg"
     },
     {
       "id": "cg4820",
@@ -702,7 +744,8 @@
         "Pet Model",
         "Model NZ691UKTDB"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4820.jpg"
     },
     {
       "id": "cg4772",
@@ -716,12 +759,13 @@
       "description": "Joseph Joseph Intelligent Waste Stack 4 for kitchen food waste.",
       "bullets": [
         "Joseph Joseph Intelligent Waste range"
-      ]
+      ],
+      "image": "assets/products/cg4772.jpg"
     },
     {
       "id": "cg4803",
       "asin": "B076656947",
-      "name": "PHILIPS LED Premium Classic Filament A60 Light Bulb, 6 Pack, E27 Edison Screw",
+      "name": "PHILIPS LED Classic Filament A60 Light Bulb, 6 Pack, E27, 4.3W (40W Equivalent), Warm White",
       "brand": "Philips",
       "category": "home-kitchen",
       "subcategory": "lighting",
@@ -730,10 +774,11 @@
       "description": "Philips LED filament bulbs with a classic A60 shape and E27 Edison screw fitting, in a pack of six.",
       "bullets": [
         "6 bulbs",
-        "A60 classic shape",
-        "E27 Edison screw"
+        "E27 Edison screw",
+        "4.3W, equivalent to 40W",
+        "Warm white (2700K)"
       ],
-      "_note": "Name cut off in screenshot: confirm wattage"
+      "image": "assets/products/cg4803.jpg"
     },
     {
       "id": "cg4769",
@@ -749,7 +794,8 @@
         "12 pieces",
         "Part number 05057421001",
         "Diamond-coated bits"
-      ]
+      ],
+      "image": "assets/products/cg4769.jpg"
     },
     {
       "id": "cg4837",
@@ -763,31 +809,33 @@
       "description": "Rummikub, the classic tile-based strategy game for the whole family.",
       "bullets": [
         "2 to 4 players",
-        "Classic family game",
-        "Fun for all ages"
+        "Classic family game for all ages",
+        "Easy to learn"
       ],
-      "featured": true
+      "featured": true,
+      "image": "assets/products/cg4837.jpg"
     },
     {
       "id": "cg4843",
       "asin": "B0CMVBG24L",
-      "name": "Marvel Spidey and His Amazing Friends Spidey Team Split Racer, 8.5-Inch",
+      "name": "Marvel Spidey and His Amazing Friends Spidey Team Split Racer, 8.5-Inch 3-in-1 Vehicle",
       "brand": "Marvel",
       "category": "toys-games",
       "subcategory": "toy-vehicles",
       "price": 2999,
       "stock": 2,
-      "description": "Spidey Team Split Racer from Marvel's Spidey and His Amazing Friends.",
+      "description": "A three-in-one Spidey Team Split Racer from Marvel's Spidey and His Amazing Friends, with web darts, sound effects and phrases.",
       "bullets": [
-        "8.5-inch vehicle",
-        "Spidey and His Amazing Friends"
+        "8.5-inch vehicle that splits into three",
+        "Web darts",
+        "Sound effects and phrases"
       ],
-      "_note": "Name cut off in screenshot"
+      "image": "assets/products/cg4843.jpg"
     },
     {
       "id": "cg4816",
       "asin": "B0F9ZK6CSM",
-      "name": "Baby Einstein Farm Explorers Happy Harvest Touch & Feel Activity Gym",
+      "name": "Baby Einstein Farm Explorers Happy Harvest Touch & Feel Activity Gym with Musical Plush Sheep",
       "brand": "Baby Einstein",
       "category": "toys-games",
       "subcategory": "baby",
@@ -796,53 +844,62 @@
       "description": "Baby Einstein activity gym with a farm theme and touch and feel textures for little explorers.",
       "bullets": [
         "Touch and feel textures",
-        "Farm theme"
+        "Musical plush sheep",
+        "Suitable from 0 months"
       ],
-      "_note": "Merged rows 4816 and 4802; name cut off"
+      "image": "assets/products/cg4816.jpg"
     },
     {
       "id": "cg4801",
       "asin": "B0DWSLF334",
-      "name": "Sharpie Creative Marker Acrylic Paint Pens, Bullet Tip, Water-Based",
+      "name": "Sharpie Creative Markers Acrylic Paint Pens, Bullet Tip, Yellow, 6 Count",
       "brand": "Sharpie",
       "category": "toys-games",
       "subcategory": "arts-crafts",
       "price": 1500,
       "stock": 9,
-      "description": "Sharpie Creative Markers: water-based acrylic paint pens with a bullet tip, for paper, wood, canvas and more.",
+      "description": "Sharpie Creative Markers in yellow: water-based acrylic paint pens with a bullet tip and no-bleed ink that writes on most surfaces.",
       "bullets": [
+        "6 pens, yellow",
         "Bullet tip",
-        "Water-based acrylic paint"
+        "Water-based acrylic paint, no-bleed ink",
+        "Writes on most surfaces"
       ],
-      "_note": "Name cut off: confirm number of pens"
+      "image": "assets/products/cg4801.jpg"
     },
     {
       "id": "cg4809",
       "asin": "B0DWS7DJQ2",
-      "name": "Sharpie Creative Marker Acrylic Paint Pens",
+      "name": "Sharpie Creative Markers Acrylic Paint Pens, Bullet Tip, Green, 6 Count",
       "brand": "Sharpie",
       "category": "toys-games",
       "subcategory": "arts-crafts",
-      "price": 69900,
+      "price": 1500,
       "stock": 1,
-      "description": "",
-      "bullets": "",
-      "hidden": true,
-      "_note": "Listed at £699 in spreadsheet: price looks wrong. Hidden until confirmed"
+      "description": "Sharpie Creative Markers in green: water-based acrylic paint pens with a bullet tip and no-bleed ink that writes on most surfaces.",
+      "bullets": [
+        "6 pens, green",
+        "Bullet tip",
+        "Water-based acrylic paint, no-bleed ink",
+        "Writes on most surfaces"
+      ],
+      "image": "assets/products/cg4809.jpg"
     },
     {
       "id": "cg4833",
       "asin": "B0GJD6XCNY",
-      "name": "Dekuri",
-      "brand": "",
-      "category": "toys-games",
-      "subcategory": "games",
+      "name": "Dekuri Professional Hair Straighteners",
+      "brand": "Dekuri",
+      "category": "health-beauty",
+      "subcategory": "hair-care",
       "price": 15000,
       "stock": 1,
-      "description": "",
-      "bullets": "",
-      "hidden": true,
-      "_note": "Unknown product. Hidden until confirmed"
+      "description": "Professional hair straighteners from Dekuri with frictionless plates for smooth, sleek styling.",
+      "bullets": [
+        "Frictionless plates",
+        "Professional styling"
+      ],
+      "image": "assets/products/cg4833.jpg"
     },
     {
       "id": "cg4788",
@@ -858,7 +915,8 @@
         "80g",
         "Beef strips",
         "For dogs"
-      ]
+      ],
+      "image": "assets/products/cg4788.jpg"
     }
   ]
 }
