@@ -57,6 +57,10 @@
   const onSale = (p) => p.compareAt && p.compareAt > p.price;
   const pctOff = (p) => Math.round((1 - p.price / p.compareAt) * 100);
   const inStock = (p) => p.stock > 0;
+  // In-stock products with photos, featured first: used for imagery on the home page.
+  const showcase = (fn = () => true) => catalogue.products
+    .filter(p => p.image && inStock(p) && fn(p))
+    .sort((a, b) => (b.featured === true) - (a.featured === true));
   const hasOffers = () => catalogue.products.some(p => onSale(p) && inStock(p));
 
   /* ---------- Basket storage (memory fallback if storage is blocked) ---------- */
@@ -422,13 +426,15 @@
         </div>`;
     } else {
       // No offers running: lead with delivery and best sellers instead.
-      const picks = catalogue.products.filter(p => p.featured && inStock(p)).slice(0, 3);
+      const picks = showcase();
+      const lead = picks.find(p => p.category === 'home-kitchen') || picks[0];
+      const others = picks.filter(p => p !== lead && p.category !== lead.category).slice(0, 2);
       strip.innerHTML = `<div class="wrap">
         <strong>Free UK delivery</strong><span>on orders over ${pounds(catalogue.shipping.freeOver)}</span>
         <a href="products.html" class="btn btn-white">Shop now</a></div>`;
       hero.innerHTML = `
         <div class="hero-copy">
-          <span class="tag">${catalogue.products.length} products in stock</span>
+          <span class="tag">${catalogue.products.filter(inStock).length} products in stock</span>
           <h1>Big brands, <em>sent from the UK</em></h1>
           <p>Lindt, Braun, Shark, Tefal, Garmin and more. Genuine stock, dispatched within 1&ndash;2 working days.</p>
           <div class="actions">
@@ -436,25 +442,44 @@
             <a href="${listUrl({ max: PRICE_BANDS[1] })}" class="btn btn-lg" style="color:#fff;border-color:rgba(255,255,255,.5)">Gifts under ${pounds(PRICE_BANDS[1])}</a>
           </div>
         </div>
-        <div class="hero-deals">
-          <h2>Best sellers</h2>
-          ${picks.map(p => `
-            <a href="${productUrl(p)}" class="deal-row">
-              <div class="thumb">${imageHTML(p)}</div>
-              <p>${esc(p.name)}<br><small>${esc(catName(p.category))}</small></p>
-              <span class="now" style="color:var(--ink)">${money(p.price)}</span>
-            </a>`).join('')}
+        <div class="hero-spot">
+          <a href="${productUrl(lead)}" class="spot-main">
+            <img src="${esc(lead.image)}" alt="${esc(lead.name)}">
+            <div class="spot-tag">
+              <small>Best seller</small>
+              <p>${esc(lead.name)}</p>
+              <strong>${money(lead.price)}</strong>
+            </div>
+          </a>
+          <div class="spot-row">
+            ${others.map(p => `
+              <a href="${productUrl(p)}" class="spot-mini">
+                <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">
+                <p>${esc(p.name)}<strong>${money(p.price)}</strong></p>
+              </a>`).join('')}
+          </div>
         </div>`;
     }
 
     document.getElementById('catTiles').innerHTML = catalogue.categories.map(c => `
       <a href="${listUrl({ category: c.id })}" class="tile tile--${esc(c.id)}">
-        <div class="tile-head">${esc(c.name)}</div>
+        <div class="tile-head">${esc(c.name)}<small>${liveSubs(c).slice(0, 3).map(s => esc(s.name)).join(' &middot; ')}</small></div>
         <div class="tile-body">
-          ${c.image ? `<img src="${esc(c.image)}" alt="" loading="lazy">` : `<ul>${liveSubs(c).slice(0, 4).map(s => `<li>${esc(s.name)}</li>`).join('')}</ul>`}
+          ${c.image
+            ? `<img class="tile-photo" src="${esc(c.image)}" alt="" loading="lazy">`
+            : `<div class="tile-collage">${showcase(p => p.category === c.id).slice(0, 3).map((p, i) =>
+                `<img class="c${i + 1}" src="${esc(p.image)}" alt="" loading="lazy">`).join('')}</div>`}
         </div>
         <span class="btn btn-white">Shop now</span>
       </a>`).join('');
+
+    const brandStrip = document.getElementById('brands');
+    if (brandStrip) {
+      const counts = {};
+      catalogue.products.filter(inStock).forEach(p => { if (p.brand) counts[p.brand] = (counts[p.brand] || 0) + 1; });
+      brandStrip.innerHTML = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b)).slice(0, 18)
+        .map(b => `<a href="${listUrl({ q: b })}">${esc(b)}</a>`).join('');
+    }
 
     const trending = catalogue.products.filter(p => p.featured && inStock(p));
     document.getElementById('trending').innerHTML = (trending.length ? trending : catalogue.products).map(card).join('');
