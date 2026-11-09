@@ -29,7 +29,7 @@ exports.handler = async (event) => {
   }
   if (!Array.isArray(items) || items.length === 0) return json(400, { error: 'Basket is empty' });
 
-  const byId = new Map(catalogue.products.map(p => [p.id, p]));
+  const byId = new Map(catalogue.products.filter(p => !p.hidden).map(p => [p.id, p]));
   const params = new URLSearchParams();
   let subtotal = 0;
   let line = 0;

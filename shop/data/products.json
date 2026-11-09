@@ -1,5 +1,5 @@
 {
-  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). Replace these placeholder products with your real stock. 'image' is optional: put the photo in shop/assets/products/ and set e.g. \"assets/products/mop.jpg\". 'featured': true shows the product under Best sellers on the home page. Set 'stock' to 0 to show 'Sold out'. Add 'compareAt' (the old price) to show the item as on offer. Each product's 'subcategory' must match an id in its category's 'subcategories' list. A category can also have an 'image' (e.g. \"assets/categories/pets.jpg\") for its tile on the home page.",
+  "_readme": "Shop catalogue. Prices are in pence (1299 = £12.99). 'stock' is how many you have to sell. 'image' is a product photo path, e.g. \"assets/products/cg4829.jpg\". 'featured': true shows it under Trending. Add 'compareAt' (a genuine previous price) to show it as on offer. 'hidden': true keeps a product off the shop. '_note' fields are reminders and are never shown to customers.",
   "currency": "GBP",
   "shipping": {
     "standard": 399,
@@ -9,81 +9,123 @@
     {
       "id": "home-kitchen",
       "name": "Home & Kitchen",
-      "blurb": "Cookware, storage & cleaning",
+      "blurb": "Appliances, cookware, floorcare & more",
       "subcategories": [
         {
+          "id": "small-appliances",
+          "name": "Small Appliances"
+        },
+        {
           "id": "cookware",
-          "name": "Cookware & Bakeware"
+          "name": "Pans & Cookware"
         },
         {
-          "id": "food-storage",
-          "name": "Food Storage"
+          "id": "floorcare",
+          "name": "Vacuums & Floorcare"
         },
         {
-          "id": "utensils",
-          "name": "Kitchen Utensils"
+          "id": "kitchen-storage",
+          "name": "Bins & Kitchen Storage"
         },
         {
-          "id": "cleaning",
-          "name": "Cleaning"
+          "id": "lighting",
+          "name": "Lighting"
         },
         {
-          "id": "laundry",
-          "name": "Laundry & Utility"
+          "id": "diy-tools",
+          "name": "DIY & Tools"
+        }
+      ]
+    },
+    {
+      "id": "food-drink",
+      "name": "Food & Drink",
+      "blurb": "Chocolates, snacks, cupboard & hot drinks",
+      "subcategories": [
+        {
+          "id": "chocolate",
+          "name": "Chocolates & Gifts"
         },
         {
-          "id": "home-decor",
-          "name": "Home Décor"
+          "id": "snacks",
+          "name": "Snacks & Bars"
+        },
+        {
+          "id": "cupboard",
+          "name": "Food Cupboard"
+        },
+        {
+          "id": "hot-drinks",
+          "name": "Tea & Coffee"
         }
       ]
     },
     {
       "id": "health-beauty",
       "name": "Health & Beauty",
-      "blurb": "Grooming, skincare & personal care",
+      "blurb": "Shavers, grooming, hair care & more",
       "subcategories": [
         {
-          "id": "grooming",
-          "name": "Shaving & Grooming"
+          "id": "shaving",
+          "name": "Shavers & Grooming"
         },
         {
-          "id": "skincare",
-          "name": "Skincare"
-        },
-        {
-          "id": "oral-care",
-          "name": "Oral Care"
+          "id": "hair-removal",
+          "name": "Hair Removal"
         },
         {
           "id": "hair-care",
           "name": "Hair Care"
         },
         {
-          "id": "bath-body",
-          "name": "Bath & Body"
+          "id": "lip-oral",
+          "name": "Lip & Oral Care"
+        }
+      ]
+    },
+    {
+      "id": "tech",
+      "name": "Tech & Electronics",
+      "blurb": "Computing, phones, wearables & car tech",
+      "subcategories": [
+        {
+          "id": "computing",
+          "name": "Computing"
+        },
+        {
+          "id": "phone-accessories",
+          "name": "Phone Accessories"
+        },
+        {
+          "id": "wearables",
+          "name": "Smartwatches"
+        },
+        {
+          "id": "audio",
+          "name": "Speakers & Audio"
+        },
+        {
+          "id": "car-tech",
+          "name": "Car Tech"
         }
       ]
     },
     {
       "id": "toys-games",
       "name": "Toys & Games",
-      "blurb": "Toys, puzzles & games",
+      "blurb": "Games, toys, baby & crafts",
       "subcategories": [
         {
-          "id": "building",
-          "name": "Building & Construction"
-        },
-        {
-          "id": "puzzles",
-          "name": "Jigsaws & Puzzles"
-        },
-        {
           "id": "games",
-          "name": "Board & Card Games"
+          "name": "Board & Family Games"
         },
         {
-          "id": "outdoor-toys",
-          "name": "Outdoor Toys"
+          "id": "toy-vehicles",
+          "name": "Toy Vehicles"
+        },
+        {
+          "id": "baby",
+          "name": "Baby & Toddler"
         },
         {
           "id": "arts-crafts",
@@ -94,7 +136,7 @@
     {
       "id": "pet-supplies",
       "name": "Pet Supplies",
-      "blurb": "Beds, toys & everyday essentials",
+      "blurb": "Treats & essentials",
       "subcategories": [
         {
           "id": "dog",
@@ -103,216 +145,719 @@
         {
           "id": "cat",
           "name": "Cat"
-        },
-        {
-          "id": "small-animal",
-          "name": "Small Animal"
-        },
-        {
-          "id": "pet-beds",
-          "name": "Beds & Bedding"
-        },
-        {
-          "id": "pet-toys",
-          "name": "Toys & Treats"
-        },
-        {
-          "id": "pet-hygiene",
-          "name": "Cleaning & Hygiene"
         }
       ]
     }
   ],
   "products": [
     {
-      "id": "hk-001",
-      "name": "Stainless Steel Food Storage Set (5 pcs)",
-      "brand": "Placeholder Brand",
-      "category": "home-kitchen",
-      "subcategory": "food-storage",
-      "price": 2499,
-      "compareAt": 2999,
-      "stock": 24,
-      "description": "Five nesting stainless steel containers with airtight lids. Freezer and dishwasher safe.",
+      "id": "cg4829",
+      "asin": "B0756RX39G",
+      "name": "Lindt Lindor Assorted Chocolate Truffles Box, 600g",
+      "brand": "Lindt",
+      "category": "food-drink",
+      "subcategory": "chocolate",
+      "price": 1699,
+      "stock": 90,
+      "description": "A large box of Lindt Lindor truffles in assorted flavours, each with a smooth melting centre. A favourite for sharing and gifting.",
       "bullets": [
-        "5 sizes, 300ml to 2.4L",
-        "Leak-proof silicone seals",
-        "Dishwasher safe"
+        "600g box",
+        "Assorted Lindor flavours",
+        "Individually wrapped truffles"
       ],
       "featured": true
     },
     {
-      "id": "hk-002",
-      "name": "Non-Stick Frying Pan 28cm",
-      "brand": "Placeholder Brand",
+      "id": "cg4830",
+      "asin": "B0CFTYNC77",
+      "name": "Lindt Lindor Silver Assorted Truffles Box, 600g",
+      "brand": "Lindt",
+      "category": "food-drink",
+      "subcategory": "chocolate",
+      "price": 1750,
+      "stock": 2,
+      "description": "Lindt Lindor truffles in the Silver assortment, presented in a 600g box. Ideal as a gift.",
+      "bullets": [
+        "600g box",
+        "Silver assortment of Lindor flavours",
+        "Individually wrapped truffles"
+      ]
+    },
+    {
+      "id": "cg4826",
+      "asin": "B00LMUKJR6",
+      "name": "Charbonnel et Walker Pink Marc de Champagne Truffles, Heart Shaped Box",
+      "brand": "Charbonnel et Walker",
+      "category": "food-drink",
+      "subcategory": "chocolate",
+      "price": 2500,
+      "stock": 12,
+      "description": "Charbonnel et Walker's signature pink Marc de Champagne truffles, presented in a heart-shaped gift box.",
+      "bullets": [
+        "Pink Marc de Champagne truffles",
+        "Heart-shaped gift box",
+        "From the British chocolatier Charbonnel et Walker"
+      ],
+      "_note": "Name cut off in screenshot: confirm box size"
+    },
+    {
+      "id": "cg4844",
+      "asin": "B09996WS7J",
+      "name": "PROPERCHIPS Barbecue Lentil Chips, 20g (24 Packs)",
+      "brand": "Proper",
+      "category": "food-drink",
+      "subcategory": "snacks",
+      "price": 2469,
+      "stock": 30,
+      "description": "Crunchy lentil chips with a smoky barbecue seasoning, in handy 20g snack packs.",
+      "bullets": [
+        "24 x 20g packs",
+        "Vegan",
+        "Gluten free"
+      ]
+    },
+    {
+      "id": "cg4831",
+      "asin": "B078D693G8",
+      "name": "Nature Valley Protein Salted Caramel Nut Cereal Bars, 4 x 40g",
+      "brand": "Nature Valley",
+      "category": "food-drink",
+      "subcategory": "snacks",
+      "price": 2099,
+      "stock": 12,
+      "description": "Nature Valley Protein bars with salted caramel and nuts. Gluten free.",
+      "bullets": [
+        "4 x 40g bars per box",
+        "Gluten free",
+        "Salted caramel and nut"
+      ],
+      "_note": "Name cut off in screenshot: confirm how many boxes are in the pack"
+    },
+    {
+      "id": "cg4839",
+      "asin": "B01K8TFWNW",
+      "name": "Batchelors Cup a Soup Golden Vegetable Instant Soup, 36 Sachets",
+      "brand": "Batchelors",
+      "category": "food-drink",
+      "subcategory": "cupboard",
+      "price": 1476,
+      "stock": 11,
+      "description": "Batchelors Cup a Soup Golden Vegetable: just add boiling water for a quick, warming cup of soup.",
+      "bullets": [
+        "36 sachets",
+        "Ready in moments with boiling water",
+        "Golden Vegetable flavour"
+      ],
+      "_note": "Merged spreadsheet rows 4839 and 4840"
+    },
+    {
+      "id": "cg4799",
+      "asin": "B010E0OBL4",
+      "name": "HP The Original Brown Sauce Sachets, 200 x 11.5g",
+      "brand": "HP",
+      "category": "food-drink",
+      "subcategory": "cupboard",
+      "price": 1790,
+      "stock": 40,
+      "description": "HP The Original Brown Sauce in single-serve sachets. Handy for cafés, lunchboxes and takeaways.",
+      "bullets": [
+        "200 sachets",
+        "11.5g per sachet",
+        "The Original HP Sauce"
+      ]
+    },
+    {
+      "id": "cg4836",
+      "asin": "B08GDQ76R8",
+      "name": "Wholefood Earth TVP Dark Textured Soya Protein Mince, 3kg",
+      "brand": "Wholefood Earth",
+      "category": "food-drink",
+      "subcategory": "cupboard",
+      "price": 3898,
+      "stock": 9,
+      "description": "Dark textured vegetable protein (TVP) mince made from soya. A versatile plant-based alternative to mince for chillies, bolognese and more.",
+      "bullets": [
+        "3kg bag",
+        "GMO free",
+        "Vegan"
+      ]
+    },
+    {
+      "id": "cg4845",
+      "asin": "B000J6BKKE",
+      "name": "NESCAFÉ Gold Blend Instant Coffee Sachets, 200 x 1.8g Sticks",
+      "brand": "NESCAFÉ",
+      "category": "food-drink",
+      "subcategory": "hot-drinks",
+      "price": 2467,
+      "stock": 30,
+      "description": "NESCAFÉ Gold Blend instant coffee in single-serve stick sachets, ideal for the office, travel or guests.",
+      "bullets": [
+        "200 stick sachets",
+        "1.8g per stick",
+        "NESCAFÉ Gold Blend"
+      ],
+      "featured": true
+    },
+    {
+      "id": "cg4813",
+      "asin": "B0DQWJXSCL",
+      "name": "Braun Series 7 Body Groomer for Men, 8-in-1, Grey, BG7555",
+      "brand": "Braun",
+      "category": "health-beauty",
+      "subcategory": "shaving",
+      "price": 9750,
+      "stock": 4,
+      "description": "Braun Series 7 8-in-1 body groomer for trimming and shaving all over.",
+      "bullets": [
+        "8-in-1 body groomer",
+        "Model BG7555",
+        "Grey"
+      ]
+    },
+    {
+      "id": "cg4828",
+      "asin": "B0H1J4SD6F",
+      "name": "Braun Series 9 All-in-One Grooming Kit for Men, 25-Piece, Grey, AIO956",
+      "brand": "Braun",
+      "category": "health-beauty",
+      "subcategory": "shaving",
+      "price": 14000,
+      "stock": 2,
+      "description": "Braun Series 9 all-in-one grooming kit with a full set of attachments for beard, hair and body.",
+      "bullets": [
+        "25-piece kit",
+        "Model AIO956",
+        "Grey"
+      ],
+      "featured": true
+    },
+    {
+      "id": "cg4812",
+      "asin": "B0H1J3PS69",
+      "name": "Braun NEVO Men's Electric Shaver with AeroTouch Technology, Graphite",
+      "brand": "Braun",
+      "category": "health-beauty",
+      "subcategory": "shaving",
+      "price": 58700,
+      "stock": 4,
+      "description": "Braun NEVO electric shaver for men, featuring Braun's AeroTouch technology.",
+      "bullets": [
+        "AeroTouch technology",
+        "Graphite finish"
+      ]
+    },
+    {
+      "id": "cg4822",
+      "asin": "B07H39BLHP",
+      "name": "Panasonic ER-GN300-K503 Nose Hair Trimmer for Men",
+      "brand": "Panasonic",
+      "category": "health-beauty",
+      "subcategory": "shaving",
+      "price": 3999,
+      "stock": 6,
+      "description": "Panasonic nose and ear hair trimmer for quick, comfortable trimming.",
+      "bullets": [
+        "Model ER-GN300-K503"
+      ],
+      "_note": "Name cut off in screenshot"
+    },
+    {
+      "id": "cg4815",
+      "asin": "B097JTJH53",
+      "name": "Braun Silk-épil 9 Epilator for Women, White/Silver, SES9-441",
+      "brand": "Braun",
+      "category": "health-beauty",
+      "subcategory": "hair-removal",
+      "price": 18468,
+      "stock": 2,
+      "description": "Braun Silk-épil 9 epilator for long-lasting hair removal.",
+      "bullets": [
+        "Model SES9-441",
+        "White/Silver"
+      ]
+    },
+    {
+      "id": "cg4821",
+      "asin": "B07N1GCPC9",
+      "name": "Braun IPL Silk-Expert Pro 5 At-Home Hair Removal, White/Gold, PL5137",
+      "brand": "Braun",
+      "category": "health-beauty",
+      "subcategory": "hair-removal",
+      "price": 43777,
+      "stock": 3,
+      "description": "Braun Silk-Expert Pro 5 IPL device for at-home hair removal.",
+      "bullets": [
+        "IPL hair removal",
+        "Model PL5137",
+        "White/Gold"
+      ]
+    },
+    {
+      "id": "cg4810",
+      "asin": "B0F7Y5CL74",
+      "name": "Panasonic EH-NA9N-H895 Hair Dryer with Diffuser, nanoe & Mineral Ions",
+      "brand": "Panasonic",
+      "category": "health-beauty",
+      "subcategory": "hair-care",
+      "price": 13000,
+      "stock": 6,
+      "description": "Panasonic hair dryer with nanoe and mineral ion technology, supplied with a diffuser.",
+      "bullets": [
+        "nanoe and mineral ions",
+        "Diffuser included",
+        "Model EH-NA9N-H895"
+      ],
+      "_note": "Name cut off in screenshot"
+    },
+    {
+      "id": "cg4790",
+      "asin": "B09ZVLGHBT",
+      "name": "Burt's Bees Lip Balm Gift Set",
+      "brand": "Burt's Bees",
+      "category": "health-beauty",
+      "subcategory": "lip-oral",
+      "price": 926,
+      "stock": 400,
+      "description": "A gift set of Burt's Bees lip balms.",
+      "bullets": [
+        "Burt's Bees lip balms",
+        "Gift set"
+      ]
+    },
+    {
+      "id": "cg4841",
+      "asin": "B09VXKZ1NB",
+      "name": "Teeth Whitening Pen Gel Kit, 5 Pack, Enamel-Safe & Sensitivity-Free",
+      "brand": "",
+      "category": "health-beauty",
+      "subcategory": "lip-oral",
+      "price": 2999,
+      "stock": 1,
+      "description": "Teeth whitening pens in a pack of five, designed to be enamel-safe and sensitivity-free.",
+      "bullets": [
+        "5 pens",
+        "Enamel-safe",
+        "Sensitivity-free"
+      ],
+      "_note": "Name cut off in screenshot; brand unknown"
+    },
+    {
+      "id": "cg4842",
+      "asin": "B081XWLQKS",
+      "name": "CORSAIR VENGEANCE RGB PRO DDR4 RAM 32GB (2x16GB) up to 3200MHz",
+      "brand": "CORSAIR",
+      "category": "tech",
+      "subcategory": "computing",
+      "price": 21661,
+      "stock": 3,
+      "description": "CORSAIR VENGEANCE RGB PRO DDR4 desktop memory kit with RGB lighting.",
+      "bullets": [
+        "32GB kit (2 x 16GB)",
+        "DDR4, up to 3200MHz",
+        "RGB lighting"
+      ],
+      "_note": "Name cut off in screenshot"
+    },
+    {
+      "id": "cg4818",
+      "asin": "B0BKRJ9HQH",
+      "name": "MSI AX1800 WiFi 6 Dual-Band USB Adapter, up to 1800 Mbps",
+      "brand": "MSI",
+      "category": "tech",
+      "subcategory": "computing",
+      "price": 4994,
+      "stock": 9,
+      "description": "MSI WiFi 6 USB adapter to add fast dual-band wireless to a PC or laptop.",
+      "bullets": [
+        "WiFi 6 (AX1800)",
+        "Dual band",
+        "USB adapter"
+      ],
+      "_note": "Name cut off in screenshot"
+    },
+    {
+      "id": "cg4846",
+      "asin": "B0FBT5G3VT",
+      "name": "Lenovo IdeaPad Slim 3 16\" 2.8K OLED Laptop, AMD Ryzen 7 7735HS",
+      "brand": "Lenovo",
+      "category": "tech",
+      "subcategory": "computing",
+      "price": 60000,
+      "stock": 2,
+      "description": "Lenovo IdeaPad Slim 3 laptop with a 16-inch 2.8K OLED display and an AMD Ryzen 7 7735HS processor.",
+      "bullets": [
+        "16-inch 2.8K OLED display",
+        "AMD Ryzen 7 7735HS"
+      ],
+      "featured": true,
+      "_note": "Name cut off in screenshot: confirm RAM and storage"
+    },
+    {
+      "id": "cg4770",
+      "asin": "B0H2DGFTFX",
+      "name": "Samsung Official Silicone Ring Magnet Case for Galaxy Z Flip8, Pink",
+      "brand": "Samsung",
+      "category": "tech",
+      "subcategory": "phone-accessories",
+      "price": 3800,
+      "stock": 2,
+      "description": "Official Samsung silicone case with ring and magnet for the Galaxy Z Flip8.",
+      "bullets": [
+        "Official Samsung accessory",
+        "For Galaxy Z Flip8",
+        "Pink"
+      ]
+    },
+    {
+      "id": "cg4825",
+      "asin": "B0F7RHB6QY",
+      "name": "Philips DLC7060C USB-C Cable, 240W PD, 2m",
+      "brand": "Philips",
+      "category": "tech",
+      "subcategory": "phone-accessories",
+      "price": 2398,
+      "stock": 2,
+      "description": "Philips USB-C to USB-C cable supporting up to 240W Power Delivery fast charging, with an E-Marker chip.",
+      "bullets": [
+        "240W Power Delivery",
+        "2m / 6.6ft",
+        "E-Marker chip"
+      ]
+    },
+    {
+      "id": "cg4787",
+      "asin": "B0F673RJ66",
+      "name": "Garmin Instinct 3 Tactical Edition 50mm Rugged GPS Smartwatch, Black",
+      "brand": "Garmin",
+      "category": "tech",
+      "subcategory": "wearables",
+      "price": 38000,
+      "stock": 2,
+      "description": "Garmin Instinct 3 Tactical rugged GPS smartwatch in a 50mm case.",
+      "bullets": [
+        "50mm case",
+        "Rugged GPS smartwatch",
+        "Black"
+      ],
+      "featured": true
+    },
+    {
+      "id": "cg4817",
+      "asin": "B0H2DM32Z9",
+      "name": "Tom by TomTom Speed Camera Detector, Premium Pack (No Subscription)",
+      "brand": "TomTom",
+      "category": "tech",
+      "subcategory": "car-tech",
+      "price": 6999,
+      "stock": 12,
+      "description": "Tom by TomTom alerts you to speed cameras, traffic and hazards with sound and light cues. No subscription needed. The Premium Pack adds an extra adhesive mount and an air vent mount.",
+      "bullets": [
+        "No subscription",
+        "Speed camera and hazard alerts",
+        "Premium Pack with extra mounts"
+      ],
+      "_note": "Merged rows 4817 (£79.99) and 4807 (£69.99): confirm price"
+    },
+    {
+      "id": "cg4805",
+      "asin": "B0D3WPJ672",
+      "name": "Ultimate Ears speaker",
+      "brand": "Ultimate Ears",
+      "category": "tech",
+      "subcategory": "audio",
+      "price": 8881,
+      "stock": 3,
+      "description": "",
+      "bullets": "",
+      "hidden": true,
+      "_note": "Which Ultimate Ears product? Hidden until confirmed"
+    },
+    {
+      "id": "cg4832",
+      "asin": "B0FBSC92FW",
+      "name": "Samsung Galaxy Watch",
+      "brand": "Samsung",
+      "category": "tech",
+      "subcategory": "wearables",
+      "price": 24300,
+      "stock": 3,
+      "description": "",
+      "bullets": "",
+      "hidden": true,
+      "_note": "Which model, size and colour? Hidden until confirmed"
+    },
+    {
+      "id": "cg4804",
+      "asin": "B0CTVLFH8M",
+      "name": "Breville Halo Flexi Air Fryer & Large Mesh Tray, Digital Dual Air Fryer Oven, 11L",
+      "brand": "Breville",
+      "category": "home-kitchen",
+      "subcategory": "small-appliances",
+      "price": 17772,
+      "stock": 6,
+      "description": "Breville Halo Flexi digital air fryer oven with an 11L capacity and a large mesh tray.",
+      "bullets": [
+        "11L capacity",
+        "Digital controls",
+        "Large mesh tray included"
+      ],
+      "featured": true,
+      "_note": "Name cut off in screenshot"
+    },
+    {
+      "id": "cg4811",
+      "asin": "B0BB7ZSV27",
+      "name": "Swan Alexa Smart Kettle, 1.5L, Voice-Controlled with LED Touch Panel",
+      "brand": "Swan",
+      "category": "home-kitchen",
+      "subcategory": "small-appliances",
+      "price": 14000,
+      "stock": 9,
+      "description": "Swan smart kettle that works with Amazon Alexa, with an LED touch panel.",
+      "bullets": [
+        "1.5L capacity",
+        "Works with Alexa",
+        "LED touch panel"
+      ],
+      "_note": "Price £140 is over twice the buy price: confirm"
+    },
+    {
+      "id": "cg4798",
+      "asin": "B01MG81CHA",
+      "name": "Swan Retro 3.5 Litre Slow Cooker, 3 Temperature Settings, Keep Warm Function",
+      "brand": "Swan",
+      "category": "home-kitchen",
+      "subcategory": "small-appliances",
+      "price": 3500,
+      "stock": 18,
+      "description": "Swan Retro slow cooker with three temperature settings and a keep warm function.",
+      "bullets": [
+        "3.5 litre",
+        "3 temperature settings",
+        "Keep warm function"
+      ]
+    },
+    {
+      "id": "cg4824",
+      "asin": "B08GH6R477",
+      "name": "Tefal Jamie Oliver Stainless Steel Frying Pan, 28cm, Oven Safe",
+      "brand": "Tefal",
       "category": "home-kitchen",
       "subcategory": "cookware",
-      "price": 1999,
-      "stock": 15,
-      "description": "Induction-ready aluminium pan with a PFOA-free non-stick coating and soft-touch handle.",
+      "price": 4990,
+      "stock": 5,
+      "description": "Tefal Jamie Oliver stainless steel frying pan, 28cm, suitable for the oven.",
       "bullets": [
-        "Suitable for all hobs incl. induction",
-        "PFOA-free coating",
-        "Oven safe to 180°C"
-      ]
+        "28cm",
+        "Stainless steel",
+        "Oven safe"
+      ],
+      "featured": true
     },
     {
-      "id": "hk-003",
-      "name": "Microfibre Cleaning Cloths (12 pack)",
-      "brand": "Placeholder Brand",
+      "id": "cg4823",
+      "asin": "B00V6A6OVW",
+      "name": "Tefal Comfort Max Stainless Steel Frying Pan, 20cm, Thermo-Spot",
+      "brand": "Tefal",
       "category": "home-kitchen",
-      "subcategory": "cleaning",
-      "price": 899,
-      "stock": 60,
-      "description": "Lint-free, streak-free microfibre cloths for glass, stainless steel and every surface in between.",
+      "subcategory": "cookware",
+      "price": 2500,
+      "stock": 2,
+      "description": "Tefal Comfort Max stainless steel frying pan with Thermo-Spot heat indicator.",
       "bullets": [
-        "30 x 30cm",
-        "Machine washable",
-        "Colour coded"
-      ],
-      "featured": true
-    },
-    {
-      "id": "hb-001",
-      "name": "Electric Beard Trimmer",
-      "brand": "Placeholder Brand",
-      "category": "health-beauty",
-      "subcategory": "grooming",
-      "price": 2999,
-      "compareAt": 3499,
-      "stock": 12,
-      "description": "Cordless rechargeable trimmer with 20 length settings and a washable head.",
-      "bullets": [
-        "90 minutes runtime",
-        "USB-C charging",
-        "20 length settings"
-      ],
-      "featured": true
-    },
-    {
-      "id": "hb-002",
-      "name": "Hydrating Facial Moisturiser 50ml",
-      "brand": "Placeholder Brand",
-      "category": "health-beauty",
-      "subcategory": "skincare",
-      "price": 1299,
-      "stock": 30,
-      "description": "Lightweight daily moisturiser with hyaluronic acid. Suitable for all skin types.",
-      "bullets": [
-        "Fragrance free",
-        "Dermatologically tested",
-        "Vegan"
-      ],
-      "featured": true
-    },
-    {
-      "id": "hb-003",
-      "name": "Bamboo Toothbrushes (4 pack)",
-      "brand": "Placeholder Brand",
-      "category": "health-beauty",
-      "subcategory": "oral-care",
-      "price": 649,
-      "stock": 80,
-      "description": "Biodegradable bamboo handles with soft BPA-free bristles.",
-      "bullets": [
-        "Soft bristles",
-        "Plastic-free packaging",
-        "4 colour-coded brushes"
+        "20cm",
+        "Stainless steel",
+        "Thermo-Spot heat indicator"
       ]
     },
     {
-      "id": "tg-001",
-      "name": "Wooden Building Blocks (100 pcs)",
-      "brand": "Placeholder Brand",
-      "category": "toys-games",
-      "subcategory": "building",
-      "price": 2299,
-      "stock": 18,
-      "description": "Classic wooden blocks in natural and coloured finishes, supplied in a storage tub.",
+      "id": "cg4819",
+      "asin": "B0D2LNZQ7Y",
+      "name": "Shark CarpetXpert Deep Clean Carpet Cleaner, 2.3L, 960W, Grey, EX150UKCP",
+      "brand": "Shark",
+      "category": "home-kitchen",
+      "subcategory": "floorcare",
+      "price": 24649,
+      "stock": 2,
+      "description": "Shark CarpetXpert deep clean carpet cleaner for carpets and upholstery.",
       "bullets": [
-        "Ages 3+",
-        "Water-based paints",
-        "Storage tub included"
+        "2.3L tank",
+        "960W",
+        "Model EX150UKCP"
+      ]
+    },
+    {
+      "id": "cg4820",
+      "asin": "B0GX9WB1SG",
+      "name": "Shark Corded Upright Vacuum Cleaner, 1.1L, Pet Model, NZ691UKTDB",
+      "brand": "Shark",
+      "category": "home-kitchen",
+      "subcategory": "floorcare",
+      "price": 30022,
+      "stock": 2,
+      "description": "Shark corded upright vacuum cleaner, Pet Model, for homes with pets.",
+      "bullets": [
+        "1.1L dust capacity",
+        "Pet Model",
+        "Model NZ691UKTDB"
       ],
       "featured": true
     },
     {
-      "id": "tg-002",
-      "name": "1000 Piece Jigsaw Puzzle",
-      "brand": "Placeholder Brand",
-      "category": "toys-games",
-      "subcategory": "puzzles",
-      "price": 1499,
-      "stock": 25,
-      "description": "A detailed 1000-piece puzzle with a poster guide included.",
+      "id": "cg4772",
+      "asin": "B01BPDY092",
+      "name": "Joseph Joseph Intelligent Waste Stack 4 Kitchen Food Waste Caddy",
+      "brand": "Joseph Joseph",
+      "category": "home-kitchen",
+      "subcategory": "kitchen-storage",
+      "price": 2900,
+      "stock": 11,
+      "description": "Joseph Joseph Intelligent Waste Stack 4 for kitchen food waste.",
       "bullets": [
-        "Finished size 70 x 50cm",
-        "Thick recycled board",
-        "Poster guide included"
-      ],
-      "featured": true
+        "Joseph Joseph Intelligent Waste range"
+      ]
     },
     {
-      "id": "tg-003",
-      "name": "Family Card Game",
-      "brand": "Placeholder Brand",
+      "id": "cg4803",
+      "asin": "B076656947",
+      "name": "PHILIPS LED Premium Classic Filament A60 Light Bulb, 6 Pack, E27 Edison Screw",
+      "brand": "Philips",
+      "category": "home-kitchen",
+      "subcategory": "lighting",
+      "price": 2080,
+      "stock": 10,
+      "description": "Philips LED filament bulbs with a classic A60 shape and E27 Edison screw fitting, in a pack of six.",
+      "bullets": [
+        "6 bulbs",
+        "A60 classic shape",
+        "E27 Edison screw"
+      ],
+      "_note": "Name cut off in screenshot: confirm wattage"
+    },
+    {
+      "id": "cg4769",
+      "asin": "B01BNGH0FM",
+      "name": "Wera 05057421001 Bit-Check 12 Diamond 1 Bit Set, 12-Piece",
+      "brand": "Wera",
+      "category": "home-kitchen",
+      "subcategory": "diy-tools",
+      "price": 2598,
+      "stock": 3,
+      "description": "Wera Bit-Check 12 Diamond 1 screwdriver bit set in a compact holder.",
+      "bullets": [
+        "12 pieces",
+        "Part number 05057421001",
+        "Diamond-coated bits"
+      ]
+    },
+    {
+      "id": "cg4837",
+      "asin": "B08P3JZ4RN",
+      "name": "Ideal Rummikub Tile Strategy Game, Classic Family Game, 2-4 Players",
+      "brand": "Ideal",
       "category": "toys-games",
       "subcategory": "games",
-      "price": 999,
-      "stock": 0,
-      "description": "Fast, easy-to-learn card game for 2 to 6 players.",
-      "bullets": [
-        "Ages 7+",
-        "15 minute games",
-        "2 to 6 players"
-      ]
-    },
-    {
-      "id": "ps-001",
-      "name": "Orthopaedic Dog Bed (Large)",
-      "brand": "Placeholder Brand",
-      "category": "pet-supplies",
-      "subcategory": "pet-beds",
       "price": 3999,
-      "compareAt": 4999,
-      "stock": 8,
-      "description": "Memory foam dog bed with a removable, machine-washable cover.",
+      "stock": 2,
+      "description": "Rummikub, the classic tile-based strategy game for the whole family.",
       "bullets": [
-        "90 x 70cm",
-        "Non-slip base",
-        "Washable cover"
+        "2 to 4 players",
+        "Classic family game",
+        "Fun for all ages"
       ],
       "featured": true
     },
     {
-      "id": "ps-002",
-      "name": "Cat Scratching Post",
-      "brand": "Placeholder Brand",
-      "category": "pet-supplies",
-      "subcategory": "cat",
-      "price": 1799,
-      "stock": 14,
-      "description": "Sisal-wrapped scratching post with a plush top platform and hanging toy.",
+      "id": "cg4843",
+      "asin": "B0CMVBG24L",
+      "name": "Marvel Spidey and His Amazing Friends Spidey Team Split Racer, 8.5-Inch",
+      "brand": "Marvel",
+      "category": "toys-games",
+      "subcategory": "toy-vehicles",
+      "price": 2999,
+      "stock": 2,
+      "description": "Spidey Team Split Racer from Marvel's Spidey and His Amazing Friends.",
       "bullets": [
-        "60cm tall",
-        "Weighted base",
-        "Replaceable toy"
+        "8.5-inch vehicle",
+        "Spidey and His Amazing Friends"
       ],
-      "featured": true
+      "_note": "Name cut off in screenshot"
     },
     {
-      "id": "ps-003",
-      "name": "Dog Poo Bags (300 bags)",
-      "brand": "Placeholder Brand",
-      "category": "pet-supplies",
-      "subcategory": "pet-hygiene",
-      "price": 799,
-      "stock": 100,
-      "description": "Thick, leak-proof bags on 20 rolls, with a dispenser included.",
+      "id": "cg4816",
+      "asin": "B0F9ZK6CSM",
+      "name": "Baby Einstein Farm Explorers Happy Harvest Touch & Feel Activity Gym",
+      "brand": "Baby Einstein",
+      "category": "toys-games",
+      "subcategory": "baby",
+      "price": 2600,
+      "stock": 11,
+      "description": "Baby Einstein activity gym with a farm theme and touch and feel textures for little explorers.",
       "bullets": [
-        "20 rolls of 15",
-        "Leak-proof",
-        "Dispenser included"
+        "Touch and feel textures",
+        "Farm theme"
+      ],
+      "_note": "Merged rows 4816 and 4802; name cut off"
+    },
+    {
+      "id": "cg4801",
+      "asin": "B0DWSLF334",
+      "name": "Sharpie Creative Marker Acrylic Paint Pens, Bullet Tip, Water-Based",
+      "brand": "Sharpie",
+      "category": "toys-games",
+      "subcategory": "arts-crafts",
+      "price": 1500,
+      "stock": 9,
+      "description": "Sharpie Creative Markers: water-based acrylic paint pens with a bullet tip, for paper, wood, canvas and more.",
+      "bullets": [
+        "Bullet tip",
+        "Water-based acrylic paint"
+      ],
+      "_note": "Name cut off: confirm number of pens"
+    },
+    {
+      "id": "cg4809",
+      "asin": "B0DWS7DJQ2",
+      "name": "Sharpie Creative Marker Acrylic Paint Pens",
+      "brand": "Sharpie",
+      "category": "toys-games",
+      "subcategory": "arts-crafts",
+      "price": 69900,
+      "stock": 1,
+      "description": "",
+      "bullets": "",
+      "hidden": true,
+      "_note": "Listed at £699 in spreadsheet: price looks wrong. Hidden until confirmed"
+    },
+    {
+      "id": "cg4833",
+      "asin": "B0GJD6XCNY",
+      "name": "Dekuri",
+      "brand": "",
+      "category": "toys-games",
+      "subcategory": "games",
+      "price": 15000,
+      "stock": 1,
+      "description": "",
+      "bullets": "",
+      "hidden": true,
+      "_note": "Unknown product. Hidden until confirmed"
+    },
+    {
+      "id": "cg4788",
+      "asin": "B07HVGGVT6",
+      "name": "Good Boy Beef Strips Dog Treats, 80g",
+      "brand": "Good Boy",
+      "category": "pet-supplies",
+      "subcategory": "dog",
+      "price": 679,
+      "stock": 600,
+      "description": "Good Boy beef strips: tasty, chewy treats for dogs.",
+      "bullets": [
+        "80g",
+        "Beef strips",
+        "For dogs"
       ]
     }
   ]

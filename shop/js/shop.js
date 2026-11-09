@@ -37,6 +37,8 @@
     'home-kitchen': '<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/>',
     'health-beauty': '<path d="M12 3c3 4 6 7 6 10.5A6 6 0 0 1 6 13.5C6 10 9 7 12 3z"/>',
     'toys-games': '<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><circle cx="16.5" cy="16.5" r="3.5"/>',
+    'food-drink': '<path d="M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3v2M11 3v2M14 3v2"/>',
+    'tech': '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>',
     'pet-supplies': '<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5.5" r="1.8"/><circle cx="14" cy="5.5" r="1.8"/><path d="M12 12c-3 0-5 3.5-5 5.5 0 1.5 1.5 2 2.5 2 1 0 1.5-.5 2.5-.5s1.5.5 2.5.5 2.5-.5 2.5-2c0-2-2-5.5-5-5.5z"/>',
   };
   // Shown until a product has a real photo ("image" in products.json).
@@ -55,6 +57,7 @@
   const onSale = (p) => p.compareAt && p.compareAt > p.price;
   const pctOff = (p) => Math.round((1 - p.price / p.compareAt) * 100);
   const inStock = (p) => p.stock > 0;
+  const hasOffers = () => catalogue.products.some(p => onSale(p) && inStock(p));
 
   /* ---------- Basket storage (memory fallback if storage is blocked) ---------- */
   let memoryBasket = {};
@@ -171,9 +174,9 @@
         </li>`;
     }).join('');
     return `<ul class="wrap catbar-list">
-      <li class="catbar-item catbar-item--offer ${cur === 'offers' ? 'is-current' : ''}"><a href="${listUrl({ offers: 1 })}">Offers</a></li>
+      ${hasOffers() ? `<li class="catbar-item catbar-item--offer ${cur === 'offers' ? 'is-current' : ''}"><a href="${listUrl({ offers: 1 })}">Offers</a></li>` : ''}
       ${megas}
-      <li class="catbar-item catbar-item--price ${cur === 'price' ? 'is-current' : ''}"><a href="${listUrl({ max: PRICE_BANDS[0] })}">Under ${pounds(PRICE_BANDS[0])}</a></li>
+      <li class="catbar-item catbar-item--price ${cur === 'price' ? 'is-current' : ''}"><a href="${listUrl({ max: PRICE_BANDS[1] })}">Under ${pounds(PRICE_BANDS[1])}</a></li>
     </ul>`;
   }
 
@@ -186,7 +189,7 @@
       <div class="drawer-scrim" data-close></div>
       <nav class="drawer-panel" aria-label="Menu">
         <div class="drawer-head"><span>Shop by department</span><button type="button" data-close aria-label="Close menu">&times;</button></div>
-        <a href="${listUrl({ offers: 1 })}" class="is-offer">Offers</a>
+        ${hasOffers() ? `<a href="${listUrl({ offers: 1 })}" class="is-offer">Offers</a>` : ''}
         ${catalogue.categories.map(c => `
           <details>
             <summary>${esc(c.name)}</summary>
@@ -237,7 +240,7 @@
           <div><h3>${SHOP_NAME}</h3><ul>
             <li><a href="about.html">About us</a></li>
             ${(catalogue?.categories || []).map(c => `<li><a href="${listUrl({ category: c.id })}">${esc(c.name)}</a></li>`).join('')}
-            <li><a href="${listUrl({ offers: 1 })}">Offers</a></li>
+            ${catalogue && hasOffers() ? `<li><a href="${listUrl({ offers: 1 })}">Offers</a></li>` : ''}
           </ul></div>
           <div><h3>Information</h3><ul>
             <li><a href="delivery-returns.html">Delivery</a></li>
@@ -418,14 +421,30 @@
             </a>`).join('')}
         </div>`;
     } else {
-      strip.remove();
+      // No offers running: lead with delivery and best sellers instead.
+      const picks = catalogue.products.filter(p => p.featured && inStock(p)).slice(0, 3);
+      strip.innerHTML = `<div class="wrap">
+        <strong>Free UK delivery</strong><span>on orders over ${pounds(catalogue.shipping.freeOver)}</span>
+        <a href="products.html" class="btn btn-white">Shop now</a></div>`;
       hero.innerHTML = `
         <div class="hero-copy">
-          <h1>Everyday essentials <em>delivered</em></h1>
-          <p>Home, beauty, toys and pet supplies, packed and posted from the UK.</p>
-          <div class="actions"><a href="products.html" class="btn btn-white btn-lg">Shop now</a></div>
+          <span class="tag">${catalogue.products.length} products in stock</span>
+          <h1>Big brands, <em>sent from the UK</em></h1>
+          <p>Lindt, Braun, Shark, Tefal, Garmin and more. Genuine stock, dispatched within 1&ndash;2 working days.</p>
+          <div class="actions">
+            <a href="products.html" class="btn btn-white btn-lg">Shop all products</a>
+            <a href="${listUrl({ max: PRICE_BANDS[1] })}" class="btn btn-lg" style="color:#fff;border-color:rgba(255,255,255,.5)">Gifts under ${pounds(PRICE_BANDS[1])}</a>
+          </div>
         </div>
-        <div class="hero-deals">${catalogue.categories.map(c => `<a href="${listUrl({ category: c.id })}" class="deal-row" style="grid-template-columns:1fr auto"><p>${esc(c.name)}</p><span>&rsaquo;</span></a>`).join('')}</div>`;
+        <div class="hero-deals">
+          <h2>Best sellers</h2>
+          ${picks.map(p => `
+            <a href="${productUrl(p)}" class="deal-row">
+              <div class="thumb">${imageHTML(p)}</div>
+              <p>${esc(p.name)}<br><small>${esc(catName(p.category))}</small></p>
+              <span class="now" style="color:var(--ink)">${money(p.price)}</span>
+            </a>`).join('')}
+        </div>`;
     }
 
     document.getElementById('catTiles').innerHTML = catalogue.categories.map(c => `
@@ -444,7 +463,9 @@
     const priceTiles = document.getElementById('priceTiles');
     priceTiles.innerHTML = PRICE_BANDS.map(b => `
       <a href="${listUrl({ max: b })}" class="price-tile"><small>Gifts &amp; essentials</small><strong>Under ${pounds(b)}</strong><span>Shop now</span></a>`).join('')
-      + `<a href="${listUrl({ offers: 1 })}" class="price-tile"><small>Limited time</small><strong>Offers</strong><span>Shop the deals</span></a>`;
+      + (hasOffers()
+        ? `<a href="${listUrl({ offers: 1 })}" class="price-tile"><small>Limited time</small><strong>Offers</strong><span>Shop the deals</span></a>`
+        : `<a href="${listUrl({ max: 5000 })}" class="price-tile"><small>Gifts &amp; essentials</small><strong>Under £50</strong><span>Shop now</span></a>`);
 
     const offersGrid = document.getElementById('offersGrid');
     if (offers.length) offersGrid.innerHTML = offers.slice(0, 4).map(card).join('');
@@ -716,6 +737,7 @@
   fetch('data/products.json', { cache: 'no-cache' })
     .then(r => r.json())
     .then(data => {
+      data.products = data.products.filter(p => !p.hidden);
       catalogue = data;
       renderHeader();
       renderFooter();
