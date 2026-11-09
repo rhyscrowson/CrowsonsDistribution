@@ -494,7 +494,8 @@ h1, h2, h3 { font-family: var(--font-head); font-weight: 700; line-height: 1.2; 
   .price { font-size: 18px; }
   .tiles, .price-tiles { gap: 10px; }
   .tile-head { font-size: 17px; min-height: 64px; padding: 10px 8px; }
-    .spot-main { min-height: 200px; }
+  .tile-head small { display: none; }
+  .spot-main { min-height: 200px; }
   .spot-row { grid-template-columns: 1fr; }
   .tile .btn { padding: 8px 14px; font-size: 14px; bottom: 12px; }
   .price-tile { min-height: 130px; padding: 16px; }
