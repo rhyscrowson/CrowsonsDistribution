@@ -170,17 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Contact form (Netlify Forms) ---------- */
+  /* ---------- Contact form ----------
+     Messages are saved in Crowsons Global's database (Supabase) and shown to Rhys on
+     trade.crowsonsglobal.com/admin under "Website messages". The key below is the public
+     "publishable" key: the database only lets it call site_contact(), nothing else. */
   const form = document.getElementById('contactForm');
 
   if (form) {
     const success = document.getElementById('formSuccess');
     const errorBox = document.getElementById('formError');
-
-    const encode = (data) =>
-      Object.keys(data)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-        .join('&');
+    const SUPABASE_URL = 'https://lulnjvyviskffwyanwpf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_8Y-1SOhh0f7p_YljHEOzSg_Ztnpl44i';
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -191,20 +191,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
       errorBox.classList.remove('is-visible');
       const data = Object.fromEntries(new FormData(form).entries());
+      delete data['form-name'];
+      data.page = location.pathname;
+      const button = form.querySelector('button[type="submit"]');
+      if (button) button.disabled = true;
 
-      fetch('/', {
+      fetch(`${SUPABASE_URL}/rest/v1/rpc/site_contact`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode(data),
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        body: JSON.stringify({ p: data }),
       })
-        .then(() => {
+        .then((res) => {
+          if (!res.ok) throw new Error('send failed');
           success.classList.add('is-visible');
           form.reset();
           setTimeout(() => success.classList.remove('is-visible'), 6000);
         })
         .catch(() => {
           errorBox.classList.add('is-visible');
-        });
+        })
+        .finally(() => { if (button) button.disabled = false; });
     });
   }
 });
