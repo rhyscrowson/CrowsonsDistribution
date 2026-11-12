@@ -1668,6 +1668,7 @@ a.who-signature:hover { opacity: 0.75; }
   .nav-links { display: none; }
   .nav-toggle { display: flex; }
   .nav .btn-primary.btn-sm.nav-only { display: none; }
+  .nav .nav-trade { display: none; }
   .why-grid { grid-template-columns: 1fr; gap: 26px; }
   .process-track { grid-template-columns: repeat(2, 1fr); row-gap: 40px; }
   .process-track::before { display: none; }
@@ -1861,3 +1862,6 @@ body.no-scroll { overflow: hidden; }
 
 .footer-col .footer-wa { color: #6fd39a; }
 .footer-col .footer-wa:hover { color: #9be7bb; }
+
+/* Trade portal login (trade.crowsonsglobal.com) */
+.nav-trade { white-space: nowrap; }
